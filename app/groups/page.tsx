@@ -14,6 +14,7 @@ import {
   Waves,
   Wifi,
 } from "lucide-react";
+import { collaborationSystems, familyChurchSystems } from "@/lib/product-expansion";
 
 const groupFeatures = [
   "Shared study rooms",
@@ -135,6 +136,26 @@ export default function GroupsPage() {
           </div>
         </section>
 
+        <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
+          <div className="flex items-center gap-3 text-blue-950">
+            <Radio className="h-6 w-6" />
+            <h2 className="text-2xl font-semibold">Collaboration systems to add next</h2>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {collaborationSystems.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-2xl border border-blue-200 bg-white p-5"
+              >
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-900">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-blue-950">{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="mt-10 grid gap-6 md:grid-cols-3">
           {[
             {
@@ -206,6 +227,46 @@ export default function GroupsPage() {
                 </article>
               ))}
             </div>
+          </aside>
+        </section>
+
+        <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
+            <div className="flex items-center gap-3 text-emerald-950">
+              <Users2 className="h-6 w-6" />
+              <h2 className="text-2xl font-semibold">Family and church mode</h2>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {familyChurchSystems.map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-2xl border border-emerald-200 bg-white p-5"
+                >
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-emerald-950">{item.detail}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <aside className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
+            <div className="flex items-center gap-3 text-amber-950">
+              <NotebookTabs className="h-6 w-6" />
+              <h2 className="text-2xl font-semibold">Recap and export direction</h2>
+            </div>
+            <p className="mt-4 text-sm leading-7 text-amber-900">
+              After a group session, the app can package the room notes into a leader recap,
+              prayer follow-up, attendance summary, and printable guide for the next meeting.
+            </p>
+            <Link
+              href="/church-admin"
+              className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#14532d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#166534]"
+            >
+              Open church admin
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </aside>
         </section>
       </main>

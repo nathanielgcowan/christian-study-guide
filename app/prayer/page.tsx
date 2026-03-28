@@ -20,6 +20,7 @@ import {
   saveWorkflowRun,
   updatePrayerEntry,
 } from '@/lib/persistence';
+import { prayerAnalyticsSystems } from '@/lib/product-expansion';
 
 interface PrayerEntry {
   id: string;
@@ -363,6 +364,26 @@ export default function PrayerPage() {
                 {analytics.topCategory}
               </p>
             </div>
+          </div>
+        </section>
+
+        <section className="lg:col-span-2 rounded-3xl border border-blue-200 bg-blue-50 p-8">
+          <div className="flex items-center gap-3 text-blue-950">
+            <NotebookPen className="h-6 w-6" />
+            <h2 className="text-2xl font-semibold">Growth-aware prayer insights</h2>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {prayerAnalyticsSystems.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-2xl border border-blue-200 bg-white p-5"
+              >
+                <p className="text-sm font-semibold uppercase tracking-wide text-blue-900">
+                  {item.title}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-blue-950">{item.detail}</p>
+              </article>
+            ))}
           </div>
         </section>
 

@@ -16,6 +16,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import AuthModal from '@/components/AuthModal';
 import { getCustomReadingPlans, saveCustomReadingPlan } from '@/lib/persistence';
+import { adaptivePlanSignals, guidedPaths } from '@/lib/product-expansion';
 
 interface ReadingPlanEntry {
   reference: string;
@@ -354,6 +355,38 @@ export default function ReadingPlansPage() {
           </aside>
         </section>
 
+        <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Guided discipleship paths
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                These tracks turn reading plans into pastoral journeys with checkpoints,
+                completion moments, and a clearer sense of spiritual direction.
+              </p>
+            </div>
+            <Link
+              href="/today"
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#0f172a] px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+              Use in Today
+              <Play className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {guidedPaths.map((path) => (
+              <article
+                key={path.title}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+              >
+                <h3 className="text-lg font-semibold text-slate-900">{path.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{path.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
         {customPlans.length > 0 ? (
         <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-[#0f172a]">Saved AI custom plans</h2>
@@ -418,6 +451,40 @@ export default function ReadingPlansPage() {
               </article>
             ))}
           </div>
+        </section>
+
+        <section className="mb-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
+            <div className="flex items-center gap-3 text-amber-950">
+              <AlertCircle className="h-6 w-6" />
+              <h2 className="text-2xl font-semibold">Adaptive reading intelligence</h2>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {adaptivePlanSignals.map((signal) => (
+                <article
+                  key={signal.title}
+                  className="rounded-2xl border border-amber-200 bg-white p-5"
+                >
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-900">
+                    {signal.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-amber-950">{signal.detail}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
+            <h2 className="text-2xl font-semibold text-emerald-950">
+              Better than a brittle streak
+            </h2>
+            <ul className="mt-6 space-y-4 text-sm leading-6 text-emerald-950">
+              <li>• Missed days recover with shorter entries instead of guilt-heavy resets.</li>
+              <li>• Plan coaching can flex between deep study, leadership prep, and survival-mode consistency.</li>
+              <li>• Leaders can assign a shared church path without losing personal pacing.</li>
+              <li>• Completions can trigger the next recommended discipleship lane automatically.</li>
+            </ul>
+          </aside>
         </section>
 
         {/* Active Plans */}

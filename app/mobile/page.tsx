@@ -9,6 +9,7 @@ import {
   WifiOff,
   Zap,
 } from "lucide-react";
+import { mobileSystems } from "@/lib/product-expansion";
 
 const mobileLayers = [
   {
@@ -115,6 +116,26 @@ export default function MobilePage() {
               <p className="mt-4 text-sm leading-6 text-slate-600">{item}</p>
             </article>
           ))}
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
+          <div className="flex items-center gap-3 text-emerald-950">
+            <Smartphone className="h-6 w-6" />
+            <h2 className="text-2xl font-semibold">Concrete mobile upgrades</h2>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {mobileSystems.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-2xl border border-emerald-200 bg-white p-5"
+              >
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-emerald-950">{item.detail}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">

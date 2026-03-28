@@ -2,6 +2,7 @@ import Link from "next/link";
 import VerseOfTheDay from "@/components/VerseOfTheDay";
 import HomeHero from "@/components/HomeHero";
 import { getCurrentUser } from "@/lib/auth-server";
+import { growthPillars } from "@/lib/product-expansion";
 import {
   BookOpen,
   BrainCircuit,
@@ -159,6 +160,50 @@ export default async function Home() {
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-[#fff8ec] border-b border-amber-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-950">
+                <Sparkles className="h-4 w-4" />
+                Expanded discipleship platform
+              </div>
+              <h2 className="mt-5 text-4xl font-bold text-text-primary">
+                The next layer is no longer just more pages.
+              </h2>
+              <p className="mt-4 text-lg leading-8 text-text-secondary">
+                The build now points toward a more complete daily growth system: personalized
+                study, guided paths, sermon support, group collaboration, publishing controls,
+                trust systems, and mobile-first habit loops.
+              </p>
+            </div>
+            <Link
+              href="/today"
+              className="inline-flex items-center gap-3 rounded-2xl bg-[#7c2d12] px-8 py-4 font-semibold text-white transition hover:bg-[#9a3412]"
+            >
+              Open the daily engine
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {growthPillars.map((pillar) => (
+              <Link
+                key={pillar.title}
+                href={pillar.href || "/"}
+                className="rounded-[2rem] border border-amber-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#7c2d12]">
+                  {pillar.eyebrow}
+                </p>
+                <h3 className="mt-4 text-2xl font-bold text-text-primary">{pillar.title}</h3>
+                <p className="mt-4 text-text-secondary">{pillar.detail}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

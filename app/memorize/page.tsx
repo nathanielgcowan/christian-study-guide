@@ -12,6 +12,7 @@ import {
   updateMemorizationProgress,
   updateMemoryBattleStats,
 } from '@/lib/persistence';
+import { memorizationSystems } from '@/lib/product-expansion';
 
 const flashcards = [
   {
@@ -388,6 +389,26 @@ export default function MemorizePage() {
               Complete all cards today to unlock a memory-builder badge.
             </p>
           </article>
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-blue-200 bg-blue-50 p-8">
+          <div className="flex items-center gap-3 text-blue-950">
+            <Brain className="h-6 w-6" />
+            <h3 className="text-2xl font-semibold">Full memorization system</h3>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {memorizationSystems.map((system) => (
+              <article
+                key={system.title}
+                className="rounded-2xl border border-blue-200 bg-white p-5"
+              >
+                <p className="text-sm font-semibold uppercase tracking-wide text-blue-900">
+                  {system.title}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-blue-950">{system.detail}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="mt-8 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { getChurchAdminSettings, saveChurchAdminSettings } from "@/lib/persistence";
+import { familyChurchSystems } from "@/lib/product-expansion";
 
 const CHURCH_ADMIN_KEY = "christian-study-guide:church-admin-settings";
 
@@ -264,6 +265,26 @@ export default function ChurchAdminPage() {
               ) : null}
             </div>
           </form>
+        </section>
+
+        <section className="mb-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
+          <div className="flex items-center gap-3 text-blue-950">
+            <Users2 className="h-6 w-6" />
+            <h2 className="text-2xl font-semibold">Family and church operating systems</h2>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {familyChurchSystems.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-2xl border border-blue-200 bg-white p-5"
+              >
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-900">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-blue-950">{item.detail}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="grid gap-6 md:grid-cols-3">

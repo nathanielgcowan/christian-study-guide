@@ -14,8 +14,11 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import {
   getPublishingFlows,
+  getWorkflowRuns,
   savePublishingFlow,
+  saveWorkflowRun,
   updatePublishingFlow,
+  updateWorkflowRun,
 } from "@/lib/persistence";
 
 const PUBLISHING_FLOWS_KEY = "christian-study-guide:publishing-flows";
@@ -49,11 +52,23 @@ interface PublishingFlow {
   shareScope: string;
 }
 
+interface WorkflowRun {
+  id: string;
+  workflowName: string;
+  linkedReference: string;
+  stage: string;
+  status: string;
+  summary: string;
+  nextStep: string;
+  output: Record<string, unknown> | null;
+}
+
 export default function PublishingPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saveFeedback, setSaveFeedback] = useState("");
   const [flows, setFlows] = useState<PublishingFlow[]>([]);
+  const [workflowRuns, setWorkflowRuns] = useState<WorkflowRun[]>([]);
   const [draft, setDraft] = useState({
     title: "Romans 5 peace with God study",
     audience: "small-group",
@@ -74,7 +89,10 @@ export default function PublishingPage() {
         setUser(session?.user ?? null);
 
         if (session) {
-          const data = await getPublishingFlows();
+          const [data, workflowData] = await Promise.all([
+            getPublishingFlows(),
+            getWorkflowRuns(),
+          ]);
           setFlows(
             (data as Array<{
               id: string;
@@ -96,6 +114,29 @@ export default function PublishingPage() {
               shareScope: item.share_scope,
             })),
           );
+          setWorkflowRuns(
+            (workflowData as Array<{
+              id: string;
+              workflow_name: string;
+              linked_reference: string | null;
+              stage: string;
+              status: string;
+              summary: string;
+              next_step: string | null;
+              output: Record<string, unknown> | null;
+            }>)
+              .filter((item) => item.workflow_name === "publishing-flow")
+              .map((item) => ({
+                id: item.id,
+                workflowName: item.workflow_name,
+                linkedReference: item.linked_reference || "",
+                stage: item.stage,
+                status: item.status,
+                summary: item.summary,
+                nextStep: item.next_step || "",
+                output: item.output,
+              })),
+          );
         } else {
           const raw = localStorage.getItem(PUBLISHING_FLOWS_KEY);
           if (raw) {
@@ -110,6 +151,14 @@ export default function PublishingPage() {
 
     load();
   }, [supabase]);
+
+  const findLinkedWorkflow = (flow: { id: string; title: string }) =>
+    workflowRuns.find((run) => {
+      const outputFlowId =
+        run.output && typeof run.output.flow_id === "string" ? run.output.flow_id : null;
+
+      return outputFlowId === flow.id || run.linkedReference === flow.title;
+    });
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -140,6 +189,38 @@ export default function PublishingPage() {
           },
           ...current,
         ]);
+
+        const workflow = await saveWorkflowRun({
+          workflow_name: "publishing-flow",
+          linked_reference: saved.title,
+          stage: saved.status,
+          status: saved.status === "published" ? "completed" : "active",
+          summary: `${saved.title} is now tracked in the publishing pipeline for ${saved.audience}.`,
+          next_step:
+            saved.status === "draft"
+              ? "Move this draft into review when theology and audience fit are ready."
+              : "Share or publish the content in the selected destination.",
+          output: {
+            flow_id: saved.id,
+            destination: saved.destination,
+            share_scope: saved.share_scope,
+            content_type: saved.content_type,
+          },
+        });
+
+        setWorkflowRuns((current) => [
+          {
+            id: workflow.id,
+            workflowName: workflow.workflow_name,
+            linkedReference: workflow.linked_reference || "",
+            stage: workflow.stage,
+            status: workflow.status,
+            summary: workflow.summary,
+            nextStep: workflow.next_step || "",
+            output: workflow.output,
+          },
+          ...current,
+        ]);
       } else {
         const next = [{ id: `${Date.now()}`, ...draft }, ...flows];
         setFlows(next);
@@ -158,6 +239,8 @@ export default function PublishingPage() {
   const handleAdvance = async (flow: PublishingFlow) => {
     const nextStatus =
       flow.status === "draft" ? "review" : flow.status === "review" ? "published" : "published";
+    const nextStage = nextStatus;
+    const linkedWorkflow = findLinkedWorkflow(flow);
 
     if (user) {
       await updatePublishingFlow({
@@ -166,6 +249,70 @@ export default function PublishingPage() {
         destination: flow.destination,
         share_scope: flow.shareScope,
       });
+
+       if (linkedWorkflow) {
+        const updatedWorkflow = await updateWorkflowRun({
+          id: linkedWorkflow.id,
+          stage: nextStage,
+          status: nextStatus === "published" ? "completed" : "active",
+          next_step:
+            nextStatus === "review"
+              ? "Complete theological review and final share checks."
+              : "This flow is published. Monitor adoption and update follow-up resources.",
+          output: {
+            ...(linkedWorkflow.output || {}),
+            flow_id: flow.id,
+            destination: flow.destination,
+            share_scope: flow.shareScope,
+          },
+        });
+
+        setWorkflowRuns((current) =>
+          current.map((item) =>
+            item.id === linkedWorkflow.id
+              ? {
+                  ...item,
+                  stage: updatedWorkflow.stage,
+                  status: updatedWorkflow.status,
+                  nextStep: updatedWorkflow.next_step || "",
+                  output: updatedWorkflow.output,
+                }
+              : item,
+          ),
+        );
+      } else {
+        const createdWorkflow = await saveWorkflowRun({
+          workflow_name: "publishing-flow",
+          linked_reference: flow.title,
+          stage: nextStage,
+          status: nextStatus === "published" ? "completed" : "active",
+          summary: `${flow.title} is moving through the publishing pipeline.`,
+          next_step:
+            nextStatus === "review"
+              ? "Complete theological review and final share checks."
+              : "This flow is published. Monitor adoption and update follow-up resources.",
+          output: {
+            flow_id: flow.id,
+            destination: flow.destination,
+            share_scope: flow.shareScope,
+            content_type: flow.contentType,
+          },
+        });
+
+        setWorkflowRuns((current) => [
+          {
+            id: createdWorkflow.id,
+            workflowName: createdWorkflow.workflow_name,
+            linkedReference: createdWorkflow.linked_reference || "",
+            stage: createdWorkflow.stage,
+            status: createdWorkflow.status,
+            summary: createdWorkflow.summary,
+            nextStep: createdWorkflow.next_step || "",
+            output: createdWorkflow.output,
+          },
+          ...current,
+        ]);
+      }
     }
 
     const nextFlows = flows.map((item) =>
@@ -384,6 +531,42 @@ export default function PublishingPage() {
               <p className="text-sm leading-6 text-slate-600">
                 Save a publishing flow to track draft, review, and publish states.
               </p>
+            )}
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
+          <div className="flex items-center gap-3 text-blue-950">
+            <ClipboardCheck className="h-6 w-6" />
+            <h2 className="text-2xl font-semibold">Publishing operations trail</h2>
+          </div>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-900">
+            Signed-in publishing work now writes to workflow history so leaders can track
+            draft, review, and publish movement with a clearer next step.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {workflowRuns.length > 0 ? (
+              workflowRuns.map((run) => (
+                <article
+                  key={run.id}
+                  className="rounded-2xl border border-blue-200 bg-white p-5"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                    {run.stage} • {run.status}
+                  </p>
+                  <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                    {run.linkedReference || "Publishing workflow"}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">{run.summary}</p>
+                  <p className="mt-3 text-sm font-medium text-blue-950">
+                    Next: {run.nextStep || "No next step saved yet."}
+                  </p>
+                </article>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-blue-300 bg-white p-5 text-sm text-blue-950">
+                Save a publishing flow while signed in to start building an operational trail.
+              </div>
             )}
           </div>
         </section>
