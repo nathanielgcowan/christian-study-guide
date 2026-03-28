@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen, Heart } from "lucide-react";
+import SocialShareLinks from "./SocialShareLinks";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -484,6 +485,10 @@ export default function Footer() {
             <div className="space-y-3 text-zinc-400">
               <p className="text-sm">Growing together in faith</p>
               <p className="text-sm">newtcowan@gmail.com</p>
+              <div className="pt-3">
+                <p className="mb-3 text-sm font-medium text-zinc-300">Share this page</p>
+                <SocialShareLinks />
+              </div>
             </div>
           </div>
         </div>
