@@ -13,34 +13,43 @@ interface Study {
   keyVerse: string;
 }
 
-async function getAllStudies(): Promise<Study[]> {
-  const studiesDir = path.join(process.cwd(), "content/studies");
+function getStudyDirectories() {
+  const root = /* turbopackIgnore: true */ process.cwd();
 
-  // If the folder doesn't exist yet, return empty array
-  if (!fs.existsSync(studiesDir)) {
-    return [];
+  return [
+    path.join(root, "content/studies"),
+    path.join(root, "app/studies"),
+  ];
+}
+
+async function getAllStudies(): Promise<Study[]> {
+  const studies = new Map<string, Study>();
+
+  for (const studiesDir of getStudyDirectories()) {
+    if (!fs.existsSync(studiesDir)) {
+      continue;
+    }
+
+    const files = fs.readdirSync(studiesDir).filter((file) => file.endsWith(".mdx"));
+
+    files.forEach((file) => {
+      const filePath = path.join(studiesDir, file);
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      const { data: frontmatter } = matter(fileContent);
+      const slug = file.replace(".mdx", "");
+
+      studies.set(slug, {
+        slug,
+        title: frontmatter.title || "Untitled Study",
+        category: frontmatter.category || "General",
+        duration: frontmatter.duration || "20 min",
+        level: frontmatter.level || "Beginner",
+        keyVerse: frontmatter.keyVerse || "",
+      });
+    });
   }
 
-  const files = fs
-    .readdirSync(studiesDir)
-    .filter((file) => file.endsWith(".mdx"));
-
-  const studies = files.map((file) => {
-    const filePath = path.join(studiesDir, file);
-    const fileContent = fs.readFileSync(filePath, "utf8");
-    const { data: frontmatter } = matter(fileContent);
-
-    return {
-      slug: file.replace(".mdx", ""),
-      title: frontmatter.title || "Untitled Study",
-      category: frontmatter.category || "General",
-      duration: frontmatter.duration || "20 min",
-      level: frontmatter.level || "Beginner",
-      keyVerse: frontmatter.keyVerse || "",
-    };
-  });
-
-  return studies;
+  return Array.from(studies.values());
 }
 
 export default async function StudiesPage() {
@@ -64,7 +73,7 @@ export default async function StudiesPage() {
           <div className="text-center py-20">
             <p className="text-2xl text-zinc-500">No studies yet.</p>
             <p className="text-zinc-400 mt-4">
-              Add .mdx files in the content/studies folder to get started.
+              Add `.mdx` files in `content/studies` or `app/studies` to get started.
             </p>
           </div>
         ) : (

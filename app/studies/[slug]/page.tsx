@@ -3,11 +3,41 @@ import path from "path";
 import matter from "gray-matter";
 import { notFound } from "next/navigation";
 
+function getStudyDirectories() {
+  const root = /* turbopackIgnore: true */ process.cwd();
+
+  return [
+    path.join(root, "content/studies"),
+    path.join(root, "app/studies"),
+  ];
+}
+
+function getStudyFilePath(slug: string) {
+  for (const directory of getStudyDirectories()) {
+    const filePath = path.join(directory, `${slug}.mdx`);
+    if (fs.existsSync(filePath)) {
+      return filePath;
+    }
+  }
+
+  return null;
+}
+
 export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), "content/studies"));
-  return files.map((file) => ({
-    slug: file.replace(".mdx", ""),
-  }));
+  const slugs = new Set<string>();
+
+  for (const directory of getStudyDirectories()) {
+    if (!fs.existsSync(directory)) {
+      continue;
+    }
+
+    const files = fs.readdirSync(directory).filter((file) => file.endsWith(".mdx"));
+    files.forEach((file) => {
+      slugs.add(file.replace(".mdx", ""));
+    });
+  }
+
+  return Array.from(slugs).map((slug) => ({ slug }));
 }
 
 export default async function StudyPage({
@@ -15,13 +45,9 @@ export default async function StudyPage({
 }: {
   params: { slug: string };
 }) {
-  const filePath = path.join(
-    process.cwd(),
-    "content/studies",
-    `${params.slug}.mdx`,
-  );
+  const filePath = getStudyFilePath(params.slug);
 
-  if (!fs.existsSync(filePath)) {
+  if (!filePath) {
     notFound(); // Shows 404 if study doesn't exist
   }
 
