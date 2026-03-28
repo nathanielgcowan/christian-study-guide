@@ -1,0 +1,17 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#0F172A"/>
+  <path d="M120 610C250 500 340 520 470 430C620 330 690 350 820 280C920 225 1010 180 1080 130" stroke="#60A5FA" stroke-width="12" stroke-linecap="round" stroke-dasharray="18 20"/>
+  <circle cx="140" cy="600" r="24" fill="#F59E0B"/>
+  <circle cx="350" cy="500" r="18" fill="#F8FAFC"/>
+  <circle cx="500" cy="420" r="18" fill="#F8FAFC"/>
+  <circle cx="720" cy="320" r="18" fill="#F8FAFC"/>
+  <circle cx="980" cy="170" r="22" fill="#34D399"/>
+  <path d="M95 180C190 110 320 95 430 135C560 180 650 165 760 130C885 90 1010 110 1100 170" stroke="#1E293B" stroke-width="120" stroke-linecap="round"/>
+  <text x="120" y="650" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="30" font-weight="700">Antioch</text>
+  <text x="300" y="550" fill="#CBD5E1" font-family="Arial, sans-serif" font-size="24">Philippi</text>
+  <text x="450" y="395" fill="#CBD5E1" font-family="Arial, sans-serif" font-size="24">Corinth</text>
+  <text x="675" y="375" fill="#CBD5E1" font-family="Arial, sans-serif" font-size="24">Ephesus</text>
+  <text x="930" y="220" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="30" font-weight="700">Rome</text>
+  <text x="80" y="92" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="54" font-weight="700">Paul's Missionary Journeys</text>
+  <text x="80" y="136" fill="#93C5FD" font-family="Arial, sans-serif" font-size="24">Acts, churches, and turning points across the Mediterranean world</text>
+</svg>

@@ -1,0 +1,16 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#172554"/>
+  <path d="M180 620C260 580 330 520 390 450C470 360 540 335 620 310C760 268 860 212 980 120" stroke="#FBBF24" stroke-width="12" stroke-linecap="round" stroke-dasharray="18 20"/>
+  <path d="M0 760C170 690 330 665 510 665C665 665 820 690 1200 770V800H0V760Z" fill="#1E3A8A"/>
+  <path d="M210 610C245 520 340 450 425 435C535 420 585 365 665 340C760 310 845 235 960 130" stroke="#F8FAFC" stroke-opacity="0.18" stroke-width="84" stroke-linecap="round"/>
+  <circle cx="190" cy="620" r="24" fill="#34D399"/>
+  <circle cx="390" cy="450" r="18" fill="#F8FAFC"/>
+  <circle cx="620" cy="310" r="18" fill="#F8FAFC"/>
+  <circle cx="980" cy="120" r="24" fill="#F87171"/>
+  <text x="150" y="668" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="28" font-weight="700">Egypt</text>
+  <text x="340" y="500" fill="#DBEAFE" font-family="Arial, sans-serif" font-size="24">Red Sea</text>
+  <text x="570" y="360" fill="#DBEAFE" font-family="Arial, sans-serif" font-size="24">Sinai</text>
+  <text x="930" y="172" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="28" font-weight="700">Jericho</text>
+  <text x="80" y="92" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="54" font-weight="700">Exodus Route</text>
+  <text x="80" y="136" fill="#BFDBFE" font-family="Arial, sans-serif" font-size="24">From Egypt through the wilderness toward promise and covenant</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="40" fill="#1E3A8A"/>
+  <path d="M0 640C200 540 350 610 490 590C650 565 795 455 905 400C1010 348 1105 345 1200 370V900H0V640Z" fill="#1E293B"/>
+  <path d="M0 760C200 700 340 730 500 710C680 688 860 615 1040 620C1095 622 1148 628 1200 638V900H0V760Z" fill="#334155"/>
+  <path d="M310 500L380 620" stroke="#FBBF24" stroke-width="12" stroke-linecap="round"/>
+  <path d="M400 425L470 560" stroke="#FBBF24" stroke-width="12" stroke-linecap="round"/>
+  <path d="M530 455L600 585" stroke="#FBBF24" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="890" cy="195" r="72" fill="#F8FAFC" fill-opacity="0.18"/>
+  <text x="80" y="120" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="64" font-weight="700">James 1:2-4</text>
+  <text x="80" y="172" fill="#DBEAFE" font-family="Arial, sans-serif" font-size="30">Trials, endurance, and a faith that matures under pressure.</text>
+</svg>

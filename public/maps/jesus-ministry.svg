@@ -1,0 +1,15 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#14532D"/>
+  <path d="M200 190C315 150 430 170 530 250C640 338 710 355 815 335C920 315 1005 350 1095 470" stroke="#FDE68A" stroke-width="14" stroke-linecap="round" stroke-dasharray="20 22"/>
+  <path d="M95 185C215 105 370 100 500 170C620 235 765 255 910 240C1005 230 1080 258 1135 310" stroke="#052E16" stroke-width="120" stroke-linecap="round"/>
+  <circle cx="210" cy="190" r="20" fill="#F8FAFC"/>
+  <circle cx="480" cy="240" r="18" fill="#BFDBFE"/>
+  <circle cx="760" cy="340" r="18" fill="#F8FAFC"/>
+  <circle cx="1080" cy="455" r="24" fill="#F59E0B"/>
+  <text x="160" y="145" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="24">Nazareth</text>
+  <text x="420" y="220" fill="#ECFCCB" font-family="Arial, sans-serif" font-size="24">Capernaum</text>
+  <text x="700" y="392" fill="#ECFCCB" font-family="Arial, sans-serif" font-size="24">Bethany</text>
+  <text x="1010" y="510" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="28" font-weight="700">Jerusalem</text>
+  <text x="80" y="92" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="54" font-weight="700">Jesus' Ministry Map</text>
+  <text x="80" y="136" fill="#DCFCE7" font-family="Arial, sans-serif" font-size="24">Major places where Jesus taught, healed, traveled, and prepared the disciples</text>
+</svg>
