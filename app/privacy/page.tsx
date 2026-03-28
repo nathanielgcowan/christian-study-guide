@@ -1,129 +1,132 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, Lock, Shield } from "lucide-react";
 
-export default function PrivacyPolicy() {
+export const metadata: Metadata = {
+  title: "Privacy Policy | Christian Study Guide",
+  description:
+    "Read the Privacy Policy for Christian Study Guide, including what data is collected, how it is used, and your available choices.",
+};
+
+const privacySections = [
+  {
+    title: "1. Information we collect",
+    body:
+      "We may collect account details such as your email address, profile information you choose to provide, study activity, prayer or note content you save, and technical information needed to operate the service.",
+  },
+  {
+    title: "2. How we use information",
+    body:
+      "We use information to operate the platform, personalize study experiences, save user progress, improve product quality, support security, and respond to questions or support needs.",
+  },
+  {
+    title: "3. Shared and community content",
+    body:
+      "If you choose to post shared content such as comments, prayer requests, or public profile information, that content may be visible to others depending on the feature and your settings.",
+  },
+  {
+    title: "4. Service providers and infrastructure",
+    body:
+      "We may rely on third-party providers for hosting, authentication, storage, analytics, and operational tooling. Those providers process data only as needed to support the platform.",
+  },
+  {
+    title: "5. Cookies and authentication",
+    body:
+      "We use cookies or similar technologies primarily for authentication, session continuity, security, and core platform functionality.",
+  },
+  {
+    title: "6. Data security",
+    body:
+      "We use reasonable administrative, technical, and organizational safeguards to protect user data. No system can guarantee absolute security, but protecting user trust is important to us.",
+  },
+  {
+    title: "7. Your choices",
+    body:
+      "You may be able to access, update, export, or delete certain account information through the platform or by contacting us. Public-facing settings can also be adjusted where features allow.",
+  },
+  {
+    title: "8. Children's privacy",
+    body:
+      "The platform is not intended for children under 13, and we do not knowingly collect personal information from children in that age group.",
+  },
+  {
+    title: "9. Policy updates",
+    body:
+      "We may revise this Privacy Policy as the platform changes. Material updates will be reflected on this page with a revised effective date.",
+  },
+  {
+    title: "10. Contact",
+    body:
+      "Questions about privacy can be sent to newtcowan@gmail.com.",
+  },
+];
+
+export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#0f172a] to-[#1e40af] text-white py-16">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-5xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-xl text-blue-100">Last updated: March 26, 2026</p>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-6 py-16 prose prose-lg text-[#1f2937] leading-relaxed">
-        <p className="text-lg">
-          At <strong>FaithPath Studies</strong>, we respect your privacy and are
-          committed to protecting your personal information.
-        </p>
-
-        <h2>1. Information We Collect</h2>
-        <p>We collect the following types of information:</p>
-        <ul>
-          <li>
-            <strong>Account Information:</strong> When you create an account, we
-            collect your email address and password.
-          </li>
-          <li>
-            <strong>Usage Data:</strong> We may collect information about how
-            you use the site (e.g., which studies you view or save).
-          </li>
-          <li>
-            <strong>Prayer Requests:</strong> If you choose to share prayer
-            requests in the community section.
-          </li>
-        </ul>
-
-        <h2>2. How We Use Your Information</h2>
-        <p>We use the information we collect to:</p>
-        <ul>
-          <li>Provide and improve our Bible study resources</li>
-          <li>
-            Allow you to save studies, take notes, and track your spiritual
-            growth
-          </li>
-          <li>Send important updates about the website (very rarely)</li>
-          <li>Protect the security of our platform</li>
-        </ul>
-
-        <h2>3. Information Sharing</h2>
-        <p>
-          We do <strong>not</strong> sell your personal information. We may
-          share your information only in these limited cases:
-        </p>
-        <ul>
-          <li>
-            With trusted service providers who help us operate the website
-            (e.g., hosting, email services)
-          </li>
-          <li>When required by law</li>
-          <li>
-            To protect the rights, property, or safety of FaithPath Studies and
-            our users
-          </li>
-        </ul>
-
-        <h2>4. Data Storage and Security</h2>
-        <p>
-          Your data is stored securely using industry-standard encryption. We
-          use Supabase (or your chosen backend) to handle user accounts and
-          data.
-        </p>
-
-        <h2>5. Your Rights</h2>
-        <p>You have the right to:</p>
-        <ul>
-          <li>Access, update, or delete your account information</li>
-          <li>Request a copy of the personal data we hold about you</li>
-          <li>Opt out of any non-essential communications</li>
-        </ul>
-        <p>
-          To exercise these rights, please contact us at
-          support@faithpathstudies.com.
-        </p>
-
-        <h2>6. Cookies</h2>
-        <p>
-          We use essential cookies to keep you logged in and provide a smooth
-          experience. We do not use tracking cookies for advertising purposes.
-        </p>
-
-        <h2>7. Children’s Privacy</h2>
-        <p>
-          Our website is not directed to children under the age of 13. We do not
-          knowingly collect personal information from children.
-        </p>
-
-        <h2>8. Changes to This Privacy Policy</h2>
-        <p>
-          We may update this Privacy Policy from time to time. We will notify
-          you of any material changes by posting the new policy on this page.
-        </p>
-
-        <h2>9. Contact Us</h2>
-        <p>
-          If you have any questions about this Privacy Policy, please feel free
-          to contact us:
-        </p>
-        <p className="font-medium mt-4">Email: support@faithpathstudies.com</p>
-
-        <div className="mt-16 pt-12 border-t border-zinc-200 text-center">
-          <p className="italic text-zinc-600">
-            “Trust in the Lord with all your heart and lean not on your own
-            understanding.”
-            <br />— Proverbs 3:5
-          </p>
-
-          <div className="mt-10">
-            <Link
-              href="/"
-              className="inline-block bg-[#d4af37] hover:bg-[#c9a66b] text-[#0f172a] font-semibold px-10 py-4 rounded-2xl transition"
-            >
-              Return to Homepage
-            </Link>
+    <div className="min-h-screen bg-[#f8fafc] pb-20">
+      <section className="bg-gradient-to-br from-[#0f172a] via-[#1e40af] to-[#7c2d12] py-20 text-white">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold">
+              <Lock className="h-4 w-4" />
+              Privacy Policy
+            </div>
+            <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+              How Christian Study Guide handles your information.
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-orange-50">
+              Last updated: March 28, 2026. This policy explains what information may be
+              collected, how it supports the platform, and what choices you have.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
+
+      <main className="mx-auto max-w-5xl px-6 py-14">
+        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="space-y-6">
+            {privacySections.map((section) => (
+              <article
+                key={section.title}
+                className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
+              >
+                <h2 className="text-2xl font-semibold text-slate-950">{section.title}</h2>
+                <p className="mt-4 text-base leading-8 text-slate-600">{section.body}</p>
+              </article>
+            ))}
+          </div>
+
+          <aside className="space-y-6">
+            <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
+              <div className="flex items-center gap-3 text-emerald-950">
+                <Shield className="h-6 w-6" />
+                <h2 className="text-2xl font-semibold">Privacy at a glance</h2>
+              </div>
+              <div className="mt-6 space-y-3 text-sm leading-7 text-emerald-950">
+                <p>• We do not frame the platform around selling user data.</p>
+                <p>• Information is used to operate and improve the service.</p>
+                <p>• Shared content is only visible when a feature is designed for sharing.</p>
+                <p>• You can contact us with questions about access or deletion requests.</p>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
+              <h2 className="text-2xl font-semibold text-blue-950">Related legal page</h2>
+              <p className="mt-4 text-sm leading-7 text-blue-950">
+                The Terms and Conditions explain the rules for using the platform, including
+                account use, acceptable behavior, and content rights.
+              </p>
+              <Link
+                href="/terms"
+                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-blue-950 transition hover:bg-blue-100"
+              >
+                Read terms and conditions
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </aside>
+        </section>
+      </main>
     </div>
   );
 }
