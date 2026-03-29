@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Copy, Link2, Mail, Share2 } from "lucide-react";
 
@@ -12,9 +12,13 @@ function buildAbsoluteUrl(origin: string, pathname: string) {
 export default function SocialShareLinks() {
   const pathname = usePathname();
   const [copyFeedback, setCopyFeedback] = useState("");
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const canNativeShare =
-    typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const [origin, setOrigin] = useState("");
+  const [canNativeShare, setCanNativeShare] = useState(false);
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+    setCanNativeShare(typeof navigator.share === "function");
+  }, []);
 
   const shareUrl = useMemo(() => buildAbsoluteUrl(origin, pathname), [origin, pathname]);
   const shareText = "Explore Christian Study Guide for Bible study, prayer, and daily discipleship.";

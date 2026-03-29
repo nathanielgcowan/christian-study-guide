@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "../node_modules/maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";

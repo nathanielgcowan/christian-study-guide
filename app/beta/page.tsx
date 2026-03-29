@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Globe2, Mic, Share2, Sparkles } from "lucide-react";
 

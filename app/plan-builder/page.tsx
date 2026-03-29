@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, CalendarRange, Compass, Sparkles, Target, Wand2 } from "lucide-react";
 

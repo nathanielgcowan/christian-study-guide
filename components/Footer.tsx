@@ -104,6 +104,12 @@ export default function Footer() {
                 Smart Search
               </Link>
               <Link
+                href="/sitemap"
+                className="block hover:text-white transition"
+              >
+                Sitemap
+              </Link>
+              <Link
                 href="/recommendations"
                 className="block hover:text-white transition"
               >

@@ -2,12 +2,35 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ArrowRight, CheckCircle, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CheckCircle, Search } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
-export default function HomeHero({ isSignedIn }: { isSignedIn: boolean }) {
+export default function HomeHero() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [authResolved, setAuthResolved] = useState(false);
+  const [supabase] = useState(() => createClient());
+
+  useEffect(() => {
+    const syncSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsSignedIn(Boolean(session?.user));
+      setAuthResolved(true);
+    };
+
+    void syncSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      setIsSignedIn(Boolean(session?.user));
+      setAuthResolved(true);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, [supabase]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -55,10 +78,11 @@ export default function HomeHero({ isSignedIn }: { isSignedIn: boolean }) {
           </p>
         </form>
 
-        {!isSignedIn && (
+        {authResolved && !isSignedIn && (
           <div className="animate-slide-up justify-center gap-4 sm:flex">
             <Link
               href="/auth/signup"
+              prefetch={false}
               className="btn btn-secondary px-8 py-4 text-lg shadow-lg hover:shadow-xl"
             >
               <CheckCircle className="h-5 w-5" />
@@ -66,6 +90,7 @@ export default function HomeHero({ isSignedIn }: { isSignedIn: boolean }) {
             </Link>
             <Link
               href="/auth/signin"
+              prefetch={false}
               className="btn btn-ghost border-white/30 px-8 py-4 text-lg text-white hover:bg-white/10"
             >
               Sign In

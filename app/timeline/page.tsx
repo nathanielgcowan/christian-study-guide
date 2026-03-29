@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, CalendarRange, Church, Crown, Route, ScrollText } from "lucide-react";
 

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, Compass, ImageIcon, MapPinned, Sparkles, Sunrise, Waypoints } from "lucide-react";
 

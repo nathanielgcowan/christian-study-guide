@@ -1,5 +1,3 @@
-"use client";
-
 import { BadgeCheck, Bug, CreditCard, LineChart, Rocket, ShieldCheck } from "lucide-react";
 
 const launchLayers = [

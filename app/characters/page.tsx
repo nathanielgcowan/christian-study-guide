@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, Crown, Heart, Milestone, ScrollText, Shield, UserRound } from "lucide-react";
 

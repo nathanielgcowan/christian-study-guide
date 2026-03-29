@@ -1,5 +1,3 @@
-"use client";
-
 import { BellRing, CheckCheck, Clock3, MessageSquareMore, Repeat2 } from "lucide-react";
 
 const notifications = [

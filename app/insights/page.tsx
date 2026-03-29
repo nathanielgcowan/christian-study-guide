@@ -1,5 +1,3 @@
-"use client";
-
 import { BarChart3, Brain, Flame, TrendingUp } from "lucide-react";
 
 const themeInsights = [

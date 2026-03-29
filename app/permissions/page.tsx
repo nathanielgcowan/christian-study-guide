@@ -1,5 +1,3 @@
-"use client";
-
 import AdminGate from "@/components/AdminGate";
 
 import { Building2, KeyRound, ShieldCheck, UserCog } from "lucide-react";

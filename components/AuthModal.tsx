@@ -125,7 +125,7 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center p-4 pt-16 sm:pt-24"
       style={{
         position: "fixed",
         top: 0,
@@ -134,7 +134,7 @@ export default function AuthModal({
         bottom: 0,
         zIndex: 9999,
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
       }}
     >

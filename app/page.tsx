@@ -1,7 +1,7 @@
 import Link from "next/link";
 import VerseOfTheDay from "@/components/VerseOfTheDay";
 import HomeHero from "@/components/HomeHero";
-import { getCurrentUser } from "@/lib/auth-server";
+import HomePageAuthCtas from "@/components/HomePageAuthCtas";
 import { growthPillars } from "@/lib/product-expansion";
 import {
   BookOpen,
@@ -29,11 +29,9 @@ import {
 } from "lucide-react";
 
 export default async function Home() {
-  const user = await getCurrentUser();
-
   return (
     <>
-      <HomeHero isSignedIn={Boolean(user)} />
+      <HomeHero />
 
       <VerseOfTheDay />
 
@@ -55,6 +53,7 @@ export default async function Home() {
             </div>
             <Link
               href="/command-center"
+              prefetch={false}
               className="inline-flex items-center gap-3 rounded-2xl bg-[#1e40af] px-8 py-4 font-semibold text-white transition hover:bg-[#1e3a8a]"
             >
               Launch Command Center
@@ -152,6 +151,7 @@ export default async function Home() {
                 <Link
                   key={item.title}
                   href={item.href}
+                  prefetch={false}
                   className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 transition hover:-translate-y-1 hover:shadow-md"
                 >
                   <Icon className="h-6 w-6 text-[#1e40af]" />
@@ -183,6 +183,7 @@ export default async function Home() {
             </div>
             <Link
               href="/today"
+              prefetch={false}
               className="inline-flex items-center gap-3 rounded-2xl bg-[#7c2d12] px-8 py-4 font-semibold text-white transition hover:bg-[#9a3412]"
             >
               Open the daily engine
@@ -195,6 +196,7 @@ export default async function Home() {
               <Link
                 key={pillar.title}
                 href={pillar.href || "/"}
+                prefetch={false}
                 className="rounded-[2rem] border border-amber-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
                 <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#7c2d12]">
@@ -254,6 +256,7 @@ export default async function Home() {
                 <Link
                   key={item.title}
                   href={item.href}
+                  prefetch={false}
                   className="rounded-[2rem] border border-slate-200 bg-white p-8 transition hover:-translate-y-1 hover:shadow-md"
                 >
                   <Icon className="h-6 w-6 text-[#1e40af]" />
@@ -312,6 +315,7 @@ export default async function Home() {
                 <Link
                   key={item.title}
                   href={item.href}
+                  prefetch={false}
                   className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 transition hover:-translate-y-1 hover:shadow-md"
                 >
                   <Icon className="h-6 w-6 text-[#1e40af]" />
@@ -350,6 +354,7 @@ export default async function Home() {
               </p>
               <Link
                 href="/reading-plans"
+                prefetch={false}
                 className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all"
               >
                 Explore <ArrowRight className="h-4 w-4" />
@@ -413,6 +418,7 @@ export default async function Home() {
               </p>
               <Link
                 href="/reading-plans"
+                prefetch={false}
                 className="text-green-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all"
               >
                 View Plans <ArrowRight className="h-4 w-4" />
@@ -430,16 +436,7 @@ export default async function Home() {
                 Track progress, view stats, manage reading plans, and see your
                 spiritual growth.
               </p>
-              {user ? (
-                <Link
-                  href="/account"
-                  className="text-secondary font-semibold flex items-center gap-2 hover:gap-3 transition-all"
-                >
-                  Go to Dashboard <ArrowRight className="h-4 w-4" />
-                </Link>
-              ) : (
-                <p className="text-sm text-text-muted">Sign up to access</p>
-              )}
+              <HomePageAuthCtas section="dashboard-card" />
             </div>
           </div>
         </div>
@@ -460,6 +457,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link
               href="/collaboration"
+              prefetch={false}
               className="card card-elevated group hover:-translate-y-1 transition-transform"
             >
               <Users className="h-6 w-6 text-[#1e40af] mb-4" />
@@ -473,6 +471,7 @@ export default async function Home() {
 
             <Link
               href="/personalization"
+              prefetch={false}
               className="card card-elevated group hover:-translate-y-1 transition-transform"
             >
               <Sparkles className="h-6 w-6 text-violet-600 mb-4" />
@@ -486,6 +485,7 @@ export default async function Home() {
 
             <Link
               href="/orchestration"
+              prefetch={false}
               className="card card-elevated group hover:-translate-y-1 transition-transform"
             >
               <BrainCircuit className="h-6 w-6 text-emerald-600 mb-4" />
@@ -499,6 +499,7 @@ export default async function Home() {
 
             <Link
               href="/intelligence"
+              prefetch={false}
               className="card card-elevated group hover:-translate-y-1 transition-transform"
             >
               <Volume2 className="h-6 w-6 text-amber-600 mb-4" />
@@ -526,42 +527,42 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link href="/passage-dashboard" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/passage-dashboard" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Shapes className="h-6 w-6 text-[#1e40af] mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Passage Dashboards</h3>
               <p className="text-sm text-text-secondary">
                 Save the whole study workspace around a passage, not just one note.
               </p>
             </Link>
-            <Link href="/publishing" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/publishing" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Quote className="h-6 w-6 text-amber-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Publishing Flow</h3>
               <p className="text-sm text-text-secondary">
                 Move leader content from draft to review, publish, and share.
               </p>
             </Link>
-            <Link href="/mentor-chat" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/mentor-chat" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Brain className="h-6 w-6 text-violet-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Full Mentor Chat</h3>
               <p className="text-sm text-text-secondary">
                 Keep a real discipleship thread attached to passage study.
               </p>
             </Link>
-            <Link href="/team-access" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/team-access" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Users className="h-6 w-6 text-emerald-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Team Access</h3>
               <p className="text-sm text-text-secondary">
                 Add roles, invites, approvals, and safer collaboration for teams.
               </p>
             </Link>
-            <Link href="/mobile" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/mobile" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Mic className="h-6 w-6 text-secondary mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Mobile Product</h3>
               <p className="text-sm text-text-secondary">
                 Push installability, offline reading, audio, and notification polish.
               </p>
             </Link>
-            <Link href="/trust" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/trust" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <CheckCircle className="h-6 w-6 text-rose-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Trust & Ops</h3>
               <p className="text-sm text-text-secondary">
@@ -585,28 +586,28 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link href="/paths" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/paths" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <BrainCircuit className="h-6 w-6 text-[#1e40af] mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Study Paths</h3>
               <p className="text-sm text-text-secondary">
                 AI-built weekly journeys through theology, gospel, discipleship, and spiritual growth.
               </p>
             </Link>
-            <Link href="/study-workspace" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/study-workspace" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Shapes className="h-6 w-6 text-violet-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Study Workspace</h3>
               <p className="text-sm text-text-secondary">
                 A multi-panel environment for Bible text, explanation, notes, and questions.
               </p>
             </Link>
-            <Link href="/quiz" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/quiz" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <CheckCircle className="h-6 w-6 text-emerald-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Quiz Mode</h3>
               <p className="text-sm text-text-secondary">
                 Generate quick Bible quizzes from passages, paths, and doctrine modules.
               </p>
             </Link>
-            <Link href="/courses" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/courses" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Mic className="h-6 w-6 text-amber-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Courses</h3>
               <p className="text-sm text-text-secondary">
@@ -630,7 +631,7 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <Link href="/topics" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/topics" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Target className="h-6 w-6 text-primary mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Topic Paths</h3>
               <p className="text-sm text-text-secondary">
@@ -638,7 +639,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/prayer" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/prayer" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <NotebookPen className="h-6 w-6 text-emerald-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Prayer Journal</h3>
               <p className="text-sm text-text-secondary">
@@ -646,7 +647,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/memorize" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/memorize" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Brain className="h-6 w-6 text-violet-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Memory Mode</h3>
               <p className="text-sm text-text-secondary">
@@ -654,7 +655,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/leaders" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/leaders" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Users className="h-6 w-6 text-amber-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Leader Tools</h3>
               <p className="text-sm text-text-secondary">
@@ -662,7 +663,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/beta" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/beta" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Mic className="h-6 w-6 text-secondary mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">What&apos;s Next</h3>
               <p className="text-sm text-text-secondary">
@@ -686,7 +687,7 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link href="/search" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/search" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Search className="h-6 w-6 text-primary mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Smart Search</h3>
               <p className="text-sm text-text-secondary">
@@ -694,7 +695,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/study" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/study" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Shapes className="h-6 w-6 text-violet-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Templates & Timeline</h3>
               <p className="text-sm text-text-secondary">
@@ -702,7 +703,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/workspace" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/workspace" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Users className="h-6 w-6 text-emerald-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Team Workspace</h3>
               <p className="text-sm text-text-secondary">
@@ -710,7 +711,7 @@ export default async function Home() {
               </p>
             </Link>
 
-            <Link href="/passage/james-1-2-4" className="card card-elevated group hover:-translate-y-1 transition-transform">
+            <Link href="/passage/james-1-2-4" prefetch={false} className="card card-elevated group hover:-translate-y-1 transition-transform">
               <Volume2 className="h-6 w-6 text-amber-600 mb-4" />
               <h3 className="text-xl font-bold text-text-primary mb-2">Audio & Family Study</h3>
               <p className="text-sm text-text-secondary">
@@ -801,33 +802,7 @@ export default async function Home() {
             Start your free journey through Scripture today.
           </p>
 
-          {!user && (
-            <Link
-              href="/auth/signup"
-              className="inline-flex items-center gap-3 btn btn-secondary text-lg px-10 py-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
-            >
-              <Heart className="h-6 w-6" />
-              Start Studying for Free
-              <ArrowRight className="h-6 w-6" />
-            </Link>
-          )}
-
-          {user && (
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/reading-plans"
-                className="btn btn-secondary px-8 py-4 shadow-lg hover:shadow-xl"
-              >
-                Browse Reading Plans
-              </Link>
-              <Link
-                href="/account"
-                className="btn btn-ghost px-8 py-4 border-white/30 text-white hover:bg-white/10"
-              >
-                View Your Dashboard
-              </Link>
-            </div>
-          )}
+          <HomePageAuthCtas section="footer" />
         </div>
       </section>
     </>

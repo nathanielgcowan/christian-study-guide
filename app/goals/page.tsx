@@ -1,5 +1,3 @@
-"use client";
-
 import { CheckCircle2, Flame, Goal, Target } from "lucide-react";
 
 const goals = [

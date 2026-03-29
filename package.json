@@ -19,6 +19,7 @@
     "@supabase/supabase-js": "^2.100.1",
     "@types/mdx": "^2.0.13",
     "@types/three": "^0.183.1",
+    "@vercel/analytics": "^2.0.1",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.7.0",

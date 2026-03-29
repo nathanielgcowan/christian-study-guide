@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, BookMarked, CheckCircle2, Milestone, TimerReset, Trophy } from "lucide-react";
 

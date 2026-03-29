@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Bookmark, FolderHeart, Layers3 } from "lucide-react";
 
