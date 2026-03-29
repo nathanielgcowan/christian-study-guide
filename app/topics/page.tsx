@@ -29,6 +29,7 @@ const topics = [
     name: 'New Believer',
     description: 'A starter Scripture path for faith foundations.',
     passages: ['John 3', 'Ephesians 2:1-10', 'Romans 5'],
+    href: '/new-believers',
   },
   {
     name: 'Spiritual Warfare',
@@ -56,6 +57,9 @@ export default function TopicsPage() {
         topic.description.toLowerCase().includes(normalizedQuery)
     );
   }, [query]);
+
+  const getTopicHref = (topic: (typeof topics)[number]) =>
+    topic.href ?? `/passage/${topic.passages[0].toLowerCase().replace(/\s+/g, '-')}`;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-20">
@@ -138,7 +142,7 @@ export default function TopicsPage() {
                 ))}
               </div>
               <Link
-                href={`/passage/${topic.passages[0].toLowerCase().replace(/\s+/g, '-')}`}
+                href={getTopicHref(topic)}
                 className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#1e40af] hover:text-[#1e3a8a]"
               >
                 Start Topic Path

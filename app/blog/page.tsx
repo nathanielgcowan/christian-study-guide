@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, PenSquare } from "lucide-react";
+import { getAllBlogPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog | Christian Study Guide",
@@ -8,34 +9,9 @@ export const metadata: Metadata = {
     "Read updates, Bible study insights, discipleship ideas, and product notes from Christian Study Guide.",
 };
 
-const posts = [
-  {
-    title: "Designing a daily Bible habit that people can actually keep",
-    excerpt:
-      "A look at why structure, continuity, and low-friction next steps matter more than endless feature depth.",
-    category: "Product",
-    date: "March 28, 2026",
-    href: "/about",
-  },
-  {
-    title: "How churches can turn sermon response into discipleship follow-through",
-    excerpt:
-      "Practical ways to connect preaching, prayer, groups, and weekday action steps inside a digital ministry workflow.",
-    category: "Ministry",
-    date: "March 21, 2026",
-    href: "/products",
-  },
-  {
-    title: "What new believers need most in their first month of following Jesus",
-    excerpt:
-      "Clarity, language, community, and simple next steps matter more than complexity when someone is just getting started.",
-    category: "Discipleship",
-    date: "March 14, 2026",
-    href: "/new-believers",
-  },
-];
-
 export default function BlogPage() {
+  const posts = getAllBlogPosts();
+
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-20">
       <section className="bg-gradient-to-br from-[#0f172a] via-[#1e40af] to-[#14532d] py-20 text-white">
@@ -73,10 +49,10 @@ export default function BlogPage() {
                 <h2 className="mt-5 text-3xl font-semibold text-slate-950">{post.title}</h2>
                 <p className="mt-4 text-base leading-8 text-slate-600">{post.excerpt}</p>
                 <Link
-                  href={post.href}
+                  href={`/blog/${post.slug}`}
                   className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#1e40af] transition hover:text-[#1e3a8a]"
                 >
-                  Read related page
+                  Read article
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </article>
