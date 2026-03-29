@@ -17,7 +17,329 @@ export type BlogPost = {
   closing: string[];
 };
 
-export const blogPosts: BlogPost[] = [
+type BlogSeed = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  relatedHref: string;
+  relatedLabel: string;
+  focus: string;
+  tension: string;
+  invitation: string;
+  practices: string[];
+};
+
+function createGuidedPost(seed: BlogSeed): BlogPost {
+  return {
+    slug: seed.slug,
+    title: seed.title,
+    excerpt: seed.excerpt,
+    category: seed.category,
+    date: seed.date,
+    author: "Christian Study Guide Team",
+    readingTime: "5 min read",
+    relatedHref: seed.relatedHref,
+    relatedLabel: seed.relatedLabel,
+    intro: [
+      `${seed.focus} often feels more complicated in real life than it does in a sermon outline or a short social post.`,
+      `Many believers live with ${seed.tension}. A healthier response starts with honesty, patience, and a clearer sense of how discipleship actually grows.`,
+    ],
+    sections: [
+      {
+        heading: "Why this matters",
+        paragraphs: [
+          `${seed.focus} shapes more than one moment. It affects attention, relationships, habits, and the way a person imagines God meeting them in daily life.`,
+          `When this area is ignored or reduced to clichés, people can feel stuck, ashamed, or spiritually numb without knowing how to move forward.`,
+        ],
+      },
+      {
+        heading: "Common drift to avoid",
+        paragraphs: [
+          "One common mistake is swinging between pressure and passivity. Either we demand instant maturity from ourselves, or we assume slow growth means nothing is changing.",
+          `${seed.tension} can make that cycle even worse because people begin reacting to frustration instead of receiving discipleship with steadiness.`,
+        ],
+      },
+      {
+        heading: "A steadier way forward",
+        paragraphs: [
+          `Scripture usually forms people through repeated patterns of grace, truth, confession, and practice. ${seed.invitation}`,
+          "That kind of growth is often quieter than people expect, but it is usually more durable because it reaches the heart instead of only managing appearances.",
+        ],
+        bullets: seed.practices,
+      },
+      {
+        heading: "What to do next",
+        paragraphs: [
+          "Choose one faithful response and stay with it long enough to notice what God is doing through repetition.",
+          "The goal is not impressive performance. It is durable obedience shaped by grace, clarity, and a realistic understanding of how change happens.",
+        ],
+      },
+    ],
+    closing: [
+      `${seed.focus} becomes more sustainable when it is rooted in grace instead of panic.`,
+      "That is why the church needs language that is both honest about struggle and hopeful about growth in Christ.",
+    ],
+  };
+}
+
+const guidedPosts: BlogPost[] = [
+  createGuidedPost({
+    slug: "when-prayer-feels-dry-and-repetitive",
+    title: "When prayer feels dry and repetitive",
+    excerpt:
+      "A practical reflection on spiritual dryness, repeated prayers, and how faithfulness often grows quietly.",
+    category: "Prayer",
+    date: "March 27, 2026",
+    relatedHref: "/prayer",
+    relatedLabel: "Open the Prayer page",
+    focus: "Prayer",
+    tension: "disappointment, distraction, and the fear that repeated prayers no longer mean anything",
+    invitation:
+      "The invitation is not to manufacture emotion, but to keep showing up before God with truth and dependence.",
+    practices: [
+      "Pray one Psalm each day for a week.",
+      "Use the same short prayer prompt morning and evening.",
+      "Write down one honest request and one reason for gratitude.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "how-to-read-the-bible-when-you-feel-overwhelmed",
+    title: "How to read the Bible when you feel overwhelmed",
+    excerpt:
+      "Start smaller, read slower, and trade information pressure for consistent attention to Scripture.",
+    category: "Bible Study",
+    date: "March 26, 2026",
+    relatedHref: "/study",
+    relatedLabel: "Open the Study page",
+    focus: "Reading the Bible",
+    tension: "too many plans, too many opinions, and too much pressure to understand everything at once",
+    invitation:
+      "The invitation is to move from overload toward a simple rhythm that values consistency and comprehension over speed.",
+    practices: [
+      "Read one chapter from a Gospel for seven days.",
+      "Write one sentence about what the passage shows you about Jesus.",
+      "End each reading with one prayer of response.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "what-church-hurt-does-to-trust-and-how-healing-begins",
+    title: "What church hurt does to trust and how healing begins",
+    excerpt:
+      "A sober look at disappointment, spiritual wounds, and the slow work of rebuilding trust without denial.",
+    category: "Community",
+    date: "March 25, 2026",
+    relatedHref: "/community",
+    relatedLabel: "Explore community features",
+    focus: "Healing from church hurt",
+    tension: "grief, defensiveness, and uncertainty about whether Christian community is still safe",
+    invitation:
+      "The invitation is to tell the truth about what happened while refusing to let injury have the final word over belonging.",
+    practices: [
+      "Name what happened without minimizing it.",
+      "Talk with one trustworthy believer or counselor.",
+      "Take one wise step back toward healthy Christian community.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "practicing-sabbath-in-a-distracted-life",
+    title: "Practicing Sabbath in a distracted life",
+    excerpt:
+      "Rest is more than stopping work. It is also learning to receive limits, delight, and trust.",
+    category: "Formation",
+    date: "March 24, 2026",
+    relatedHref: "/today",
+    relatedLabel: "Open Today",
+    focus: "Sabbath practice",
+    tension: "constant digital stimulation, productivity pressure, and guilt about resting",
+    invitation:
+      "The invitation is to receive rest as trustful surrender rather than as a reward for finally finishing everything.",
+    practices: [
+      "Choose a recurring window for unhurried worship and rest.",
+      "Turn off the noisiest digital inputs for that window.",
+      "Do one restful activity that cultivates gratitude instead of output.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "why-christian-friendship-needs-more-than-shared-interests",
+    title: "Why Christian friendship needs more than shared interests",
+    excerpt:
+      "Real spiritual friendship is built through presence, truthfulness, prayer, and mutual encouragement.",
+    category: "Discipleship",
+    date: "March 23, 2026",
+    relatedHref: "/groups",
+    relatedLabel: "Explore groups",
+    focus: "Christian friendship",
+    tension: "surface-level connection, busyness, and uncertainty about how to move from acquaintance to spiritual friendship",
+    invitation:
+      "The invitation is to pursue friendships that can carry honesty, prayer, and real encouragement instead of only shared preferences.",
+    practices: [
+      "Ask one deeper question the next time you meet with a friend.",
+      "Pray together before you leave.",
+      "Follow up on one burden they shared instead of letting it fade.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "when-unanswered-prayer-makes-faith-feel-harder",
+    title: "When unanswered prayer makes faith feel harder",
+    excerpt:
+      "How to stay honest with God when the silence is long and the need feels urgent.",
+    category: "Prayer",
+    date: "March 22, 2026",
+    relatedHref: "/prayer",
+    relatedLabel: "Return to Prayer",
+    focus: "Unanswered prayer",
+    tension: "silence, confusion, and the temptation to treat delay as indifference from God",
+    invitation:
+      "The invitation is to keep bringing the real ache to God while letting Scripture retrain what faithfulness looks like in waiting.",
+    practices: [
+      "Pray specific requests instead of vague frustration.",
+      "Read a lament Psalm slowly.",
+      "Ask one trusted believer to carry the burden with you in prayer.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "scripture-memory-for-people-who-think-they-are-bad-at-memorizing",
+    title: "Scripture memory for people who think they are bad at memorizing",
+    excerpt:
+      "Memorizing Scripture does not require a perfect memory. It requires repetition, patience, and a realistic plan.",
+    category: "Bible Study",
+    date: "March 21, 2026",
+    relatedHref: "/memorize",
+    relatedLabel: "Open Memorize",
+    focus: "Scripture memory",
+    tension: "discouragement, inconsistency, and the assumption that memorization belongs only to naturally gifted people",
+    invitation:
+      "The invitation is to treat memorization as patient formation rather than as a test of talent.",
+    practices: [
+      "Choose one short verse for the week.",
+      "Say it aloud in the morning, midday, and evening.",
+      "Connect the verse to one specific prayer request or struggle.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "how-to-forgive-without-pretending-the-wound-was-small",
+    title: "How to forgive without pretending the wound was small",
+    excerpt:
+      "Forgiveness is not denial. It is a costly act of obedience that can still make room for grief and boundaries.",
+    category: "Discipleship",
+    date: "March 20, 2026",
+    relatedHref: "/topics",
+    relatedLabel: "Open Topics",
+    focus: "Forgiveness",
+    tension: "real pain, unresolved anger, and confusion about whether forgiveness means minimizing wrong",
+    invitation:
+      "The invitation is to bring both the wound and the command of Christ into the same honest process instead of flattening either one.",
+    practices: [
+      "Name the offense truthfully before God.",
+      "Pray for willingness before you feel emotional resolution.",
+      "Keep wise boundaries where trust has not yet been rebuilt.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "following-jesus-through-anxiety-without-spiritual-cliches",
+    title: "Following Jesus through anxiety without spiritual cliches",
+    excerpt:
+      "A more grounded approach to fear, prayer, embodiment, and the ordinary practices that help people keep going.",
+    category: "Care",
+    date: "March 19, 2026",
+    relatedHref: "/topics",
+    relatedLabel: "Explore topic studies",
+    focus: "Walking with anxiety",
+    tension: "persistent fear, shame about struggling, and shallow advice that increases pressure instead of hope",
+    invitation:
+      "The invitation is to bring anxiety into honest prayer, wise support, and embodied rhythms instead of pretending faith cancels complexity.",
+    practices: [
+      "Pair a short prayer with slow breathing.",
+      "Read one grounding passage such as Psalm 23 or Philippians 4.",
+      "Tell one safe person what feels heavy this week.",
+    ],
+  }),
+  createGuidedPost({
+    slug: "building-a-faith-that-lasts-after-graduation",
+    title: "Building a faith that lasts after graduation",
+    excerpt:
+      "Transitions expose habits. A durable faith after school needs intention, community, and a plan for ordinary life.",
+    category: "Discipleship",
+    date: "March 18, 2026",
+    relatedHref: "/paths",
+    relatedLabel: "Open Guided Paths",
+    focus: "Post-graduation faith",
+    tension: "disrupted routines, new environments, and the temptation to let spiritual life drift without noticing",
+    invitation:
+      "The invitation is to build a few durable anchors before the new season becomes crowded with competing priorities.",
+    practices: [
+      "Find a church before you feel fully settled.",
+      "Choose one daily Scripture and prayer rhythm.",
+      "Ask one mature believer to check in with you during the transition.",
+    ],
+  }),
+];
+
+const featuredPosts: BlogPost[] = [
+  {
+    slug: "rethinking-purity-culture-with-truth-grace-and-discipleship",
+    title: "Rethinking purity culture with truth, grace, and discipleship",
+    excerpt:
+      "A pastoral reflection on sexual integrity, shame, healing, and why discipleship has to be deeper than fear-based messaging.",
+    category: "Discipleship",
+    date: "March 28, 2026",
+    author: "Christian Study Guide Team",
+    readingTime: "7 min read",
+    relatedHref: "/theology",
+    relatedLabel: "Explore theology and formation topics",
+    intro: [
+      "Many Christians use the phrase purity culture to describe a set of messages about sex, holiness, dating, modesty, and worth that shaped churches, youth ministries, and families for years.",
+      "Some of those messages came from a sincere desire to honor God. But in many settings, the result was a culture driven more by fear, shame, and image management than by mature discipleship in Christ.",
+    ],
+    sections: [
+      {
+        heading: "The problem was not calling people to holiness",
+        paragraphs: [
+          "Scripture does call believers to holiness, self-control, and sexual integrity. The problem was often not the existence of moral conviction, but the way conviction was framed and enforced.",
+          "When holiness is reduced to rule-keeping, external performance, or a narrow focus on virginity, people can learn to manage appearances without learning how desire, repentance, grace, and sanctification actually work.",
+        ],
+      },
+      {
+        heading: "Fear and shame are weak discipleship tools",
+        paragraphs: [
+          "Fear can produce short-term conformity, but it rarely produces lasting spiritual maturity. Shame can silence people, but it does not teach them how to confess, heal, and walk in the light.",
+          "A fear-based framework often leaves people unprepared for real temptation, real failure, and real complexity. When they do struggle, they may assume they are permanently damaged rather than invited into repentance and restoration.",
+        ],
+        bullets: [
+          "People may hide sin instead of confessing it.",
+          "Survivors of abuse may carry false guilt for what was done to them.",
+          "Married life can feel confusing when desire was only discussed as danger.",
+        ],
+      },
+      {
+        heading: "Sexual ethics need a larger Gospel framework",
+        paragraphs: [
+          "Christian teaching about sex makes more sense when it is placed inside the larger story of creation, covenant, embodiment, sin, redemption, and hope. Without that framework, the message can shrink into a list of warnings.",
+          "The Gospel gives a deeper vision. Our bodies matter. Holiness matters. Sin is serious. Grace is real. No one is beyond repentance, and no one’s worth is determined by sexual history.",
+        ],
+      },
+      {
+        heading: "Healing requires honesty and patience",
+        paragraphs: [
+          "Many people are still untangling how purity culture affected their relationship with God, their bodies, dating, marriage, or the church. Some need to grieve bad teaching. Some need to relearn trust. Some need careful pastoral care.",
+          "Churches should make room for truthful conversation without panic. That means listening well, distinguishing biblical conviction from cultural baggage, and refusing to treat hard questions as rebellion.",
+        ],
+      },
+      {
+        heading: "A better path is whole-life discipleship",
+        paragraphs: [
+          "A healthier approach to sexual ethics forms the whole person. It teaches theology, cultivates wisdom, and helps people practice confession, boundaries, community, and dependence on the Spirit.",
+          "That kind of discipleship is more demanding than slogans, but it is also more humane. It aims not merely at image preservation, but at deep obedience shaped by grace.",
+        ],
+      },
+    ],
+    closing: [
+      "The answer to harmful purity culture is not abandoning holiness. It is recovering a more biblical, more honest, and more grace-filled vision of holiness in Christ.",
+      "When churches tell the truth about sin and the truth about grace at the same time, people have a better chance of finding both conviction and healing.",
+    ],
+  },
   {
     slug: "designing-a-daily-bible-habit-that-people-can-actually-keep",
     title: "Designing a daily Bible habit that people can actually keep",
@@ -184,6 +506,8 @@ export const blogPosts: BlogPost[] = [
     ],
   },
 ];
+
+export const blogPosts: BlogPost[] = [...featuredPosts, ...guidedPosts];
 
 export function getAllBlogPosts() {
   return blogPosts;
