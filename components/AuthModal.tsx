@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { X, Mail, Lock, Eye, EyeOff, ArrowRight, User } from "lucide-react";
+import { X, Mail, Eye, EyeOff, ArrowRight, User } from "lucide-react";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -29,6 +29,10 @@ export default function AuthModal({
   } | null>(null);
 
   const supabase = createClient();
+
+  type AuthError = {
+    message?: string;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,10 +115,11 @@ export default function AuthModal({
         setMessage({ type: "success", text: "Signed in successfully!" });
         setTimeout(onClose, 1200);
       }
-    } catch (err: any) {
+    } catch (err) {
+      const authError = err as AuthError;
       setMessage({
         type: "error",
-        text: err.message || "Something went wrong",
+        text: authError.message || "Something went wrong",
       });
     } finally {
       setLoading(false);
@@ -349,7 +354,7 @@ export default function AuthModal({
                   Forgot your password?
                 </button>
                 <div className="text-gray-500 text-sm">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button
                     onClick={() => setMode("signup")}
                     className="text-blue-600 hover:text-blue-700 font-medium transition-colors"

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import type { User } from '@supabase/supabase-js';
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import {
   ArrowRight,
   CheckCircle2,
@@ -11,16 +11,16 @@ import {
   PlusCircle,
   Sparkles,
   TrendingUp,
-} from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import {
   getPrayerEntries,
   getWorkflowRuns,
   savePrayerEntry,
   saveWorkflowRun,
   updatePrayerEntry,
-} from '@/lib/persistence';
-import { prayerAnalyticsSystems } from '@/lib/product-expansion';
+} from "../../lib/persistence";
+import { prayerAnalyticsSystems } from "../../lib/product-expansion";
 
 interface PrayerEntry {
   id: string;
@@ -37,25 +37,25 @@ interface TestimonyEntry {
   nextStep: string;
 }
 
-const PRAYER_STORAGE_KEY = 'christian-study-guide:prayer-entries';
-const PRAYER_TESTIMONIES_KEY = 'christian-study-guide:prayer-testimonies';
-const ACTIVITY_STORAGE_KEY = 'christian-study-guide:activity-timeline';
+const PRAYER_STORAGE_KEY = "christian-study-guide:prayer-entries";
+const PRAYER_TESTIMONIES_KEY = "christian-study-guide:prayer-testimonies";
+const ACTIVITY_STORAGE_KEY = "christian-study-guide:activity-timeline";
 
 const initialEntries: PrayerEntry[] = [
   {
-    id: '1',
-    title: 'Peace in anxious moments',
+    id: "1",
+    title: "Peace in anxious moments",
     content:
-      'Lord, help me replace fear with trust and remember that You are near when my mind feels overwhelmed.',
-    category: 'Anxiety',
+      "Lord, help me replace fear with trust and remember that You are near when my mind feels overwhelmed.",
+    category: "Anxiety",
     answered: false,
   },
   {
-    id: '2',
-    title: 'Wisdom for family decisions',
+    id: "2",
+    title: "Wisdom for family decisions",
     content:
-      'Give our family unity, patience, and wisdom as we make decisions about the next season.',
-    category: 'Family',
+      "Give our family unity, patience, and wisdom as we make decisions about the next season.",
+    category: "Family",
     answered: true,
   },
 ];
@@ -81,24 +81,34 @@ const reminderIdeas = [
 
 export default function PrayerPage() {
   const [entries, setEntries] = useState(initialEntries);
-  const [draft, setDraft] = useState({ title: '', content: '', category: 'General' });
+  const [draft, setDraft] = useState({
+    title: "",
+    content: "",
+    category: "General",
+  });
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [testimonies, setTestimonies] = useState<TestimonyEntry[]>([]);
-  const [testimonyDrafts, setTestimonyDrafts] = useState<Record<string, string>>({});
+  const [testimonyDrafts, setTestimonyDrafts] = useState<
+    Record<string, string>
+  >({});
   const [supabase] = useState(() => createClient());
 
   const analytics = useMemo(() => {
     const answeredCount = entries.filter((entry) => entry.answered).length;
     const unansweredCount = entries.length - answeredCount;
-    const categoryMap = entries.reduce<Record<string, number>>((accumulator, entry) => {
-      accumulator[entry.category] = (accumulator[entry.category] || 0) + 1;
-      return accumulator;
-    }, {});
+    const categoryMap = entries.reduce<Record<string, number>>(
+      (accumulator, entry) => {
+        accumulator[entry.category] = (accumulator[entry.category] || 0) + 1;
+        return accumulator;
+      },
+      {},
+    );
 
     const topCategory =
-      Object.entries(categoryMap).sort((left, right) => right[1] - left[1])[0]?.[0] ||
-      'General';
+      Object.entries(categoryMap).sort(
+        (left, right) => right[1] - left[1],
+      )[0]?.[0] || "General";
 
     return {
       answeredCount,
@@ -117,15 +127,20 @@ export default function PrayerPage() {
         setUser(session?.user ?? null);
 
         if (session) {
-          const [data, workflowRuns] = await Promise.all([getPrayerEntries(), getWorkflowRuns()]);
+          const [data, workflowRuns] = await Promise.all([
+            getPrayerEntries(),
+            getWorkflowRuns(),
+          ]);
           setEntries(
-            (data as Array<{
-              id: string;
-              title: string;
-              content: string;
-              category: string;
-              answered: boolean;
-            }>).map((entry) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                content: string;
+                category: string;
+                answered: boolean;
+              }>
+            ).map((entry) => ({
               id: entry.id,
               title: entry.title,
               content: entry.content,
@@ -134,22 +149,27 @@ export default function PrayerPage() {
             })),
           );
           setTestimonies(
-            (workflowRuns as Array<{
-              id: string;
-              workflow_name: string;
-              summary: string;
-              next_step: string | null;
-              output: Record<string, unknown> | null;
-            }>)
-              .filter((item) => item.workflow_name === 'answered-prayer-testimony')
+            (
+              workflowRuns as Array<{
+                id: string;
+                workflow_name: string;
+                summary: string;
+                next_step: string | null;
+                output: Record<string, unknown> | null;
+              }>
+            )
+              .filter(
+                (item) => item.workflow_name === "answered-prayer-testimony",
+              )
               .map((item) => ({
                 id: item.id,
                 prayerTitle:
-                  typeof item.output?.prayer_title === 'string'
+                  typeof item.output?.prayer_title === "string"
                     ? item.output.prayer_title
-                    : 'Answered prayer',
+                    : "Answered prayer",
                 summary: item.summary,
-                nextStep: item.next_step || 'Share this testimony with gratitude.',
+                nextStep:
+                  item.next_step || "Share this testimony with gratitude.",
               })),
           );
         } else {
@@ -177,7 +197,11 @@ export default function PrayerPage() {
 
     const persist = async () => {
       if (user) {
-        const saved = await savePrayerEntry(draft.title, draft.content, draft.category);
+        const saved = await savePrayerEntry(
+          draft.title,
+          draft.content,
+          draft.category,
+        );
         setEntries((current) => [
           {
             id: saved.id,
@@ -202,27 +226,29 @@ export default function PrayerPage() {
         setEntries(nextEntries);
         localStorage.setItem(PRAYER_STORAGE_KEY, JSON.stringify(nextEntries));
         const existingActivity = JSON.parse(
-          localStorage.getItem(ACTIVITY_STORAGE_KEY) || '[]'
+          localStorage.getItem(ACTIVITY_STORAGE_KEY) || "[]",
         ) as Array<Record<string, unknown>>;
         localStorage.setItem(
           ACTIVITY_STORAGE_KEY,
-          JSON.stringify([
-            {
-              id: `prayer-${Date.now()}`,
-              event_type: 'prayer_entry_created',
-              reference: null,
-              metadata: {
-                title: draft.title,
-                category: draft.category,
+          JSON.stringify(
+            [
+              {
+                id: `prayer-${Date.now()}`,
+                event_type: "prayer_entry_created",
+                reference: null,
+                metadata: {
+                  title: draft.title,
+                  category: draft.category,
+                },
+                created_at: new Date().toISOString(),
               },
-              created_at: new Date().toISOString(),
-            },
-            ...existingActivity,
-          ].slice(0, 30))
+              ...existingActivity,
+            ].slice(0, 30),
+          ),
         );
       }
 
-      setDraft({ title: '', content: '', category: 'General' });
+      setDraft({ title: "", content: "", category: "General" });
     };
 
     persist();
@@ -237,33 +263,37 @@ export default function PrayerPage() {
         const updated = await updatePrayerEntry(id, !target.answered);
         setEntries((current) =>
           current.map((entry) =>
-            entry.id === id ? { ...entry, answered: updated.answered } : entry
-          )
+            entry.id === id ? { ...entry, answered: updated.answered } : entry,
+          ),
         );
       } else {
         const nextEntries = entries.map((entry) =>
-          entry.id === id ? { ...entry, answered: !entry.answered } : entry
+          entry.id === id ? { ...entry, answered: !entry.answered } : entry,
         );
         setEntries(nextEntries);
         localStorage.setItem(PRAYER_STORAGE_KEY, JSON.stringify(nextEntries));
         const existingActivity = JSON.parse(
-          localStorage.getItem(ACTIVITY_STORAGE_KEY) || '[]'
+          localStorage.getItem(ACTIVITY_STORAGE_KEY) || "[]",
         ) as Array<Record<string, unknown>>;
         localStorage.setItem(
           ACTIVITY_STORAGE_KEY,
-          JSON.stringify([
-            {
-              id: `prayer-toggle-${Date.now()}`,
-              event_type: !target.answered ? 'prayer_answered' : 'prayer_reopened',
-              reference: null,
-              metadata: {
-                title: target.title,
-                category: target.category,
+          JSON.stringify(
+            [
+              {
+                id: `prayer-toggle-${Date.now()}`,
+                event_type: !target.answered
+                  ? "prayer_answered"
+                  : "prayer_reopened",
+                reference: null,
+                metadata: {
+                  title: target.title,
+                  category: target.category,
+                },
+                created_at: new Date().toISOString(),
               },
-              created_at: new Date().toISOString(),
-            },
-            ...existingActivity,
-          ].slice(0, 30))
+              ...existingActivity,
+            ].slice(0, 30),
+          ),
         );
       }
     };
@@ -279,14 +309,14 @@ export default function PrayerPage() {
       id: `${entry.id}-${Date.now()}`,
       prayerTitle: entry.title,
       summary,
-      nextStep: 'Share this update with your group, mentor, or journal review.',
+      nextStep: "Share this update with your group, mentor, or journal review.",
     };
 
     if (user) {
       const saved = await saveWorkflowRun({
-        workflow_name: 'answered-prayer-testimony',
-        stage: 'reflection',
-        status: 'completed',
+        workflow_name: "answered-prayer-testimony",
+        stage: "reflection",
+        status: "completed",
         summary,
         next_step: testimonyEntry.nextStep,
         output: {
@@ -310,7 +340,7 @@ export default function PrayerPage() {
       localStorage.setItem(PRAYER_TESTIMONIES_KEY, JSON.stringify(next));
     }
 
-    setTestimonyDrafts((current) => ({ ...current, [entry.id]: '' }));
+    setTestimonyDrafts((current) => ({ ...current, [entry.id]: "" }));
   };
 
   if (loading) {
@@ -332,7 +362,8 @@ export default function PrayerPage() {
             <div>
               <h1 className="text-4xl font-bold">Prayer Journal</h1>
               <p className="mt-1 text-blue-100">
-                Save prayers, revisit answered requests, and build a record of God&apos;s faithfulness.
+                Save prayers, revisit answered requests, and build a record of
+                God&apos;s faithfulness.
               </p>
             </div>
           </div>
@@ -347,13 +378,17 @@ export default function PrayerPage() {
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl bg-white p-5">
-              <p className="text-sm font-medium text-slate-600">Answered prayers</p>
+              <p className="text-sm font-medium text-slate-600">
+                Answered prayers
+              </p>
               <p className="mt-2 text-3xl font-bold text-emerald-700">
                 {analytics.answeredCount}
               </p>
             </div>
             <div className="rounded-2xl bg-white p-5">
-              <p className="text-sm font-medium text-slate-600">Still praying</p>
+              <p className="text-sm font-medium text-slate-600">
+                Still praying
+              </p>
               <p className="mt-2 text-3xl font-bold text-blue-700">
                 {analytics.unansweredCount}
               </p>
@@ -370,7 +405,9 @@ export default function PrayerPage() {
         <section className="lg:col-span-2 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <NotebookPen className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Growth-aware prayer insights</h2>
+            <h2 className="text-2xl font-semibold">
+              Growth-aware prayer insights
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {prayerAnalyticsSystems.map((item) => (
@@ -381,7 +418,9 @@ export default function PrayerPage() {
                 <p className="text-sm font-semibold uppercase tracking-wide text-blue-900">
                   {item.title}
                 </p>
-                <p className="mt-3 text-sm leading-6 text-blue-950">{item.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-blue-950">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>
@@ -399,13 +438,19 @@ export default function PrayerPage() {
                   key={template.input}
                   className="rounded-2xl border border-violet-200 bg-white p-5"
                 >
-                  <p className="text-sm font-semibold text-violet-900">{template.input}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{template.output}</p>
+                  <p className="text-sm font-semibold text-violet-900">
+                    {template.input}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {template.output}
+                  </p>
                 </article>
               ))}
             </div>
             <aside className="rounded-2xl border border-violet-200 bg-white p-5">
-              <p className="text-sm font-semibold text-violet-950">Prayer reminders</p>
+              <p className="text-sm font-semibold text-violet-950">
+                Prayer reminders
+              </p>
               <div className="mt-4 grid gap-3">
                 {reminderIdeas.map((reminder) => (
                   <article
@@ -423,10 +468,12 @@ export default function PrayerPage() {
         <section className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-semibold text-amber-950">Answered prayer testimonies</h2>
+              <h2 className="text-2xl font-semibold text-amber-950">
+                Answered prayer testimonies
+              </h2>
               <p className="mt-2 text-sm leading-6 text-amber-900">
-                Move beyond tracking requests by recording how God answered and what step of
-                gratitude or obedience comes next.
+                Move beyond tracking requests by recording how God answered and
+                what step of gratitude or obedience comes next.
               </p>
             </div>
             <Link
@@ -441,18 +488,25 @@ export default function PrayerPage() {
           <div className="mt-6 grid gap-4">
             {testimonies.length > 0 ? (
               testimonies.map((item) => (
-                <article key={item.id} className="rounded-2xl border border-amber-200 bg-white p-5">
+                <article
+                  key={item.id}
+                  className="rounded-2xl border border-amber-200 bg-white p-5"
+                >
                   <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
                     {item.prayerTitle}
                   </p>
-                  <p className="mt-2 text-sm leading-7 text-slate-700">{item.summary}</p>
-                  <p className="mt-3 text-sm font-medium text-amber-950">{item.nextStep}</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-700">
+                    {item.summary}
+                  </p>
+                  <p className="mt-3 text-sm font-medium text-amber-950">
+                    {item.nextStep}
+                  </p>
                 </article>
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-amber-300 bg-white p-5 text-sm text-amber-950">
-                Mark a prayer answered and write one short testimony to start building a record of
-                faithfulness.
+                Mark a prayer answered and write one short testimony to start
+                building a record of faithfulness.
               </div>
             )}
           </div>
@@ -461,7 +515,9 @@ export default function PrayerPage() {
         <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
             <PlusCircle className="h-5 w-5 text-[#1e40af]" />
-            <h2 className="text-2xl font-semibold text-[#0f172a]">New Prayer Entry</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              New Prayer Entry
+            </h2>
           </div>
 
           <form onSubmit={addEntry} className="space-y-4">
@@ -476,13 +532,18 @@ export default function PrayerPage() {
               onChange={(e) => setDraft({ ...draft, category: e.target.value })}
               className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#1e40af] focus:bg-white"
             >
-              {['General', 'Anxiety', 'Family', 'Healing', 'Guidance', 'Gratitude'].map(
-                (category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                )
-              )}
+              {[
+                "General",
+                "Anxiety",
+                "Family",
+                "Healing",
+                "Guidance",
+                "Gratitude",
+              ].map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </select>
             <textarea
               value={draft.content}
@@ -503,7 +564,9 @@ export default function PrayerPage() {
         <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
             <NotebookPen className="h-5 w-5 text-emerald-600" />
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Answered Prayer Tracker</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Answered Prayer Tracker
+            </h2>
           </div>
 
           <div className="space-y-4">
@@ -512,13 +575,15 @@ export default function PrayerPage() {
                 key={entry.id}
                 className={`rounded-2xl border p-5 ${
                   entry.answered
-                    ? 'border-emerald-200 bg-emerald-50'
-                    : 'border-gray-200 bg-gray-50'
+                    ? "border-emerald-200 bg-emerald-50"
+                    : "border-gray-200 bg-gray-50"
                 }`}
               >
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-lg font-semibold text-[#0f172a]">{entry.title}</p>
+                    <p className="text-lg font-semibold text-[#0f172a]">
+                      {entry.title}
+                    </p>
                     <p className="mt-1 inline-flex rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-700">
                       {entry.category}
                     </p>
@@ -527,22 +592,24 @@ export default function PrayerPage() {
                     onClick={() => toggleAnswered(entry.id)}
                     className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition ${
                       entry.answered
-                        ? 'bg-emerald-100 text-emerald-900'
-                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                        ? "bg-emerald-100 text-emerald-900"
+                        : "bg-white text-gray-700 hover:bg-gray-100"
                     }`}
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    {entry.answered ? 'Answered' : 'Mark Answered'}
+                    {entry.answered ? "Answered" : "Mark Answered"}
                   </button>
                 </div>
-                <p className="text-sm leading-7 text-slate-700">{entry.content}</p>
+                <p className="text-sm leading-7 text-slate-700">
+                  {entry.content}
+                </p>
                 {entry.answered ? (
                   <div className="mt-4 rounded-2xl border border-emerald-200 bg-white p-4">
                     <label className="text-sm font-semibold text-emerald-950">
                       Add a testimony note
                     </label>
                     <textarea
-                      value={testimonyDrafts[entry.id] || ''}
+                      value={testimonyDrafts[entry.id] || ""}
                       onChange={(e) =>
                         setTestimonyDrafts((current) => ({
                           ...current,

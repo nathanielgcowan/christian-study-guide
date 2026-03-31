@@ -20,7 +20,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   getCommandCenterPreferences,
   saveCommandCenterPreferences,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 interface StudyStatsResponse {
   streak?: {
@@ -219,7 +219,7 @@ export default function CommandCenterPage() {
     try {
       localStorage.setItem(
         COMMAND_CENTER_PREFS_KEY,
-        JSON.stringify(preferences)
+        JSON.stringify(preferences),
       );
     } catch {}
   }, [preferences, preferencesLoaded, user]);
@@ -324,7 +324,7 @@ export default function CommandCenterPage() {
         score: Math.min(100, metrics.searchHistory * 16),
       },
     ],
-    [metrics]
+    [metrics],
   );
 
   const strategicFocus = useMemo(() => {
@@ -376,17 +376,21 @@ export default function CommandCenterPage() {
               <h2 className="text-2xl font-semibold">Control panel</h2>
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Tune what the command center emphasizes and which widgets stay visible.
+              Tune what the command center emphasizes and which widgets stay
+              visible.
             </p>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               <div>
-                <p className="text-sm font-semibold text-slate-700">Strategic focus</p>
+                <p className="text-sm font-semibold text-slate-700">
+                  Strategic focus
+                </p>
                 <select
                   value={preferences.focusGoal}
                   onChange={(event) =>
                     setPreferences((current) => ({
                       ...current,
-                      focusGoal: event.target.value as CommandCenterPreferences["focusGoal"],
+                      focusGoal: event.target
+                        .value as CommandCenterPreferences["focusGoal"],
                     }))
                   }
                   className="mt-3 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-[#1e40af]"
@@ -402,7 +406,9 @@ export default function CommandCenterPage() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-slate-700">Visible widgets</p>
+                <p className="text-sm font-semibold text-slate-700">
+                  Visible widgets
+                </p>
                 <div className="mt-3 grid gap-3">
                   {(
                     Object.keys(preferences.visibleWidgets) as Array<
@@ -413,7 +419,9 @@ export default function CommandCenterPage() {
                       key={key}
                       className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700"
                     >
-                      <span className="capitalize">{key.replace(/([A-Z])/g, " $1")}</span>
+                      <span className="capitalize">
+                        {key.replace(/([A-Z])/g, " $1")}
+                      </span>
                       <input
                         type="checkbox"
                         checked={preferences.visibleWidgets[key]}
@@ -478,92 +486,96 @@ export default function CommandCenterPage() {
         </section>
 
         {preferences.visibleWidgets.metrics && (
-        <section className="grid gap-6 md:grid-cols-3 lg:grid-cols-6">
-          {[
-            ["Studies", metrics.totalStudies],
-            ["Sessions", metrics.savedSessions],
-            ["Mentor", metrics.mentorMoments],
-            ["Prayer", metrics.prayerEntries],
-            ["Workspace", metrics.workspaceResources],
-            ["Searches", metrics.searchHistory],
-          ].map(([label, value]) => (
-            <article
-              key={label}
-              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
-            >
-              <p className="text-sm font-medium text-slate-600">{label}</p>
-              <p className="mt-3 text-4xl font-bold text-[#0f172a]">{value}</p>
-            </article>
-          ))}
-        </section>
+          <section className="grid gap-6 md:grid-cols-3 lg:grid-cols-6">
+            {[
+              ["Studies", metrics.totalStudies],
+              ["Sessions", metrics.savedSessions],
+              ["Mentor", metrics.mentorMoments],
+              ["Prayer", metrics.prayerEntries],
+              ["Workspace", metrics.workspaceResources],
+              ["Searches", metrics.searchHistory],
+            ].map(([label, value]) => (
+              <article
+                key={label}
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+              >
+                <p className="text-sm font-medium text-slate-600">{label}</p>
+                <p className="mt-3 text-4xl font-bold text-[#0f172a]">
+                  {value}
+                </p>
+              </article>
+            ))}
+          </section>
         )}
 
         {(preferences.visibleWidgets.recommendations ||
           preferences.visibleWidgets.systemHealth) && (
-        <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          {preferences.visibleWidgets.recommendations && (
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <div className="flex items-center gap-3 text-[#0f172a]">
-              <BrainCircuit className="h-6 w-6 text-violet-700" />
-              <h2 className="text-2xl font-semibold">Recommendation engine</h2>
-            </div>
-            <div className="mt-6 grid gap-4">
-              {recommendations.length > 0 ? (
-                recommendations.map((item) => (
-                  <Link
-                    key={item.title}
-                    href={item.href}
-                    className="rounded-3xl border border-violet-200 bg-violet-50 p-6 transition hover:bg-violet-100"
-                  >
-                    <h3 className="text-xl font-semibold text-violet-950">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-6 text-violet-900">
-                      {item.description}
-                    </p>
-                  </Link>
-                ))
-              ) : (
-                <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6">
-                  <p className="text-sm leading-6 text-emerald-950">
-                    Your current system already has meaningful depth. The next
-                    gain is refinement, not just feature count.
-                  </p>
+          <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            {preferences.visibleWidgets.recommendations && (
+              <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+                <div className="flex items-center gap-3 text-[#0f172a]">
+                  <BrainCircuit className="h-6 w-6 text-violet-700" />
+                  <h2 className="text-2xl font-semibold">
+                    Recommendation engine
+                  </h2>
                 </div>
-              )}
-            </div>
-          </div>
-          )}
+                <div className="mt-6 grid gap-4">
+                  {recommendations.length > 0 ? (
+                    recommendations.map((item) => (
+                      <Link
+                        key={item.title}
+                        href={item.href}
+                        className="rounded-3xl border border-violet-200 bg-violet-50 p-6 transition hover:bg-violet-100"
+                      >
+                        <h3 className="text-xl font-semibold text-violet-950">
+                          {item.title}
+                        </h3>
+                        <p className="mt-3 text-sm leading-6 text-violet-900">
+                          {item.description}
+                        </p>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6">
+                      <p className="text-sm leading-6 text-emerald-950">
+                        Your current system already has meaningful depth. The
+                        next gain is refinement, not just feature count.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
-          {preferences.visibleWidgets.systemHealth && (
-          <aside className="rounded-3xl border border-[#d4af37]/20 bg-[#fffaf0] p-8">
-            <div className="flex items-center gap-3 text-[#0f172a]">
-              <ShieldCheck className="h-6 w-6 text-emerald-700" />
-              <h2 className="text-2xl font-semibold">System health</h2>
-            </div>
-            <div className="mt-6 space-y-5">
-              {systemHealth.map((item) => (
-                <div key={item.label}>
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-medium text-slate-700">
-                      {item.label}
-                    </p>
-                    <p className="text-sm font-semibold text-[#1e40af]">
-                      {item.score}%
-                    </p>
-                  </div>
-                  <div className="mt-2 h-3 w-full rounded-full bg-slate-200">
-                    <div
-                      className="h-3 rounded-full bg-gradient-to-r from-[#1e40af] to-emerald-500"
-                      style={{ width: `${item.score}%` }}
-                    />
-                  </div>
+            {preferences.visibleWidgets.systemHealth && (
+              <aside className="rounded-3xl border border-[#d4af37]/20 bg-[#fffaf0] p-8">
+                <div className="flex items-center gap-3 text-[#0f172a]">
+                  <ShieldCheck className="h-6 w-6 text-emerald-700" />
+                  <h2 className="text-2xl font-semibold">System health</h2>
                 </div>
-              ))}
-            </div>
-          </aside>
-          )}
-        </section>
+                <div className="mt-6 space-y-5">
+                  {systemHealth.map((item) => (
+                    <div key={item.label}>
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-sm font-medium text-slate-700">
+                          {item.label}
+                        </p>
+                        <p className="text-sm font-semibold text-[#1e40af]">
+                          {item.score}%
+                        </p>
+                      </div>
+                      <div className="mt-2 h-3 w-full rounded-full bg-slate-200">
+                        <div
+                          className="h-3 rounded-full bg-gradient-to-r from-[#1e40af] to-emerald-500"
+                          style={{ width: `${item.score}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </aside>
+            )}
+          </section>
         )}
 
         <section className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
@@ -695,80 +707,86 @@ export default function CommandCenterPage() {
         </section>
 
         {preferences.visibleWidgets.orchestration && (
-        <section className="mt-10 grid gap-6 md:grid-cols-3">
-          <Link
-            href="/study"
-            className="rounded-3xl border border-blue-200 bg-blue-50 p-8 transition hover:bg-blue-100"
-          >
-            <Compass className="h-6 w-6 text-blue-800" />
-            <h2 className="mt-4 text-2xl font-semibold text-blue-950">
-              Study intelligence
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-blue-900">
-              Timeline, sessions, mentor history, reminders, and follow-up all in
-              one operational surface.
-            </p>
-          </Link>
-          <Link
-            href="/workspace"
-            className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 transition hover:bg-emerald-100"
-          >
-            <Layers3 className="h-6 w-6 text-emerald-800" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
-              Leader orchestration
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-emerald-900">
-              Resources, collaborators, team planning, and ministry prep now sit
-              in one connected layer.
-            </p>
-          </Link>
-          <Link
-            href="/search"
-            className="rounded-3xl border border-violet-200 bg-violet-50 p-8 transition hover:bg-violet-100"
-          >
-            <Target className="h-6 w-6 text-violet-800" />
-            <h2 className="mt-4 text-2xl font-semibold text-violet-950">
-              Discovery engine
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-violet-900">
-              Search history, topical intent, and life-situation discovery make
-              the front door smarter.
-            </p>
-          </Link>
-        </section>
+          <section className="mt-10 grid gap-6 md:grid-cols-3">
+            <Link
+              href="/study"
+              className="rounded-3xl border border-blue-200 bg-blue-50 p-8 transition hover:bg-blue-100"
+            >
+              <Compass className="h-6 w-6 text-blue-800" />
+              <h2 className="mt-4 text-2xl font-semibold text-blue-950">
+                Study intelligence
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-blue-900">
+                Timeline, sessions, mentor history, reminders, and follow-up all
+                in one operational surface.
+              </p>
+            </Link>
+            <Link
+              href="/workspace"
+              className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 transition hover:bg-emerald-100"
+            >
+              <Layers3 className="h-6 w-6 text-emerald-800" />
+              <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+                Leader orchestration
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-emerald-900">
+                Resources, collaborators, team planning, and ministry prep now
+                sit in one connected layer.
+              </p>
+            </Link>
+            <Link
+              href="/search"
+              className="rounded-3xl border border-violet-200 bg-violet-50 p-8 transition hover:bg-violet-100"
+            >
+              <Target className="h-6 w-6 text-violet-800" />
+              <h2 className="mt-4 text-2xl font-semibold text-violet-950">
+                Discovery engine
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-violet-900">
+                Search history, topical intent, and life-situation discovery
+                make the front door smarter.
+              </p>
+            </Link>
+          </section>
         )}
 
         {preferences.visibleWidgets.activity && (
-        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <div className="flex items-center gap-3 text-[#0f172a]">
-            <Activity className="h-6 w-6 text-amber-700" />
-            <h2 className="text-2xl font-semibold">Recent system activity</h2>
-          </div>
-          <div className="mt-6 grid gap-4">
-            {(metrics.activity.length > 0 ? metrics.activity : demoMetrics.activity).length >
-            0 ? (
-              (metrics.activity.length > 0 ? metrics.activity : demoMetrics.activity)
-                .slice(0, 8)
-                .map((item) => (
-                  <article
-                    key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
-                  >
-                    <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-                      {item.event_type.replace(/_/g, " ")}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-700">
-                      {item.reference || "System event"}
-                    </p>
-                  </article>
-                ))
-            ) : (
-              <p className="text-sm leading-6 text-slate-600">
-                Activity will appear here as you study, pray, search, and save.
-              </p>
-            )}
-          </div>
-        </section>
+          <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+            <div className="flex items-center gap-3 text-[#0f172a]">
+              <Activity className="h-6 w-6 text-amber-700" />
+              <h2 className="text-2xl font-semibold">Recent system activity</h2>
+            </div>
+            <div className="mt-6 grid gap-4">
+              {(metrics.activity.length > 0
+                ? metrics.activity
+                : demoMetrics.activity
+              ).length > 0 ? (
+                (metrics.activity.length > 0
+                  ? metrics.activity
+                  : demoMetrics.activity
+                )
+                  .slice(0, 8)
+                  .map((item) => (
+                    <article
+                      key={item.id}
+                      className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                    >
+                      <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                        {item.event_type.replace(/_/g, " ")}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-700">
+                        {item.reference || "System event"}
+                      </p>
+                    </article>
+                  ))
+              ) : (
+                <p className="text-sm leading-6 text-slate-600">
+                  Activity will appear here as you study, pray, search, and
+                  save.
+                </p>
+              )}
+            </div>
+          </section>
         )}
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">

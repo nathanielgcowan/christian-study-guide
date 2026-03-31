@@ -2,9 +2,18 @@
 
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Building2, CheckCircle2, Crown, LockKeyhole, Wallet } from "lucide-react";
+import {
+  Building2,
+  CheckCircle2,
+  Crown,
+  LockKeyhole,
+  Wallet,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getSubscriptionSettings, saveSubscriptionSettings } from "@/lib/persistence";
+import {
+  getSubscriptionSettings,
+  saveSubscriptionSettings,
+} from "../../lib/persistence";
 
 const SUBSCRIPTION_SETTINGS_KEY = "christian-study-guide:subscription-settings";
 
@@ -17,12 +26,14 @@ const plans = [
   {
     name: "Premium",
     price: "$12/mo",
-    summary: "Advanced exports, saved libraries, journeys, and deeper leadership tools.",
+    summary:
+      "Advanced exports, saved libraries, journeys, and deeper leadership tools.",
   },
   {
     name: "Church",
     price: "$79/mo",
-    summary: "Team seats, church admin, shared workspaces, and ministry dashboards.",
+    summary:
+      "Team seats, church admin, shared workspaces, and ministry dashboards.",
   },
 ];
 
@@ -83,7 +94,10 @@ export default function SubscriptionsPage() {
           trial_active: settings.trialActive,
         });
       } else {
-        localStorage.setItem(SUBSCRIPTION_SETTINGS_KEY, JSON.stringify(settings));
+        localStorage.setItem(
+          SUBSCRIPTION_SETTINGS_KEY,
+          JSON.stringify(settings),
+        );
       }
 
       setSaveFeedback("Subscription settings saved");
@@ -109,8 +123,8 @@ export default function SubscriptionsPage() {
           <Crown className="mx-auto h-16 w-16" />
           <h1 className="mt-6 text-5xl font-bold md:text-6xl">Subscriptions</h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-emerald-50">
-            A billing and subscription layer for premium personal tools, leader workflows,
-            and church-wide ministry plans.
+            A billing and subscription layer for premium personal tools, leader
+            workflows, and church-wide ministry plans.
           </p>
         </div>
       </section>
@@ -122,10 +136,15 @@ export default function SubscriptionsPage() {
               Subscription settings
             </h2>
             {saveFeedback ? (
-              <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <select
               value={settings.selectedPlan}
               onChange={(event) =>
@@ -196,7 +215,9 @@ export default function SubscriptionsPage() {
               <p className="text-sm font-semibold uppercase tracking-wide text-[#14532d]">
                 {plan.name}
               </p>
-              <h2 className="mt-3 text-4xl font-bold text-[#0f172a]">{plan.price}</h2>
+              <h2 className="mt-3 text-4xl font-bold text-[#0f172a]">
+                {plan.price}
+              </h2>
               <p className="mt-4 leading-7 text-slate-600">{plan.summary}</p>
             </article>
           ))}
@@ -209,8 +230,8 @@ export default function SubscriptionsPage() {
               Premium entitlements
             </h2>
             <p className="mt-4 leading-7 text-amber-900">
-              Control which advanced features stay free, which belong to premium users,
-              and which belong to church teams.
+              Control which advanced features stay free, which belong to premium
+              users, and which belong to church teams.
             </p>
           </article>
           <article className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
@@ -219,8 +240,8 @@ export default function SubscriptionsPage() {
               Billing layer
             </h2>
             <p className="mt-4 leading-7 text-blue-900">
-              The next step is checkout, plan management, renewals, and account-level
-              subscription visibility inside the product.
+              The next step is checkout, plan management, renewals, and
+              account-level subscription visibility inside the product.
             </p>
           </article>
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
@@ -229,8 +250,9 @@ export default function SubscriptionsPage() {
               Church plans
             </h2>
             <p className="mt-4 leading-7 text-emerald-900">
-              Church subscriptions fit naturally with team workspace, role permissions,
-              church admin, journeys, and leader resource publishing.
+              Church subscriptions fit naturally with team workspace, role
+              permissions, church admin, journeys, and leader resource
+              publishing.
             </p>
           </article>
         </section>
@@ -259,7 +281,9 @@ export default function SubscriptionsPage() {
 
         <section className="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-200 px-8 py-6">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Feature gating model</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Feature gating model
+            </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
@@ -274,9 +298,24 @@ export default function SubscriptionsPage() {
               <tbody>
                 {[
                   ["Daily studies and basic mentor", "Yes", "Yes", "Yes"],
-                  ["Advanced AI generation and exports", "Limited", "Yes", "Yes"],
-                  ["Saved libraries and premium courses", "Limited", "Yes", "Yes"],
-                  ["Shared workspaces and leader dashboards", "No", "Limited", "Yes"],
+                  [
+                    "Advanced AI generation and exports",
+                    "Limited",
+                    "Yes",
+                    "Yes",
+                  ],
+                  [
+                    "Saved libraries and premium courses",
+                    "Limited",
+                    "Yes",
+                    "Yes",
+                  ],
+                  [
+                    "Shared workspaces and leader dashboards",
+                    "No",
+                    "Limited",
+                    "Yes",
+                  ],
                 ].map((row) => (
                   <tr key={row[0]} className="border-t border-slate-200">
                     {row.map((cell) => (
@@ -315,23 +354,32 @@ export default function SubscriptionsPage() {
         <section className="mt-10 grid gap-6 md:grid-cols-3">
           <article className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <Wallet className="h-6 w-6 text-blue-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-blue-950">Stripe-ready flow</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-blue-950">
+              Stripe-ready flow
+            </h2>
             <p className="mt-4 text-sm leading-6 text-blue-900">
-              Checkout, customer portal, invoice history, failed payment recovery, and trial conversion.
+              Checkout, customer portal, invoice history, failed payment
+              recovery, and trial conversion.
             </p>
           </article>
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <LockKeyhole className="h-6 w-6 text-emerald-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">Entitlements</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+              Entitlements
+            </h2>
             <p className="mt-4 text-sm leading-6 text-emerald-900">
-              Gate AI volume, exports, leader tools, team seats, and premium dashboards by plan.
+              Gate AI volume, exports, leader tools, team seats, and premium
+              dashboards by plan.
             </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <Building2 className="h-6 w-6 text-amber-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-amber-950">Church billing ops</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-amber-950">
+              Church billing ops
+            </h2>
             <p className="mt-4 text-sm leading-6 text-amber-900">
-              Support seat counts, team ownership, church admin billing visibility, and plan-based permissions.
+              Support seat counts, team ownership, church admin billing
+              visibility, and plan-based permissions.
             </p>
           </article>
         </section>

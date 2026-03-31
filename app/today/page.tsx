@@ -21,12 +21,13 @@ import {
   getGuidedPaths,
   getPrayerEntries,
   getWorkflowRuns,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
+
 import {
   dailyEngineMoments,
   guidedPaths,
   retentionSystems,
-} from "@/lib/product-expansion";
+} from "../../lib/product-expansion";
 
 type TodayMoment = {
   title: string;
@@ -70,29 +71,6 @@ type ReadingPlan = {
   } | null;
 };
 
-const defaultTodayMoments: TodayMoment[] = [
-  {
-    title: "Read",
-    detail: "James 1:2-4 with a short context note and one thing to notice.",
-    href: "/passage/james-1-2-4",
-  },
-  {
-    title: "Reflect",
-    detail: "Write one honest response to a guided question instead of guessing what to do next.",
-    href: "/study",
-  },
-  {
-    title: "Pray",
-    detail: "Use a structured prayer prompt anchored to what you just read.",
-    href: "/prayer",
-  },
-  {
-    title: "Review",
-    detail: "Practice one memory verse and close the day with one visible win.",
-    href: "/memorize",
-  },
-];
-
 const dailyJourney = [
   "Open one passage instead of deciding where to start.",
   "Read a short explanation that stays anchored to context.",
@@ -126,24 +104,27 @@ export default function TodayPage() {
         setUser(session?.user ?? null);
 
         if (session) {
-          const [pathsData, workflowData, prayerData, readingPlansResponse] = await Promise.all([
-            getGuidedPaths(),
-            getWorkflowRuns(),
-            getPrayerEntries(),
-            fetch("/api/reading-plans").then((response) =>
-              response.ok ? response.json() : [],
-            ),
-          ]);
+          const [pathsData, workflowData, prayerData, readingPlansResponse] =
+            await Promise.all([
+              getGuidedPaths(),
+              getWorkflowRuns(),
+              getPrayerEntries(),
+              fetch("/api/reading-plans").then((response) =>
+                response.ok ? response.json() : [],
+              ),
+            ]);
 
           setSavedPaths(
-            (pathsData as Array<{
-              id: string;
-              title: string;
-              summary: string;
-              current_week: string | null;
-              current_focus: string | null;
-              status: string;
-            }>).map((item) => ({
+            (
+              pathsData as Array<{
+                id: string;
+                title: string;
+                summary: string;
+                current_week: string | null;
+                current_focus: string | null;
+                status: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               summary: item.summary,
@@ -166,12 +147,14 @@ export default function TodayPage() {
           );
 
           setPrayers(
-            (prayerData as Array<{
-              id: string;
-              title: string;
-              category: string;
-              answered: boolean;
-            }>).map((item) => ({
+            (
+              prayerData as Array<{
+                id: string;
+                title: string;
+                category: string;
+                answered: boolean;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               category: item.category,
@@ -197,7 +180,9 @@ export default function TodayPage() {
 
   const activeReadingPlan = useMemo(
     () =>
-      readingPlans.find((plan) => plan.userProgress && !plan.userProgress.completed) || null,
+      readingPlans.find(
+        (plan) => plan.userProgress && !plan.userProgress.completed,
+      ) || null,
     [readingPlans],
   );
 
@@ -211,7 +196,8 @@ export default function TodayPage() {
       workflows.find(
         (run) =>
           run.status === "active" &&
-          (run.workflow_name === "guided-path" || run.workflow_name === "publishing-flow"),
+          (run.workflow_name === "guided-path" ||
+            run.workflow_name === "publishing-flow"),
       ) || null,
     [workflows],
   );
@@ -220,7 +206,9 @@ export default function TodayPage() {
     const readingReference =
       activeReadingPlan?.entries?.[
         Math.max((activeReadingPlan.userProgress?.current_day || 1) - 1, 0)
-      ]?.reference || activePath?.currentFocus || "James 1:2-4";
+      ]?.reference ||
+      activePath?.currentFocus ||
+      "James 1:2-4";
     const readingSlug = readingReference.toLowerCase().replace(/\s+/g, "-");
 
     return [
@@ -334,7 +322,8 @@ export default function TodayPage() {
               Pray: HeartHandshake,
               Review: Target,
             };
-            const Icon = iconMap[moment.title as keyof typeof iconMap] || BookOpenText;
+            const Icon =
+              iconMap[moment.title as keyof typeof iconMap] || BookOpenText;
 
             return (
               <Link
@@ -343,8 +332,12 @@ export default function TodayPage() {
                 className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
                 <Icon className="h-6 w-6 text-[#1e40af]" />
-                <h2 className="mt-4 text-2xl font-semibold text-slate-950">{moment.title}</h2>
-                <p className="mt-4 text-sm leading-7 text-slate-600">{moment.detail}</p>
+                <h2 className="mt-4 text-2xl font-semibold text-slate-950">
+                  {moment.title}
+                </h2>
+                <p className="mt-4 text-sm leading-7 text-slate-600">
+                  {moment.detail}
+                </p>
               </Link>
             );
           })}
@@ -354,7 +347,9 @@ export default function TodayPage() {
           <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <Flame className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Daily flow that actually helps</h2>
+              <h2 className="text-2xl font-semibold">
+                Daily flow that actually helps
+              </h2>
             </div>
             <div className="mt-6 grid gap-4">
               {personalizedJourney.map((step) => (
@@ -371,20 +366,30 @@ export default function TodayPage() {
           <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <BellRing className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Today&apos;s live signals</h2>
+              <h2 className="text-2xl font-semibold">
+                Today&apos;s live signals
+              </h2>
             </div>
             <div className="mt-6 space-y-4 text-sm leading-7 text-emerald-900">
               <p>
-                • Active path: {activePath ? `${activePath.title} • ${activePath.currentWeek || "Next checkpoint"}` : "None yet"}
+                • Active path:{" "}
+                {activePath
+                  ? `${activePath.title} • ${activePath.currentWeek || "Next checkpoint"}`
+                  : "None yet"}
               </p>
               <p>
-                • Reading plan: {activeReadingPlan ? activeReadingPlan.name : "No active plan"}
+                • Reading plan:{" "}
+                {activeReadingPlan ? activeReadingPlan.name : "No active plan"}
               </p>
               <p>
-                • Prayer follow-up: {duePrayer ? duePrayer.title : "No open prayer reminder"}
+                • Prayer follow-up:{" "}
+                {duePrayer ? duePrayer.title : "No open prayer reminder"}
               </p>
               <p>
-                • Workflow step: {activeWorkflow ? activeWorkflow.next_step || activeWorkflow.summary : "No unfinished workflow"}
+                • Workflow step:{" "}
+                {activeWorkflow
+                  ? activeWorkflow.next_step || activeWorkflow.summary
+                  : "No unfinished workflow"}
               </p>
             </div>
             <Link
@@ -401,7 +406,9 @@ export default function TodayPage() {
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <div className="flex items-center gap-3 text-violet-950">
               <WandSparkles className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Personalized today engine</h2>
+              <h2 className="text-2xl font-semibold">
+                Personalized today engine
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {dailyEngineMoments.map((item) => (
@@ -412,7 +419,9 @@ export default function TodayPage() {
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-violet-900">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-violet-950">{item.detail}</p>
+                  <p className="mt-3 text-sm leading-6 text-violet-950">
+                    {item.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -424,12 +433,17 @@ export default function TodayPage() {
               <h2 className="text-2xl font-semibold">Path recommendations</h2>
             </div>
             <div className="mt-6 space-y-3">
-              {(savedPaths.length > 0 ? savedPaths.slice(0, 4) : guidedPaths.slice(0, 4)).map((path) => (
+              {(savedPaths.length > 0
+                ? savedPaths.slice(0, 4)
+                : guidedPaths.slice(0, 4)
+              ).map((path) => (
                 <article
                   key={path.title}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
                 >
-                  <h3 className="text-sm font-semibold text-slate-900">{path.title}</h3>
+                  <h3 className="text-sm font-semibold text-slate-900">
+                    {path.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
                     {"summary" in path ? path.summary : path.detail}
                   </p>
@@ -452,9 +466,10 @@ export default function TodayPage() {
             <h2 className="text-2xl font-semibold">A better habit loop</h2>
           </div>
           <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-600">
-            Most people do not need more Bible features before breakfast. They need a clear
-            starting point, a guided next step, and a small sense of completion. This page is
-            the product version of that idea, and it now adapts when account data exists.
+            Most people do not need more Bible features before breakfast. They
+            need a clear starting point, a guided next step, and a small sense
+            of completion. This page is the product version of that idea, and it
+            now adapts when account data exists.
           </p>
         </section>
 
@@ -478,7 +493,9 @@ export default function TodayPage() {
         <section className="mt-10 rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
           <div className="flex items-center gap-3 text-emerald-950">
             <BellRing className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Retention and recovery loops</h2>
+            <h2 className="text-2xl font-semibold">
+              Retention and recovery loops
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {retentionSystems.map((system) => (
@@ -489,7 +506,9 @@ export default function TodayPage() {
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
                   {system.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-emerald-950">{system.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-emerald-950">
+                  {system.detail}
+                </p>
               </article>
             ))}
           </div>

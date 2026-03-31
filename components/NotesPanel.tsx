@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from "react";
 import {
   X,
   Loader2,
@@ -8,20 +8,19 @@ import {
   Trash2,
   Edit2,
   Check,
-  MoreVertical,
-  Copy,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   getNotes as fetchNotes,
   saveNote,
   updateNote,
   deleteNote,
-} from '@/lib/persistence';
+} from "../lib/persistence";
 
 interface Note {
   id: string;
+  reference?: string;
   content: string;
-  note_type: 'note' | 'highlight' | 'question';
+  note_type: "note" | "highlight" | "question";
   color: string;
   tags?: string[];
   created_at: string;
@@ -36,33 +35,35 @@ interface NotesPanelProps {
 export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newNote, setNewNote] = useState('');
-  const [noteType, setNoteType] = useState<'note' | 'highlight' | 'question'>(
-    'note'
+  const [newNote, setNewNote] = useState("");
+  const [noteType, setNoteType] = useState<"note" | "highlight" | "question">(
+    "note",
   );
   const [saving, setSaving] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'note' | 'highlight' | 'question'>('all');
+  const [editValue, setEditValue] = useState("");
+  const [filterType, setFilterType] = useState<
+    "all" | "note" | "highlight" | "question"
+  >("all");
 
-  useEffect(() => {
-    loadNotes();
-  }, [reference]);
-
-  const loadNotes = async () => {
+  const loadNotes = useCallback(async () => {
     try {
       setLoading(true);
       const allNotes = await fetchNotes();
-      const filteredNotes = allNotes.filter(
-        (note: any) => note.reference === reference
+      const filteredNotes = (allNotes as Note[]).filter(
+        (note) => note.reference === reference,
       );
       setNotes(filteredNotes);
-    } catch (error) {
-      console.error('Error loading notes:', error);
+    } catch {
+      console.error("Error loading notes");
     } finally {
       setLoading(false);
     }
-  };
+  }, [reference]);
+
+  useEffect(() => {
+    void loadNotes();
+  }, [loadNotes]);
 
   const handleAddNote = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,10 +72,10 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
     try {
       setSaving(true);
       await saveNote(reference, newNote, noteType);
-      setNewNote('');
+      setNewNote("");
       await loadNotes();
-    } catch (error) {
-      alert('Failed to save note');
+    } catch {
+      alert("Failed to save note");
     } finally {
       setSaving(false);
     }
@@ -87,38 +88,38 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
       setSaving(true);
       await updateNote(id, editValue);
       setEditingId(null);
-      setEditValue('');
+      setEditValue("");
       await loadNotes();
-    } catch (error) {
-      alert('Failed to update note');
+    } catch {
+      alert("Failed to update note");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDeleteNote = async (id: string) => {
-    if (!confirm('Delete this note?')) return;
+    if (!confirm("Delete this note?")) return;
 
     try {
       await deleteNote(id);
       await loadNotes();
-    } catch (error) {
-      alert('Failed to delete note');
+    } catch {
+      alert("Failed to delete note");
     }
   };
 
   const filteredNotes = notes.filter(
-    (note) => filterType === 'all' || note.note_type === filterType
+    (note) => filterType === "all" || note.note_type === filterType,
   );
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'highlight':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'question':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+      case "highlight":
+        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      case "question":
+        return "bg-blue-100 text-blue-800 border-blue-300";
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return "bg-gray-100 text-gray-800 border-gray-300";
     }
   };
 
@@ -126,7 +127,9 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
     <div className="bg-white rounded-lg shadow-lg border border-gray-200 h-full flex flex-col max-w-md">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b">
-        <h2 className="text-xl font-semibold text-gray-800">Notes & Highlights</h2>
+        <h2 className="text-xl font-semibold text-gray-800">
+          Notes & Highlights
+        </h2>
         {onClose && (
           <button
             onClick={onClose}
@@ -139,14 +142,14 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
 
       {/* Filters */}
       <div className="flex gap-2 p-4 border-b overflow-x-auto">
-        {(['all', 'note', 'highlight', 'question'] as const).map((type) => (
+        {(["all", "note", "highlight", "question"] as const).map((type) => (
           <button
             key={type}
             onClick={() => setFilterType(type)}
             className={`px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap ${
               filterType === type
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
             {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -162,7 +165,7 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
           </div>
         ) : filteredNotes.length === 0 ? (
           <div className="text-center text-gray-500 py-8">
-            <p>No {filterType !== 'all' ? filterType + 's' : 'notes'} yet</p>
+            <p>No {filterType !== "all" ? filterType + "s" : "notes"} yet</p>
             <p className="text-sm mt-1">Add your first note below</p>
           </div>
         ) : (
@@ -170,10 +173,10 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
             <div
               key={note.id}
               className={`p-4 rounded-lg border-l-4 ${getTypeColor(
-                note.note_type
+                note.note_type,
               )}`}
               style={{
-                borderLeftColor: note.color || '#ffff00',
+                borderLeftColor: note.color || "#ffff00",
               }}
             >
               {editingId === note.id ? (
@@ -208,7 +211,9 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
               ) : (
                 <>
                   <div className="flex items-start justify-between mb-2">
-                    <span className={`text-xs font-semibold px-2 py-1 rounded ${getTypeColor(note.note_type)}`}>
+                    <span
+                      className={`text-xs font-semibold px-2 py-1 rounded ${getTypeColor(note.note_type)}`}
+                    >
                       {note.note_type.toUpperCase()}
                     </span>
                     <div className="flex gap-1">
@@ -261,7 +266,7 @@ export default function NotesPanel({ reference, onClose }: NotesPanelProps) {
             <select
               value={noteType}
               onChange={(e) =>
-                setNoteType(e.target.value as 'note' | 'highlight' | 'question')
+                setNoteType(e.target.value as "note" | "highlight" | "question")
               }
               className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >

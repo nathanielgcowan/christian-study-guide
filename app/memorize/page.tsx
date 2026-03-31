@@ -1,9 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import type { User } from '@supabase/supabase-js';
-import { BellRing, Brain, CheckCircle2, Crown, RotateCcw, Swords, Trophy } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { useEffect, useMemo, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import {
+  BellRing,
+  Brain,
+  CheckCircle2,
+  Crown,
+  RotateCcw,
+  Swords,
+  Trophy,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import {
   getMemoryBattleStats,
   getMemorizationProgress,
@@ -11,29 +19,29 @@ import {
   saveMemoryBattleStats,
   updateMemorizationProgress,
   updateMemoryBattleStats,
-} from '@/lib/persistence';
-import { memorizationSystems } from '@/lib/product-expansion';
+} from "../../lib/persistence";
+import { memorizationSystems } from "@/lib/product-expansion";
 
 const flashcards = [
   {
-    reference: 'Philippians 4:6-7',
-    front: 'What does Paul say to do with anxiety?',
-    back: 'Bring everything to God in prayer with thanksgiving.',
+    reference: "Philippians 4:6-7",
+    front: "What does Paul say to do with anxiety?",
+    back: "Bring everything to God in prayer with thanksgiving.",
   },
   {
-    reference: 'James 1:2-4',
-    front: 'What do trials produce according to James?',
-    back: 'Steadfastness and mature faith.',
+    reference: "James 1:2-4",
+    front: "What do trials produce according to James?",
+    back: "Steadfastness and mature faith.",
   },
   {
-    reference: 'Psalm 23:1',
-    front: 'Fill in the blank: “The Lord is my _____.”',
-    back: 'Shepherd',
+    reference: "Psalm 23:1",
+    front: "Fill in the blank: “The Lord is my _____.”",
+    back: "Shepherd",
   },
 ];
 
-const MEMORIZATION_PROGRESS_KEY = 'christian-study-guide:memorization-progress';
-const MEMORY_BATTLE_STATS_KEY = 'christian-study-guide:memory-battle-stats';
+const MEMORIZATION_PROGRESS_KEY = "christian-study-guide:memorization-progress";
+const MEMORY_BATTLE_STATS_KEY = "christian-study-guide:memory-battle-stats";
 
 interface MemorizationRecord {
   id: string;
@@ -49,12 +57,12 @@ export default function MemorizePage() {
   const [index, setIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
   const [completed, setCompleted] = useState<number[]>([]);
-  const [fillGuess, setFillGuess] = useState('');
+  const [fillGuess, setFillGuess] = useState("");
   const [battleScore, setBattleScore] = useState(0);
   const [bestBattleScore, setBestBattleScore] = useState(0);
   const [roundsPlayed, setRoundsPlayed] = useState(0);
   const [roundsWon, setRoundsWon] = useState(0);
-  const [battleFeedback, setBattleFeedback] = useState('');
+  const [battleFeedback, setBattleFeedback] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState<MemorizationRecord[]>([]);
@@ -64,16 +72,16 @@ export default function MemorizePage() {
   const reminderMessage = useMemo(
     () =>
       completed.length >= flashcards.length
-        ? 'Great work. Your next spaced-repetition review is tomorrow.'
-        : 'Daily reminder: review one verse in the morning and one before bed.',
-    [completed.length]
+        ? "Great work. Your next spaced-repetition review is tomorrow."
+        : "Daily reminder: review one verse in the morning and one before bed.",
+    [completed.length],
   );
 
   const masteryRank = useMemo(() => {
-    if (completed.length >= flashcards.length) return 'Mastered';
-    if (completed.length >= 2) return 'Confident';
-    if (completed.length >= 1) return 'Familiar';
-    return 'Learning';
+    if (completed.length >= flashcards.length) return "Mastered";
+    if (completed.length >= 2) return "Confident";
+    if (completed.length >= 1) return "Familiar";
+    return "Learning";
   }, [completed.length]);
 
   useEffect(() => {
@@ -90,23 +98,25 @@ export default function MemorizePage() {
             getMemoryBattleStats(),
           ]);
           setRecords(
-            (data as Array<{
-              id: string;
-              reference: string;
-              prompt: string;
-              review_count: number;
-              mastery_level: string;
-              last_result: string;
-              next_review_at: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                reference: string;
+                prompt: string;
+                review_count: number;
+                mastery_level: string;
+                last_result: string;
+                next_review_at: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               reference: item.reference,
               prompt: item.prompt,
               reviewCount: item.review_count,
               masteryLevel: item.mastery_level,
               lastResult: item.last_result,
-              nextReviewAt: item.next_review_at || '',
-            }))
+              nextReviewAt: item.next_review_at || "",
+            })),
           );
           if (battleStats) {
             setBattleScore(battleStats.current_score ?? 0);
@@ -136,16 +146,20 @@ export default function MemorizePage() {
   }, [supabase]);
 
   const persistReview = async () => {
-    const nextReviewAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    const existing = records.find((record) => record.reference === current.reference);
+    const nextReviewAt = new Date(
+      Date.now() + 24 * 60 * 60 * 1000,
+    ).toISOString();
+    const existing = records.find(
+      (record) => record.reference === current.reference,
+    );
 
     if (user) {
       if (existing) {
         const updated = await updateMemorizationProgress({
           id: existing.id,
           review_count: existing.reviewCount + 1,
-          mastery_level: existing.reviewCount + 1 >= 4 ? 'steady' : 'starting',
-          last_result: 'reviewed',
+          mastery_level: existing.reviewCount + 1 >= 4 ? "steady" : "starting",
+          last_result: "reviewed",
           next_review_at: nextReviewAt,
         });
         setRecords((currentRecords) =>
@@ -158,10 +172,10 @@ export default function MemorizePage() {
                   reviewCount: updated.review_count,
                   masteryLevel: updated.mastery_level,
                   lastResult: updated.last_result,
-                  nextReviewAt: updated.next_review_at || '',
+                  nextReviewAt: updated.next_review_at || "",
                 }
-              : record
-          )
+              : record,
+          ),
         );
         return;
       }
@@ -170,8 +184,8 @@ export default function MemorizePage() {
         reference: current.reference,
         prompt: current.front,
         review_count: 1,
-        mastery_level: 'starting',
-        last_result: 'reviewed',
+        mastery_level: "starting",
+        last_result: "reviewed",
         next_review_at: nextReviewAt,
       });
       setRecords((currentRecords) => [
@@ -182,7 +196,7 @@ export default function MemorizePage() {
           reviewCount: saved.review_count,
           masteryLevel: saved.mastery_level,
           lastResult: saved.last_result,
-          nextReviewAt: saved.next_review_at || '',
+          nextReviewAt: saved.next_review_at || "",
         },
         ...currentRecords,
       ]);
@@ -195,10 +209,11 @@ export default function MemorizePage() {
             ? {
                 ...record,
                 reviewCount: record.reviewCount + 1,
-                masteryLevel: record.reviewCount + 1 >= 4 ? 'steady' : 'starting',
+                masteryLevel:
+                  record.reviewCount + 1 >= 4 ? "steady" : "starting",
                 nextReviewAt,
               }
-            : record
+            : record,
         )
       : [
           {
@@ -206,15 +221,18 @@ export default function MemorizePage() {
             reference: current.reference,
             prompt: current.front,
             reviewCount: 1,
-            masteryLevel: 'starting',
-            lastResult: 'reviewed',
+            masteryLevel: "starting",
+            lastResult: "reviewed",
             nextReviewAt,
           },
           ...records,
         ];
 
     setRecords(nextRecords);
-    localStorage.setItem(MEMORIZATION_PROGRESS_KEY, JSON.stringify(nextRecords));
+    localStorage.setItem(
+      MEMORIZATION_PROGRESS_KEY,
+      JSON.stringify(nextRecords),
+    );
   };
 
   const handleBattleRound = (correct: boolean) => {
@@ -243,8 +261,15 @@ export default function MemorizePage() {
         };
         const existing = await getMemoryBattleStats();
         const saved = existing
-          ? await updateMemoryBattleStats(payload)
-          : await saveMemoryBattleStats(payload);
+          ? await updateMemoryBattleStats({
+              ...payload,
+            })
+          : await saveMemoryBattleStats({
+              current_score: 0,
+              best_score: 0,
+              rounds_played: 0,
+              rounds_won: 0,
+            });
         setBattleScore(saved.current_score ?? 0);
         setBestBattleScore(saved.best_score ?? 0);
         setRoundsPlayed(saved.rounds_played ?? 0);
@@ -261,11 +286,11 @@ export default function MemorizePage() {
         );
       }
 
-      setBattleFeedback('Battle stats saved');
+      setBattleFeedback("Battle stats saved");
     } catch {
-      setBattleFeedback('Save failed');
+      setBattleFeedback("Save failed");
     } finally {
-      setTimeout(() => setBattleFeedback(''), 2000);
+      setTimeout(() => setBattleFeedback(""), 2000);
     }
   };
 
@@ -288,7 +313,8 @@ export default function MemorizePage() {
             <div>
               <h1 className="text-4xl font-bold">Verse Memorization</h1>
               <p className="mt-1 text-blue-100">
-                Practice flashcards, fill-in-the-blank prompts, and repeat Scripture until it stays with you.
+                Practice flashcards, fill-in-the-blank prompts, and repeat
+                Scripture until it stays with you.
               </p>
             </div>
           </div>
@@ -324,7 +350,7 @@ export default function MemorizePage() {
             onClick={() => setShowBack((currentValue) => !currentValue)}
           >
             <p className="text-sm font-medium uppercase tracking-wide text-violet-700">
-              {showBack ? 'Answer' : 'Prompt'}
+              {showBack ? "Answer" : "Prompt"}
             </p>
             <p className="mt-6 text-2xl leading-10 text-violet-950">
               {showBack ? current.back : current.front}
@@ -337,7 +363,7 @@ export default function MemorizePage() {
               onClick={() => setShowBack((currentValue) => !currentValue)}
               className="rounded-xl bg-[#1e40af] px-5 py-3 font-medium text-white transition hover:bg-[#1e3a8a]"
             >
-              {showBack ? 'Hide Answer' : 'Show Answer'}
+              {showBack ? "Hide Answer" : "Show Answer"}
             </button>
             <button
               onClick={() => {
@@ -347,7 +373,7 @@ export default function MemorizePage() {
                 void persistReview();
                 setShowBack(false);
                 setIndex((currentValue) =>
-                  currentValue === flashcards.length - 1 ? 0 : currentValue + 1
+                  currentValue === flashcards.length - 1 ? 0 : currentValue + 1,
                 );
               }}
               className="inline-flex items-center gap-2 rounded-xl bg-emerald-100 px-5 py-3 font-medium text-emerald-900 transition hover:bg-emerald-200"
@@ -366,7 +392,9 @@ export default function MemorizePage() {
           <div className="mt-4 h-3 w-full rounded-full bg-gray-200">
             <div
               className="h-3 rounded-full bg-gradient-to-r from-[#1e40af] to-emerald-500 transition-all"
-              style={{ width: `${(completed.length / flashcards.length) * 100}%` }}
+              style={{
+                width: `${(completed.length / flashcards.length) * 100}%`,
+              }}
             />
           </div>
         </section>
@@ -374,17 +402,27 @@ export default function MemorizePage() {
         <section className="mt-8 grid gap-6 md:grid-cols-3">
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6">
             <Crown className="h-6 w-6 text-emerald-700" />
-            <p className="mt-4 text-sm font-medium text-emerald-900">Mastery rank</p>
-            <p className="mt-2 text-3xl font-bold text-emerald-950">{masteryRank}</p>
+            <p className="mt-4 text-sm font-medium text-emerald-900">
+              Mastery rank
+            </p>
+            <p className="mt-2 text-3xl font-bold text-emerald-950">
+              {masteryRank}
+            </p>
           </article>
           <article className="rounded-3xl border border-blue-200 bg-blue-50 p-6">
             <BellRing className="h-6 w-6 text-blue-700" />
-            <p className="mt-4 text-sm font-medium text-blue-900">Daily reminder</p>
-            <p className="mt-2 text-sm leading-6 text-blue-950">{reminderMessage}</p>
+            <p className="mt-4 text-sm font-medium text-blue-900">
+              Daily reminder
+            </p>
+            <p className="mt-2 text-sm leading-6 text-blue-950">
+              {reminderMessage}
+            </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-6">
             <Trophy className="h-6 w-6 text-amber-700" />
-            <p className="mt-4 text-sm font-medium text-amber-900">Next milestone</p>
+            <p className="mt-4 text-sm font-medium text-amber-900">
+              Next milestone
+            </p>
             <p className="mt-2 text-sm leading-6 text-amber-950">
               Complete all cards today to unlock a memory-builder badge.
             </p>
@@ -405,7 +443,9 @@ export default function MemorizePage() {
                 <p className="text-sm font-semibold uppercase tracking-wide text-blue-900">
                   {system.title}
                 </p>
-                <p className="mt-3 text-sm leading-6 text-blue-950">{system.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-blue-950">
+                  {system.detail}
+                </p>
               </article>
             ))}
           </div>
@@ -427,9 +467,9 @@ export default function MemorizePage() {
             />
             {fillGuess ? (
               <p className="mt-4 text-sm font-medium text-violet-950">
-                {fillGuess.trim().toLowerCase() === 'son'
-                  ? 'Correct. Keep repeating the whole verse aloud once more.'
-                  : 'Keep going. Try recalling the full phrase before checking.'}
+                {fillGuess.trim().toLowerCase() === "son"
+                  ? "Correct. Keep repeating the whole verse aloud once more."
+                  : "Keep going. Try recalling the full phrase before checking."}
               </p>
             ) : null}
           </div>
@@ -442,10 +482,10 @@ export default function MemorizePage() {
             <p className="mt-4 leading-7 text-amber-900">{reminderMessage}</p>
             <div className="mt-6 grid gap-3">
               {[
-                'Review after 1 day',
-                'Review after 3 days',
-                'Review after 7 days',
-                'Review after 14 days',
+                "Review after 1 day",
+                "Review after 3 days",
+                "Review after 7 days",
+                "Review after 14 days",
               ].map((item) => (
                 <article
                   key={item}
@@ -465,32 +505,43 @@ export default function MemorizePage() {
           </div>
           <p className="mt-4 text-sm leading-6 text-rose-900">
             Turn memorization into a fast self-challenge. Keep a streak going by
-            marking each recall round as correct or missed, and try to beat your best score.
+            marking each recall round as correct or missed, and try to beat your
+            best score.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <article className="rounded-2xl border border-rose-200 bg-white p-5">
               <p className="text-sm font-medium text-rose-800">Current score</p>
-              <p className="mt-2 text-3xl font-bold text-rose-950">{battleScore}</p>
+              <p className="mt-2 text-3xl font-bold text-rose-950">
+                {battleScore}
+              </p>
             </article>
             <article className="rounded-2xl border border-rose-200 bg-white p-5">
               <p className="text-sm font-medium text-rose-800">Best score</p>
-              <p className="mt-2 text-3xl font-bold text-rose-950">{bestBattleScore}</p>
+              <p className="mt-2 text-3xl font-bold text-rose-950">
+                {bestBattleScore}
+              </p>
             </article>
             <article className="rounded-2xl border border-rose-200 bg-white p-5">
               <p className="text-sm font-medium text-rose-800">Round prompt</p>
               <p className="mt-2 text-sm leading-6 text-rose-950">
-                Recite <span className="font-semibold">{current.reference}</span> aloud before revealing the answer.
+                Recite{" "}
+                <span className="font-semibold">{current.reference}</span> aloud
+                before revealing the answer.
               </p>
             </article>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <article className="rounded-2xl border border-rose-200 bg-white p-5">
               <p className="text-sm font-medium text-rose-800">Rounds played</p>
-              <p className="mt-2 text-2xl font-bold text-rose-950">{roundsPlayed}</p>
+              <p className="mt-2 text-2xl font-bold text-rose-950">
+                {roundsPlayed}
+              </p>
             </article>
             <article className="rounded-2xl border border-rose-200 bg-white p-5">
               <p className="text-sm font-medium text-rose-800">Rounds won</p>
-              <p className="mt-2 text-2xl font-bold text-rose-950">{roundsWon}</p>
+              <p className="mt-2 text-2xl font-bold text-rose-950">
+                {roundsWon}
+              </p>
             </article>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -514,12 +565,16 @@ export default function MemorizePage() {
             </button>
           </div>
           {battleFeedback ? (
-            <p className="mt-4 text-sm font-semibold text-emerald-700">{battleFeedback}</p>
+            <p className="mt-4 text-sm font-semibold text-emerald-700">
+              {battleFeedback}
+            </p>
           ) : null}
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h3 className="text-2xl font-semibold text-[#0f172a]">Saved memorization progress</h3>
+          <h3 className="text-2xl font-semibold text-[#0f172a]">
+            Saved memorization progress
+          </h3>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {records.length > 0 ? (
               records.map((record) => (
@@ -527,9 +582,12 @@ export default function MemorizePage() {
                   key={record.id}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
-                  <p className="font-semibold text-slate-900">{record.reference}</p>
+                  <p className="font-semibold text-slate-900">
+                    {record.reference}
+                  </p>
                   <p className="mt-2 text-sm text-slate-600">
-                    Reviews: {record.reviewCount} • Mastery: {record.masteryLevel}
+                    Reviews: {record.reviewCount} • Mastery:{" "}
+                    {record.masteryLevel}
                   </p>
                 </article>
               ))

@@ -13,7 +13,11 @@ import {
   Route,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getWorkflowRuns, saveWorkflowRun, updateWorkflowRun } from "@/lib/persistence";
+import {
+  getWorkflowRuns,
+  saveWorkflowRun,
+  updateWorkflowRun,
+} from "../../lib/persistence";
 
 const WORKFLOW_RUNS_KEY = "christian-study-guide:workflow-runs";
 
@@ -78,15 +82,17 @@ export default function OrchestrationPage() {
         if (session) {
           const data = await getWorkflowRuns();
           setWorkflowRuns(
-            (data as Array<{
-              id: string;
-              workflow_name: string;
-              linked_reference: string | null;
-              stage: string;
-              status: string;
-              summary: string;
-              next_step: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                workflow_name: string;
+                linked_reference: string | null;
+                stage: string;
+                status: string;
+                summary: string;
+                next_step: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               workflowName: item.workflow_name,
               linkedReference: item.linked_reference || "",
@@ -176,9 +182,7 @@ export default function OrchestrationPage() {
     }
 
     const nextRuns = workflowRuns.map((run) =>
-      run.id === id
-        ? { ...run, stage: "completed", status: "completed" }
-        : run,
+      run.id === id ? { ...run, stage: "completed", status: "completed" } : run,
     );
     setWorkflowRuns(nextRuns);
 
@@ -208,8 +212,9 @@ export default function OrchestrationPage() {
               Turn isolated tools into guided discipleship workflows.
             </h1>
             <p className="mt-6 text-lg leading-8 text-emerald-50">
-              This layer coordinates passage study, mentor help, prayer, planning,
-              reminders, and follow-up so the product behaves like a system.
+              This layer coordinates passage study, mentor help, prayer,
+              planning, reminders, and follow-up so the product behaves like a
+              system.
             </p>
           </div>
         </div>
@@ -222,10 +227,13 @@ export default function OrchestrationPage() {
             <h2 className="text-2xl font-semibold">Save workflow runs</h2>
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Keep orchestration records for passage workflows, leader-prep chains,
-            and follow-through loops.
+            Keep orchestration records for passage workflows, leader-prep
+            chains, and follow-through loops.
           </p>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <select
               value={draft.workflowName}
               onChange={(event) =>
@@ -298,7 +306,9 @@ export default function OrchestrationPage() {
                 Save workflow run
               </button>
               {savedMessage ? (
-                <p className="text-sm font-medium text-emerald-700">{savedMessage}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {savedMessage}
+                </p>
               ) : null}
             </div>
           </form>
@@ -314,7 +324,9 @@ export default function OrchestrationPage() {
               <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">
                 {workflow.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600">{workflow.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {workflow.description}
+              </p>
             </article>
           ))}
         </section>
@@ -326,8 +338,9 @@ export default function OrchestrationPage() {
               <h2 className="text-2xl font-semibold">Growth loops</h2>
             </div>
             <p className="mt-4 leading-7 text-blue-900">
-              Once workflows exist, analytics become more meaningful. The app can
-              tell whether insight is leading to action, prayer, completion, and return usage.
+              Once workflows exist, analytics become more meaningful. The app
+              can tell whether insight is leading to action, prayer, completion,
+              and return usage.
             </p>
             <div className="mt-6 space-y-4">
               {loopMetrics.map((metric) => (
@@ -348,8 +361,9 @@ export default function OrchestrationPage() {
                 Follow-through engine
               </h2>
               <p className="mt-4 leading-7 text-emerald-900">
-                Reminders, saved sessions, timeline events, and prayer updates all
-                become part of the same follow-through engine instead of separate pages.
+                Reminders, saved sessions, timeline events, and prayer updates
+                all become part of the same follow-through engine instead of
+                separate pages.
               </p>
             </article>
 
@@ -360,7 +374,8 @@ export default function OrchestrationPage() {
               </h2>
               <p className="mt-4 leading-7 text-amber-900">
                 Notifications make more sense when they come from a workflow:
-                unfinished plan, mentor follow-up, room prep, or a prayer update.
+                unfinished plan, mentor follow-up, room prep, or a prayer
+                update.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -395,17 +410,23 @@ export default function OrchestrationPage() {
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-semibold text-slate-900">{run.workflowName}</p>
+                    <p className="font-semibold text-slate-900">
+                      {run.workflowName}
+                    </p>
                     <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700">
                       {run.stage}
                     </span>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{run.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {run.summary}
+                  </p>
                   <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                     {run.linkedReference || "No linked reference"}
                   </p>
                   {run.nextStep ? (
-                    <p className="mt-2 text-sm text-slate-600">Next: {run.nextStep}</p>
+                    <p className="mt-2 text-sm text-slate-600">
+                      Next: {run.nextStep}
+                    </p>
                   ) : null}
                   {run.status !== "completed" ? (
                     <button
@@ -420,7 +441,8 @@ export default function OrchestrationPage() {
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save a workflow run above to start building an orchestration trail.
+                Save a workflow run above to start building an orchestration
+                trail.
               </p>
             )}
           </div>

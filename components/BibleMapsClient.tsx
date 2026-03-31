@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { Compass, Route, ShipWheel, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getBibleMapStates, saveBibleMapState } from "@/lib/persistence";
+import { getBibleMapStates, saveBibleMapState } from "../lib/persistence";
 
 const BIBLE_MAP_STATES_KEY = "christian-study-guide:bible-map-states";
 
@@ -44,13 +44,15 @@ export default function BibleMapsClient({ maps }: { maps: MapDefinition[] }) {
         if (session) {
           const data = await getBibleMapStates();
           setSavedStates(
-            (data as Array<{
-              id: string;
-              map_title: string;
-              selected_place: string;
-              layer_mode: string;
-              timeline_note: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                map_title: string;
+                selected_place: string;
+                layer_mode: string;
+                timeline_note: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               mapTitle: item.map_title,
               selectedPlace: item.selected_place,
@@ -132,7 +134,9 @@ export default function BibleMapsClient({ maps }: { maps: MapDefinition[] }) {
             key={map.title}
             className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
           >
-            <div className={`relative aspect-[4/3] bg-gradient-to-br ${map.accent}`}>
+            <div
+              className={`relative aspect-[4/3] bg-gradient-to-br ${map.accent}`}
+            >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,transparent_0%,rgba(15,23,42,0.28)_100%)]" />
               <div className="absolute inset-0 p-6">
                 <div className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
@@ -140,7 +144,9 @@ export default function BibleMapsClient({ maps }: { maps: MapDefinition[] }) {
                 </div>
               </div>
               <div className="absolute inset-x-0 bottom-0 p-6">
-                <h2 className="text-2xl font-semibold text-white">{map.title}</h2>
+                <h2 className="text-2xl font-semibold text-white">
+                  {map.title}
+                </h2>
                 <p className="mt-3 max-w-md text-sm leading-6 text-slate-100">
                   {map.summary}
                 </p>
@@ -182,7 +188,8 @@ export default function BibleMapsClient({ maps }: { maps: MapDefinition[] }) {
           </div>
           <p className="mt-4 max-w-3xl leading-7 text-amber-900">
             The strongest version lets users click places for historical notes,
-            passage links, cultural background, and connected events in the biblical timeline.
+            passage links, cultural background, and connected events in the
+            biblical timeline.
           </p>
           <div className="mt-6 rounded-2xl border border-amber-200 bg-white p-5">
             <p className="text-sm font-semibold text-amber-950">
@@ -206,7 +213,9 @@ export default function BibleMapsClient({ maps }: { maps: MapDefinition[] }) {
         </div>
 
         <aside className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#0f172a]">Saved map states</h2>
+          <h2 className="text-2xl font-semibold text-[#0f172a]">
+            Saved map states
+          </h2>
           <div className="mt-6 grid gap-3">
             {savedStates.length > 0 ? (
               savedStates.map((item) => (
@@ -226,7 +235,8 @@ export default function BibleMapsClient({ maps }: { maps: MapDefinition[] }) {
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save map selections to keep track of places and timeline insights.
+                Save map selections to keep track of places and timeline
+                insights.
               </p>
             )}
           </div>

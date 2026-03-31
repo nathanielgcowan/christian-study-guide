@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import type { User } from "@supabase/supabase-js";
 import {
   BookOpen,
   Calendar,
@@ -12,11 +12,15 @@ import {
   Play,
   Trash2,
   Wand2,
-} from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
-import AuthModal from '@/components/AuthModal';
-import { getCustomReadingPlans, saveCustomReadingPlan } from '@/lib/persistence';
-import { adaptivePlanSignals, guidedPaths } from '@/lib/product-expansion';
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import AuthModal from "../../components/AuthModal";
+
+import { adaptivePlanSignals, guidedPaths } from "../../lib/product-expansion";
+import {
+  getCustomReadingPlans,
+  saveCustomReadingPlan,
+} from "../../lib/persistence";
 
 interface ReadingPlanEntry {
   reference: string;
@@ -26,7 +30,7 @@ interface ReadingPlan {
   id: string;
   name: string;
   description: string;
-  plan_type: 'general' | 'theology' | 'topical';
+  plan_type: "general" | "theology" | "topical";
   duration_days: number;
   entries: ReadingPlanEntry[];
   userProgress?: {
@@ -39,7 +43,7 @@ function buildPlanCoach(reference: string) {
   return {
     summary: `Today's reading in ${reference} is a chance to slow down and notice one truth about God's character and one step of obedience for your day.`,
     reflection:
-      'What part of this reading feels most connected to your current season, and why?',
+      "What part of this reading feels most connected to your current season, and why?",
     prayer: `Lord, meet me through ${reference} today. Give me understanding, faith, and the courage to live what I read. Amen.`,
     action: `Read ${reference} once for understanding, once for prayer, and then write one sentence about how you will live it out before the day ends.`,
   };
@@ -66,7 +70,9 @@ export default function ReadingPlansPage() {
   const [removing, setRemoving] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [customPlanPrompt, setCustomPlanPrompt] = useState("Create a 14-day plan about faith.");
+  const [customPlanPrompt, setCustomPlanPrompt] = useState(
+    "Create a 14-day plan about faith.",
+  );
   const [customPlans, setCustomPlans] = useState<
     Array<{
       id: string;
@@ -76,7 +82,7 @@ export default function ReadingPlansPage() {
       summary: string;
     }>
   >([]);
-  const [customPlanFeedback, setCustomPlanFeedback] = useState('');
+  const [customPlanFeedback, setCustomPlanFeedback] = useState("");
 
   const [supabase] = useState(() => createClient());
 
@@ -105,19 +111,21 @@ export default function ReadingPlansPage() {
     try {
       const data = await getCustomReadingPlans();
       setCustomPlans(
-        (data as Array<{
-          id: string;
-          prompt: string;
-          title: string;
-          duration_days: number;
-          summary: string;
-        }>).map((item) => ({
+        (
+          data as Array<{
+            id: string;
+            prompt: string;
+            title: string;
+            duration_days: number;
+            summary: string;
+          }>
+        ).map((item) => ({
           id: item.id,
           prompt: item.prompt,
           title: item.title,
           durationDays: item.duration_days,
           summary: item.summary,
-        }))
+        })),
       );
     } catch {}
   };
@@ -125,17 +133,17 @@ export default function ReadingPlansPage() {
   const loadPlans = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/reading-plans');
+      const response = await fetch("/api/reading-plans");
 
       if (!response.ok) {
-        throw new Error('Failed to load reading plans');
+        throw new Error("Failed to load reading plans");
       }
 
       const data = await response.json();
       setPlans(data);
     } catch (error) {
-      console.error('Error loading plans:', error);
-      alert('Failed to load reading plans');
+      console.error("Error loading plans:", error);
+      alert("Failed to load reading plans");
     } finally {
       setLoading(false);
     }
@@ -144,16 +152,16 @@ export default function ReadingPlansPage() {
   const handleStartPlan = async (planId: string) => {
     try {
       setEnrolling(planId);
-      const response = await fetch('/api/reading-plans', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/reading-plans", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan_id: planId }),
       });
 
       if (!response.ok) {
         const result = await response.json();
         if (response.status === 409) {
-          alert('You are already enrolled in this plan');
+          alert("You are already enrolled in this plan");
         } else {
           throw new Error(result.error);
         }
@@ -162,30 +170,30 @@ export default function ReadingPlansPage() {
 
       await loadPlans();
     } catch {
-      alert('Failed to start plan');
+      alert("Failed to start plan");
     } finally {
       setEnrolling(null);
     }
   };
 
   const handleRemovePlan = async (planId: string) => {
-    if (!confirm('Remove this plan from your reading list?')) return;
+    if (!confirm("Remove this plan from your reading list?")) return;
 
     try {
       setRemoving(planId);
       const response = await fetch(`/api/reading-plans/${planId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planId }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to remove plan');
+        throw new Error("Failed to remove plan");
       }
 
       await loadPlans();
     } catch {
-      alert('Failed to remove plan');
+      alert("Failed to remove plan");
     } finally {
       setRemoving(null);
     }
@@ -193,37 +201,55 @@ export default function ReadingPlansPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'theology':
-        return 'bg-purple-100 text-purple-700 border-purple-200';
-      case 'topical':
-        return 'bg-green-100 text-green-700 border-green-200';
+      case "theology":
+        return "bg-purple-100 text-purple-700 border-purple-200";
+      case "topical":
+        return "bg-green-100 text-green-700 border-green-200";
       default:
-        return 'bg-blue-100 text-blue-700 border-blue-200';
+        return "bg-blue-100 text-blue-700 border-blue-200";
     }
   };
 
   const getProgressPercentage = (plan: ReadingPlan) => {
     if (!plan.duration_days || !plan.userProgress) return 0;
-    return Math.round((plan.userProgress.current_day / plan.duration_days) * 100);
+    return Math.round(
+      (plan.userProgress.current_day / plan.duration_days) * 100,
+    );
   };
 
   const getCurrentReference = (plan: ReadingPlan) => {
     const index = Math.max((plan.userProgress?.current_day || 1) - 1, 0);
-    return plan.entries?.[index]?.reference || plan.entries?.[0]?.reference || 'Scripture';
+    return (
+      plan.entries?.[index]?.reference ||
+      plan.entries?.[0]?.reference ||
+      "Scripture"
+    );
   };
 
   const handleSaveCustomPlan = async () => {
     if (!customPlanPrompt.trim()) return;
 
-    const generatedTitle = customPlanPrompt.includes('faith')
-      ? '14-Day Faith Builder'
-      : 'Custom Reading Plan';
+    const generatedTitle = customPlanPrompt.includes("faith")
+      ? "14-Day Faith Builder"
+      : "Custom Reading Plan";
     const generatedSummary =
-      'A custom AI-shaped reading plan with a daily focus, Scripture rhythm, and one coaching nudge for spiritual consistency.';
+      "A custom AI-shaped reading plan with a daily focus, Scripture rhythm, and one coaching nudge for spiritual consistency.";
     const generatedEntries = [
-      { day: 1, reference: 'Hebrews 11', note: 'See faith defined and embodied.' },
-      { day: 2, reference: 'Romans 4', note: 'Study Abraham and justification by faith.' },
-      { day: 3, reference: 'James 2', note: 'Explore living faith and obedience.' },
+      {
+        day: 1,
+        reference: "Hebrews 11",
+        note: "See faith defined and embodied.",
+      },
+      {
+        day: 2,
+        reference: "Romans 4",
+        note: "Study Abraham and justification by faith.",
+      },
+      {
+        day: 3,
+        reference: "James 2",
+        note: "Explore living faith and obedience.",
+      },
     ];
 
     try {
@@ -231,7 +257,7 @@ export default function ReadingPlansPage() {
         prompt: customPlanPrompt,
         title: generatedTitle,
         duration_days: 14,
-        focus: 'faith',
+        focus: "faith",
         summary: generatedSummary,
         entries: generatedEntries,
       });
@@ -246,11 +272,11 @@ export default function ReadingPlansPage() {
         },
         ...current,
       ]);
-      setCustomPlanFeedback('Custom plan saved');
+      setCustomPlanFeedback("Custom plan saved");
     } catch {
-      setCustomPlanFeedback('Save failed');
+      setCustomPlanFeedback("Save failed");
     } finally {
-      setTimeout(() => setCustomPlanFeedback(''), 2000);
+      setTimeout(() => setCustomPlanFeedback(""), 2000);
     }
   };
 
@@ -264,7 +290,8 @@ export default function ReadingPlansPage() {
               Reading Plans
             </h1>
             <p className="text-gray-600">
-              Sign in to access personalized reading plans and track your progress.
+              Sign in to access personalized reading plans and track your
+              progress.
             </p>
           </div>
           <button
@@ -344,13 +371,14 @@ export default function ReadingPlansPage() {
               className="mt-6 w-full rounded-2xl border border-violet-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-violet-500"
             />
             <p className="mt-4 text-sm leading-6 text-violet-900">
-              Example output: daily readings, a short goal for each day, and one coaching prompt.
+              Example output: daily readings, a short goal for each day, and one
+              coaching prompt.
             </p>
             <button
               onClick={handleSaveCustomPlan}
               className="mt-5 rounded-2xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-800"
             >
-              {customPlanFeedback || 'Save custom plan'}
+              {customPlanFeedback || "Save custom plan"}
             </button>
           </aside>
         </section>
@@ -362,8 +390,9 @@ export default function ReadingPlansPage() {
                 Guided discipleship paths
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                These tracks turn reading plans into pastoral journeys with checkpoints,
-                completion moments, and a clearer sense of spiritual direction.
+                These tracks turn reading plans into pastoral journeys with
+                checkpoints, completion moments, and a clearer sense of
+                spiritual direction.
               </p>
             </div>
             <Link
@@ -380,16 +409,22 @@ export default function ReadingPlansPage() {
                 key={path.title}
                 className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
               >
-                <h3 className="text-lg font-semibold text-slate-900">{path.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{path.detail}</p>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  {path.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  {path.detail}
+                </p>
               </article>
             ))}
           </div>
         </section>
 
         {customPlans.length > 0 ? (
-        <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Saved AI custom plans</h2>
+          <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Saved AI custom plans
+            </h2>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {customPlans.map((plan) => (
                 <article
@@ -398,7 +433,9 @@ export default function ReadingPlansPage() {
                 >
                   <p className="font-semibold text-slate-900">{plan.title}</p>
                   <p className="mt-2 text-sm text-slate-600">{plan.prompt}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{plan.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {plan.summary}
+                  </p>
                 </article>
               ))}
             </div>
@@ -412,8 +449,8 @@ export default function ReadingPlansPage() {
               <h2 className="text-2xl font-semibold">Reading Plan Builder</h2>
             </div>
             <p className="mt-4 leading-7 text-slate-600">
-              Generate a custom plan by topic, book, duration, or spiritual goal,
-              then pair it with weekly AI coaching.
+              Generate a custom plan by topic, book, duration, or spiritual
+              goal, then pair it with weekly AI coaching.
             </p>
             <Link
               href="/plan-builder"
@@ -428,9 +465,14 @@ export default function ReadingPlansPage() {
               AI Plan Coach
             </h2>
             <ul className="mt-6 space-y-4 text-sm leading-6 text-emerald-950">
-              <li>• Weekly summaries that spot the main thread in your readings</li>
+              <li>
+                • Weekly summaries that spot the main thread in your readings
+              </li>
               <li>• Mid-plan check-ins when momentum drops</li>
-              <li>• Goal-aware coaching based on consistency, depth, or leadership focus</li>
+              <li>
+                • Goal-aware coaching based on consistency, depth, or leadership
+                focus
+              </li>
               <li>• Suggested next plans after completion</li>
             </ul>
           </aside>
@@ -457,7 +499,9 @@ export default function ReadingPlansPage() {
           <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <div className="flex items-center gap-3 text-amber-950">
               <AlertCircle className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Adaptive reading intelligence</h2>
+              <h2 className="text-2xl font-semibold">
+                Adaptive reading intelligence
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {adaptivePlanSignals.map((signal) => (
@@ -468,7 +512,9 @@ export default function ReadingPlansPage() {
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-900">
                     {signal.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-amber-950">{signal.detail}</p>
+                  <p className="mt-3 text-sm leading-6 text-amber-950">
+                    {signal.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -479,10 +525,22 @@ export default function ReadingPlansPage() {
               Better than a brittle streak
             </h2>
             <ul className="mt-6 space-y-4 text-sm leading-6 text-emerald-950">
-              <li>• Missed days recover with shorter entries instead of guilt-heavy resets.</li>
-              <li>• Plan coaching can flex between deep study, leadership prep, and survival-mode consistency.</li>
-              <li>• Leaders can assign a shared church path without losing personal pacing.</li>
-              <li>• Completions can trigger the next recommended discipleship lane automatically.</li>
+              <li>
+                • Missed days recover with shorter entries instead of
+                guilt-heavy resets.
+              </li>
+              <li>
+                • Plan coaching can flex between deep study, leadership prep,
+                and survival-mode consistency.
+              </li>
+              <li>
+                • Leaders can assign a shared church path without losing
+                personal pacing.
+              </li>
+              <li>
+                • Completions can trigger the next recommended discipleship lane
+                automatically.
+              </li>
             </ul>
           </aside>
         </section>
@@ -514,7 +572,7 @@ export default function ReadingPlansPage() {
                           </h3>
                           <span
                             className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${getTypeColor(
-                              plan.plan_type
+                              plan.plan_type,
                             )}`}
                           >
                             {plan.plan_type.charAt(0).toUpperCase() +
@@ -540,13 +598,16 @@ export default function ReadingPlansPage() {
                           {coach.summary}
                         </p>
                         <p className="mt-3 text-sm text-emerald-900">
-                          <span className="font-semibold">Reflect:</span> {coach.reflection}
+                          <span className="font-semibold">Reflect:</span>{" "}
+                          {coach.reflection}
                         </p>
                         <p className="mt-3 text-sm text-emerald-900">
-                          <span className="font-semibold">Pray:</span> {coach.prayer}
+                          <span className="font-semibold">Pray:</span>{" "}
+                          {coach.prayer}
                         </p>
                         <p className="mt-3 text-sm text-emerald-900">
-                          <span className="font-semibold">Action:</span> {coach.action}
+                          <span className="font-semibold">Action:</span>{" "}
+                          {coach.action}
                         </p>
                       </div>
 
@@ -557,8 +618,8 @@ export default function ReadingPlansPage() {
                             Progress
                           </span>
                           <span className="text-sm font-bold text-[#1e40af]">
-                            {plan.userProgress?.current_day || 0} /{' '}
-                            {plan.duration_days}{' '}
+                            {plan.userProgress?.current_day || 0} /{" "}
+                            {plan.duration_days}{" "}
                             <span className="text-gray-600">({progress}%)</span>
                           </span>
                         </div>
@@ -572,7 +633,7 @@ export default function ReadingPlansPage() {
 
                       <div className="flex gap-3">
                         <Link
-                          href={`/passage/${currentReference.toLowerCase().replace(/\s+/g, '-')}`}
+                          href={`/passage/${currentReference.toLowerCase().replace(/\s+/g, "-")}`}
                           className="flex-1 bg-[#1e40af] hover:bg-[#1e3a8a] text-white px-4 py-3 rounded-lg font-medium transition flex items-center justify-center gap-2"
                         >
                           <Calendar className="h-5 w-5" />
@@ -609,7 +670,7 @@ export default function ReadingPlansPage() {
                         </h3>
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${getTypeColor(
-                            plan.plan_type
+                            plan.plan_type,
                           )}`}
                         >
                           {plan.plan_type.charAt(0).toUpperCase() +
@@ -654,7 +715,7 @@ export default function ReadingPlansPage() {
 
                   <span
                     className={`inline-block w-fit px-3 py-1 rounded-full text-sm font-medium border mb-4 ${getTypeColor(
-                      plan.plan_type
+                      plan.plan_type,
                     )}`}
                   >
                     {plan.plan_type.charAt(0).toUpperCase() +
@@ -696,7 +757,8 @@ export default function ReadingPlansPage() {
               <AlertCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <p className="text-blue-900 font-medium">All plans are active!</p>
               <p className="text-blue-700 text-sm mt-1">
-                You&apos;re either enrolled in or have completed all available plans.
+                You&apos;re either enrolled in or have completed all available
+                plans.
               </p>
             </div>
           )}

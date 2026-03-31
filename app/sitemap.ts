@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllSiteMapLinks, getSiteUrl } from "@/lib/site-map";
+import { getAllSiteMapLinks, getSiteUrl } from "../lib/site-map";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();

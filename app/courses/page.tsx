@@ -3,14 +3,22 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Award, BookOpen, CheckSquare, GraduationCap, Shield, Sparkles, Target } from "lucide-react";
+import {
+  Award,
+  BookOpen,
+  CheckSquare,
+  GraduationCap,
+  Shield,
+  Sparkles,
+  Target,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
   deleteCourseEnrollment,
   getCourseEnrollments,
   saveCourseEnrollment,
   updateCourseEnrollment,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const COURSE_ENROLLMENTS_KEY = "christian-study-guide:course-enrollments";
 
@@ -18,32 +26,38 @@ const courses = [
   {
     title: "New Believer Foundations",
     category: "foundations",
-    summary: "A simple first discipleship course on the Gospel, prayer, Bible reading, church, and daily obedience.",
+    summary:
+      "A simple first discipleship course on the Gospel, prayer, Bible reading, church, and daily obedience.",
   },
   {
     title: "Trinity",
     category: "theology",
-    summary: "One God in three Persons, with anchor texts, doctrine notes, and short knowledge checks.",
+    summary:
+      "One God in three Persons, with anchor texts, doctrine notes, and short knowledge checks.",
   },
   {
     title: "Salvation",
     category: "gospel",
-    summary: "Grace, faith, justification, and assurance structured as a guided doctrine track.",
+    summary:
+      "Grace, faith, justification, and assurance structured as a guided doctrine track.",
   },
   {
     title: "Church history",
     category: "history",
-    summary: "A beginner-friendly path through the early church, councils, reform, and modern movements.",
+    summary:
+      "A beginner-friendly path through the early church, councils, reform, and modern movements.",
   },
   {
     title: "Apologetics",
     category: "defense",
-    summary: "A course path for the resurrection, reliability of Scripture, and common worldview questions.",
+    summary:
+      "A course path for the resurrection, reliability of Scripture, and common worldview questions.",
   },
   {
     title: "Biblical theology",
     category: "deep-study",
-    summary: "Trace the storyline of Scripture from creation to new creation with guided connections.",
+    summary:
+      "Trace the storyline of Scripture from creation to new creation with guided connections.",
   },
 ];
 
@@ -89,15 +103,17 @@ export default function CoursesPage() {
         if (session) {
           const data = await getCourseEnrollments();
           setSavedCourses(
-            (data as Array<{
-              id: string;
-              title: string;
-              category: string;
-              progress_percentage: number;
-              status: string;
-              current_module: string | null;
-              summary: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                category: string;
+                progress_percentage: number;
+                status: string;
+                current_module: string | null;
+                summary: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               category: item.category,
@@ -235,9 +251,12 @@ export default function CoursesPage() {
       <section className="bg-gradient-to-br from-[#0f172a] via-[#1e40af] to-[#14532d] py-20 text-white">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <GraduationCap className="mx-auto h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">AI Theology Tutor</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            AI Theology Tutor
+          </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-blue-100">
-            Structured lessons, quizzes, readings, and doctrine tracks for a course-style learning experience.
+            Structured lessons, quizzes, readings, and doctrine tracks for a
+            course-style learning experience.
           </p>
         </div>
       </section>
@@ -254,8 +273,12 @@ export default function CoursesPage() {
               ) : (
                 <Shield className="h-5 w-5 text-emerald-700" />
               )}
-              <p className="mt-4 text-sm font-semibold text-slate-900">{course.title}</p>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{course.summary}</p>
+              <p className="mt-4 text-sm font-semibold text-slate-900">
+                {course.title}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">
+                {course.summary}
+              </p>
               <button
                 type="button"
                 onClick={() => handleEnroll(course)}
@@ -273,8 +296,9 @@ export default function CoursesPage() {
             <h2 className="text-2xl font-semibold">Course structure</h2>
           </div>
           <p className="mt-4 leading-7 text-violet-900">
-            Each course can combine guided reading paths, theology notes, quizzes,
-            apologetics explanations, and progress tracking inside one learning system.
+            Each course can combine guided reading paths, theology notes,
+            quizzes, apologetics explanations, and progress tracking inside one
+            learning system.
           </p>
         </section>
 
@@ -282,7 +306,9 @@ export default function CoursesPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3 text-slate-900">
               <Target className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold">What a strong course should produce</h2>
+              <h2 className="text-2xl font-semibold">
+                What a strong course should produce
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {courseOutcomes.map((item) => (
@@ -322,11 +348,14 @@ export default function CoursesPage() {
             <div>
               <div className="flex items-center gap-3 text-amber-950">
                 <Award className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Certificates and completion rewards</h2>
+                <h2 className="text-2xl font-semibold">
+                  Certificates and completion rewards
+                </h2>
               </div>
               <p className="mt-4 text-sm leading-7 text-amber-900">
-                Guided paths and theology tracks feel more substantial when users unlock a certificate,
-                course badge, or shareable completion card at the end.
+                Guided paths and theology tracks feel more substantial when
+                users unlock a certificate, course badge, or shareable
+                completion card at the end.
               </p>
             </div>
             <Link
@@ -341,7 +370,9 @@ export default function CoursesPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <GraduationCap className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Recommended learning tracks</h2>
+            <h2 className="text-2xl font-semibold">
+              Recommended learning tracks
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {[
@@ -362,19 +393,24 @@ export default function CoursesPage() {
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Saved enrollments</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Saved enrollments
+              </h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 Signed-in users can keep course progress synced across devices.
               </p>
             </div>
             {saveFeedback ? (
-              <p className="text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
 
           {savedCourses.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
-              Enroll in a course to start tracking theology and discipleship progress.
+              Enroll in a course to start tracking theology and discipleship
+              progress.
             </div>
           ) : (
             <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -385,7 +421,9 @@ export default function CoursesPage() {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-lg font-semibold text-slate-900">{course.title}</h3>
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        {course.title}
+                      </h3>
                       <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                         {course.category} • {course.status}
                       </p>
@@ -409,14 +447,20 @@ export default function CoursesPage() {
                       </button>
                     </div>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{course.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {course.summary}
+                  </p>
                   <div className="mt-4 rounded-xl bg-white p-4 text-sm text-slate-700">
                     <p>
-                      <span className="font-semibold text-slate-900">Current module:</span>{" "}
+                      <span className="font-semibold text-slate-900">
+                        Current module:
+                      </span>{" "}
                       {course.currentModule || "Module 1"}
                     </p>
                     <p className="mt-2">
-                      <span className="font-semibold text-slate-900">Progress:</span>{" "}
+                      <span className="font-semibold text-slate-900">
+                        Progress:
+                      </span>{" "}
                       {course.progressPercentage}%
                     </p>
                   </div>

@@ -20,13 +20,21 @@ export default function UpdatePasswordPage() {
 
   useEffect(() => {
     // Optional: Check if user came from a valid recovery link
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        // You can still allow it because Supabase handles the token via URL hash
-        console.log("No active session — expecting recovery token in URL");
-      }
-    });
-  }, []);
+    supabase.auth
+      .getSession()
+      .then(
+        ({
+          data,
+        }: {
+          data: { session: import("@supabase/auth-js").Session | null };
+        }) => {
+          if (!data.session) {
+            // You can still allow it because Supabase handles the token via URL hash
+            console.log("No active session — expecting recovery token in URL");
+          }
+        },
+      );
+  }, [supabase.auth]);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,10 +68,10 @@ export default function UpdatePasswordPage() {
       setTimeout(() => {
         router.push("/account");
       }, 2000);
-    } catch (err: any) {
+    } catch (err) {
       setMessage({
         type: "error",
-        text: err.message || "Failed to update password",
+        text: err instanceof Error ? err.message : "Failed to update password",
       });
     } finally {
       setLoading(false);

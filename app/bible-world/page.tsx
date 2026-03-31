@@ -1,5 +1,5 @@
 import { Compass, Landmark, Sparkles } from "lucide-react";
-import BibleWorldMapSection from "@/components/BibleWorldMapSection";
+import BibleWorldMapSection from "../../components/BibleWorldMapSection";
 
 export default function BibleWorldPage() {
   return (
@@ -15,9 +15,10 @@ export default function BibleWorldPage() {
               Explore the land of Jesus through a real interactive map.
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
-              Instead of a static image, this page now uses MapLibre GL to create
-              a more atmospheric Jesus-era world explorer with historical regions,
-              route tracing, and curated locations across Galilee and Judea.
+              Instead of a static image, this page now uses MapLibre GL to
+              create a more atmospheric Jesus-era world explorer with historical
+              regions, route tracing, and curated locations across Galilee and
+              Judea.
             </p>
           </div>
         </div>
@@ -28,17 +29,20 @@ export default function BibleWorldPage() {
           {[
             {
               title: "Atmosphere modes",
-              detail: "Switch the map between dawn, midday, and evening to change the feel of the land.",
+              detail:
+                "Switch the map between dawn, midday, and evening to change the feel of the land.",
               icon: Sparkles,
             },
             {
               title: "Historical focus",
-              detail: "Jump between Galilee, Jerusalem, and the Judean wilderness with curated presets.",
+              detail:
+                "Jump between Galilee, Jerusalem, and the Judean wilderness with curated presets.",
               icon: Compass,
             },
             {
               title: "Jesus-era markers",
-              detail: "Open location notes for Nazareth, Capernaum, Bethlehem, Bethany, and Jerusalem.",
+              detail:
+                "Open location notes for Nazareth, Capernaum, Bethlehem, Bethany, and Jerusalem.",
               icon: Landmark,
             },
           ].map((item) => {
@@ -49,8 +53,12 @@ export default function BibleWorldPage() {
                 className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm"
               >
                 <Icon className="h-6 w-6 text-blue-700" />
-                <h2 className="mt-4 text-xl font-semibold text-slate-950">{item.title}</h2>
-                <p className="mt-3 text-sm leading-7 text-slate-600">{item.detail}</p>
+                <h2 className="mt-4 text-xl font-semibold text-slate-950">
+                  {item.title}
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-slate-600">
+                  {item.detail}
+                </p>
               </article>
             );
           })}
@@ -59,11 +67,13 @@ export default function BibleWorldPage() {
         <BibleWorldMapSection />
 
         <div className="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-slate-950">How to use it</h3>
+          <h3 className="text-lg font-semibold text-slate-950">
+            How to use it
+          </h3>
           <p className="mt-3 text-sm leading-7 text-slate-600">
-            Drag to explore, zoom in to study the Galilee and Jerusalem corridors,
-            click markers for Jesus-era notes, and use the preset cards to move through
-            the landscape like a guided historical scene.
+            Drag to explore, zoom in to study the Galilee and Jerusalem
+            corridors, click markers for Jesus-era notes, and use the preset
+            cards to move through the landscape like a guided historical scene.
           </p>
         </div>
       </section>

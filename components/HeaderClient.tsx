@@ -87,7 +87,7 @@ export default function HeaderClient() {
             prefetch={false}
             className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-80"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-dark text-white shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary-dark text-white shadow-sm">
               <BookOpen size={24} />
             </div>
             <div className="hidden min-w-0 sm:block">

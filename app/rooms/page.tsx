@@ -3,9 +3,21 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { ArrowRight, MessagesSquare, NotebookTabs, RadioTower, Users2, Video, Wifi } from "lucide-react";
+import {
+  ArrowRight,
+  MessagesSquare,
+  NotebookTabs,
+  RadioTower,
+  Users2,
+  Video,
+  Wifi,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getRoomSyncStates, saveRoomSyncState, updateRoomSyncState } from "@/lib/persistence";
+import {
+  getRoomSyncStates,
+  saveRoomSyncState,
+  updateRoomSyncState,
+} from "../../lib/persistence";
 
 const ROOM_SYNC_KEY = "christian-study-guide:room-sync-states";
 
@@ -69,13 +81,15 @@ export default function RoomsPage() {
         if (session) {
           const data = await getRoomSyncStates();
           setSyncStates(
-            (data as Array<{
-              id: string;
-              room_name: string;
-              room_type: string;
-              sync_stage: string;
-              participant_count: number;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                room_name: string;
+                room_type: string;
+                sync_stage: string;
+                participant_count: number;
+              }>
+            ).map((item) => ({
               id: item.id,
               roomName: item.room_name,
               roomType: item.room_type,
@@ -194,13 +208,20 @@ export default function RoomsPage() {
             <h2 className="text-2xl font-semibold">Save room sync state</h2>
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Keep a room’s current stage, participant count, and sync mode across devices.
+            Keep a room’s current stage, participant count, and sync mode across
+            devices.
           </p>
-          <form onSubmit={handleSaveSync} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSaveSync}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <input
               value={draft.roomName}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, roomName: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  roomName: event.target.value,
+                }))
               }
               placeholder="Room name"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -208,7 +229,10 @@ export default function RoomsPage() {
             <select
               value={draft.roomType}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, roomType: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  roomType: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -219,7 +243,10 @@ export default function RoomsPage() {
             <select
               value={draft.syncStage}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, syncStage: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  syncStage: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -248,7 +275,9 @@ export default function RoomsPage() {
                 Save sync state
               </button>
               {savedMessage ? (
-                <p className="text-sm font-medium text-emerald-700">{savedMessage}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {savedMessage}
+                </p>
               ) : null}
             </div>
           </form>
@@ -258,17 +287,20 @@ export default function RoomsPage() {
           {[
             {
               title: "Live notes",
-              detail: "Collaborative notes that update during the room, not after it is over.",
+              detail:
+                "Collaborative notes that update during the room, not after it is over.",
               icon: NotebookTabs,
             },
             {
               title: "Synced room state",
-              detail: "Everyone moves together from reading to discussion to prayer.",
+              detail:
+                "Everyone moves together from reading to discussion to prayer.",
               icon: Wifi,
             },
             {
               title: "Leader controls",
-              detail: "Guide prompts, prayers, and follow-up moments without the room feeling chaotic.",
+              detail:
+                "Guide prompts, prayers, and follow-up moments without the room feeling chaotic.",
               icon: RadioTower,
             },
           ].map((item) => {
@@ -279,8 +311,12 @@ export default function RoomsPage() {
                 className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
               >
                 <Icon className="h-6 w-6 text-[#1e40af]" />
-                <h2 className="mt-4 text-2xl font-semibold text-slate-900">{item.title}</h2>
-                <p className="mt-4 text-sm leading-6 text-slate-600">{item.detail}</p>
+                <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+                  {item.title}
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-slate-600">
+                  {item.detail}
+                </p>
               </article>
             );
           })}
@@ -356,11 +392,14 @@ export default function RoomsPage() {
             <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
               <div className="flex items-center gap-3 text-blue-950">
                 <Users2 className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Real-time collaboration layer</h2>
+                <h2 className="text-2xl font-semibold">
+                  Real-time collaboration layer
+                </h2>
               </div>
               <p className="mt-6 leading-7 text-blue-900">
                 The next step is presence-aware rooms with shared note streams,
-                live leader prompts, and participant updates that move together in real time.
+                live leader prompts, and participant updates that move together
+                in real time.
               </p>
               <Link
                 href="/collaboration"
@@ -379,9 +418,9 @@ export default function RoomsPage() {
             <h2 className="text-2xl font-semibold">Live room sync</h2>
           </div>
           <p className="mt-4 leading-7 text-slate-600">
-            The next room layer is real-time presence, collaborative notes, shared prayer
-            updates, and leader-controlled discussion stages so everyone moves through the
-            same study moment together.
+            The next room layer is real-time presence, collaborative notes,
+            shared prayer updates, and leader-controlled discussion stages so
+            everyone moves through the same study moment together.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-4">
             {[
@@ -401,7 +440,9 @@ export default function RoomsPage() {
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#0f172a]">Saved sync states</h2>
+          <h2 className="text-2xl font-semibold text-[#0f172a]">
+            Saved sync states
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {syncStates.length > 0 ? (
               syncStates.map((state) => (
@@ -410,13 +451,16 @@ export default function RoomsPage() {
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-semibold text-slate-900">{state.roomName}</p>
+                    <p className="font-semibold text-slate-900">
+                      {state.roomName}
+                    </p>
                     <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700">
                       {state.syncStage}
                     </span>
                   </div>
                   <p className="mt-3 text-sm text-slate-600">
-                    {state.roomType.replace(/-/g, " ")} • {state.participantCount} participants
+                    {state.roomType.replace(/-/g, " ")} •{" "}
+                    {state.participantCount} participants
                   </p>
                   {state.syncStage !== "discussion" ? (
                     <button
@@ -431,7 +475,8 @@ export default function RoomsPage() {
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save a room sync state above to keep live-room progress available later.
+                Save a room sync state above to keep live-room progress
+                available later.
               </p>
             )}
           </div>

@@ -5,22 +5,25 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { ArrowRight, BookMarked, LibraryBig, Quote } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getCommentarySaves, saveCommentarySave } from "@/lib/persistence";
+import { getCommentarySaves, saveCommentarySave } from "../../lib/persistence";
 
 const COMMENTARY_SAVES_KEY = "christian-study-guide:commentary-saves";
 
 const commentarySources = [
   {
     title: "Matthew Henry",
-    summary: "Accessible devotional-style commentary that helps readers connect meaning and application.",
+    summary:
+      "Accessible devotional-style commentary that helps readers connect meaning and application.",
   },
   {
     title: "John Gill",
-    summary: "Detailed verse-by-verse observations with stronger theological and historical emphasis.",
+    summary:
+      "Detailed verse-by-verse observations with stronger theological and historical emphasis.",
   },
   {
     title: "Jamieson-Fausset-Brown",
-    summary: "Compact classic commentary useful for quick context and comparative insights.",
+    summary:
+      "Compact classic commentary useful for quick context and comparative insights.",
   },
 ];
 
@@ -50,13 +53,15 @@ export default function CommentariesPage() {
         if (session) {
           const data = await getCommentarySaves();
           setSavedSources(
-            (data as Array<{
-              id: string;
-              source_title: string;
-              reference: string;
-              summary: string;
-              use_case: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                source_title: string;
+                reference: string;
+                summary: string;
+                use_case: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               sourceTitle: item.source_title,
               reference: item.reference,
@@ -77,12 +82,15 @@ export default function CommentariesPage() {
     load();
   }, [supabase]);
 
-  const handleSaveCommentary = async (source: (typeof commentarySources)[number]) => {
+  const handleSaveCommentary = async (
+    source: (typeof commentarySources)[number],
+  ) => {
     const payload = {
       source_title: source.title,
       reference: "John 3:16",
       summary: source.summary,
-      use_case: "Helpful for comparing a trusted commentary summary with the AI explanation.",
+      use_case:
+        "Helpful for comparing a trusted commentary summary with the AI explanation.",
     };
 
     try {
@@ -134,9 +142,12 @@ export default function CommentariesPage() {
       <section className="bg-gradient-to-br from-[#0f172a] via-[#7c2d12] to-[#1e40af] py-20 text-white">
         <div className="mx-auto max-w-6xl px-6">
           <LibraryBig className="h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">Commentary Layer</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            Commentary Layer
+          </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-orange-50">
-            Add trusted Christian commentary summaries alongside AI explanations so study feels more grounded and useful.
+            Add trusted Christian commentary summaries alongside AI explanations
+            so study feels more grounded and useful.
           </p>
         </div>
       </section>
@@ -149,8 +160,12 @@ export default function CommentariesPage() {
               className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
             >
               <Quote className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="mt-4 text-2xl font-semibold text-slate-900">{source.title}</h2>
-              <p className="mt-4 text-sm leading-6 text-slate-600">{source.summary}</p>
+              <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+                {source.title}
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-slate-600">
+                {source.summary}
+              </p>
               <button
                 type="button"
                 onClick={() => handleSaveCommentary(source)}
@@ -166,7 +181,9 @@ export default function CommentariesPage() {
           <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <BookMarked className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">How this fits the passage flow</h2>
+              <h2 className="text-2xl font-semibold">
+                How this fits the passage flow
+              </h2>
             </div>
             <div className="mt-6 grid gap-4">
               {[
@@ -186,10 +203,13 @@ export default function CommentariesPage() {
           </div>
 
           <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
-            <h2 className="text-2xl font-semibold text-emerald-950">Why it matters</h2>
+            <h2 className="text-2xl font-semibold text-emerald-950">
+              Why it matters
+            </h2>
             <p className="mt-4 text-sm leading-6 text-emerald-900">
-              Commentary integration helps the app feel less like a generic AI chatbot
-              and more like a real Bible study tool with grounded interpretive support.
+              Commentary integration helps the app feel less like a generic AI
+              chatbot and more like a real Bible study tool with grounded
+              interpretive support.
             </p>
             <Link
               href="/passage/john-3-16"
@@ -203,9 +223,13 @@ export default function CommentariesPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Saved commentary sources</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Saved commentary sources
+            </h2>
             {saveFeedback ? (
-              <p className="text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -215,15 +239,24 @@ export default function CommentariesPage() {
                   key={item.id}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
-                  <h3 className="text-lg font-semibold text-slate-900">{item.sourceTitle}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{item.reference}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.summary}</p>
-                  <p className="mt-3 text-xs leading-5 text-slate-500">{item.useCase}</p>
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {item.sourceTitle}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {item.reference}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {item.summary}
+                  </p>
+                  <p className="mt-3 text-xs leading-5 text-slate-500">
+                    {item.useCase}
+                  </p>
                 </article>
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
-                Save commentary sources here so trusted interpretation layers follow the user.
+                Save commentary sources here so trusted interpretation layers
+                follow the user.
               </div>
             )}
           </div>
@@ -232,7 +265,9 @@ export default function CommentariesPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <LibraryBig className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Commentary depth worth adding</h2>
+            <h2 className="text-2xl font-semibold">
+              Commentary depth worth adding
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[

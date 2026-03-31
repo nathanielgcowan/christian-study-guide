@@ -6,7 +6,7 @@ import {
   Shield,
   ShieldAlert,
 } from "lucide-react";
-import { aiSafeguards, retentionSystems } from "@/lib/product-expansion";
+import { aiSafeguards, retentionSystems } from "../../lib/product-expansion";
 
 const trustColumns = [
   {
@@ -45,8 +45,9 @@ export default function TrustPage() {
               Add the systems that make the product trustworthy at scale.
             </h1>
             <p className="mt-6 text-lg leading-8 text-red-50">
-              Shared content, teams, subscriptions, and AI workflows all need moderation,
-              auditability, testing discipline, and real production visibility.
+              Shared content, teams, subscriptions, and AI workflows all need
+              moderation, auditability, testing discipline, and real production
+              visibility.
             </p>
           </div>
         </div>
@@ -72,7 +73,9 @@ export default function TrustPage() {
           <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <div className="flex items-center gap-3 text-amber-950">
               <ShieldAlert className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Moderation and audit focus</h2>
+              <h2 className="text-2xl font-semibold">
+                Moderation and audit focus
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {[
@@ -94,7 +97,9 @@ export default function TrustPage() {
           <aside className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <Activity className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Operational quality loop</h2>
+              <h2 className="text-2xl font-semibold">
+                Operational quality loop
+              </h2>
             </div>
             <div className="mt-6 space-y-4">
               <article className="rounded-2xl border border-blue-200 bg-white p-5 text-sm leading-6 text-blue-950">
@@ -123,7 +128,9 @@ export default function TrustPage() {
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-900">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-blue-950">{item.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-blue-950">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>
@@ -132,7 +139,9 @@ export default function TrustPage() {
         <section className="mt-10 rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
           <div className="flex items-center gap-3 text-emerald-950">
             <BadgeCheck className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Retention that respects users</h2>
+            <h2 className="text-2xl font-semibold">
+              Retention that respects users
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {retentionSystems.map((item) => (
@@ -143,7 +152,9 @@ export default function TrustPage() {
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-emerald-950">{item.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-emerald-950">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>

@@ -18,7 +18,7 @@ import {
   saveMentorChatMessage,
   saveMentorChatThread,
   updateMentorChatThread,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const MENTOR_CHAT_THREADS_KEY = "christian-study-guide:mentor-chat-threads";
 const MENTOR_CHAT_MESSAGES_KEY = "christian-study-guide:mentor-chat-messages";
@@ -80,15 +80,17 @@ export default function MentorChatPage() {
 
         if (session) {
           const data = await getMentorChatThreads();
-          const mapped = (data as Array<{
-            id: string;
-            reference: string;
-            title: string;
-            goal: string | null;
-            status: string;
-            latest_summary: string | null;
-            next_step: string | null;
-          }>).map((item) => ({
+          const mapped = (
+            data as Array<{
+              id: string;
+              reference: string;
+              title: string;
+              goal: string | null;
+              status: string;
+              latest_summary: string | null;
+              next_step: string | null;
+            }>
+          ).map((item) => ({
             id: item.id,
             reference: item.reference,
             title: item.title,
@@ -127,13 +129,15 @@ export default function MentorChatPage() {
       try {
         const data = await getMentorChatMessages(selectedThreadId);
         setMessages(
-          (data as Array<{
-            id: string;
-            thread_id: string;
-            speaker: string;
-            message: string;
-            stage: string;
-          }>).map((item) => ({
+          (
+            data as Array<{
+              id: string;
+              thread_id: string;
+              speaker: string;
+              message: string;
+              stage: string;
+            }>
+          ).map((item) => ({
             id: item.id,
             threadId: item.thread_id,
             speaker: item.speaker,
@@ -184,7 +188,10 @@ export default function MentorChatPage() {
         const nextThreads = [nextThread, ...threads];
         setThreads(nextThreads);
         setSelectedThreadId(nextThread.id);
-        localStorage.setItem(MENTOR_CHAT_THREADS_KEY, JSON.stringify(nextThreads));
+        localStorage.setItem(
+          MENTOR_CHAT_THREADS_KEY,
+          JSON.stringify(nextThreads),
+        );
       }
 
       setThreadDraft((current) => ({
@@ -238,7 +245,10 @@ export default function MentorChatPage() {
           },
         ];
         setMessages(nextMessages);
-        localStorage.setItem(MENTOR_CHAT_MESSAGES_KEY, JSON.stringify(nextMessages));
+        localStorage.setItem(
+          MENTOR_CHAT_MESSAGES_KEY,
+          JSON.stringify(nextMessages),
+        );
       }
 
       setMessageDraft((current) => ({ ...current, message: "" }));
@@ -250,7 +260,9 @@ export default function MentorChatPage() {
     }
   };
 
-  const selectedMessages = messages.filter((message) => message.threadId === selectedThreadId);
+  const selectedMessages = messages.filter(
+    (message) => message.threadId === selectedThreadId,
+  );
 
   if (loading) {
     return (
@@ -273,8 +285,9 @@ export default function MentorChatPage() {
               Move from one answer to an ongoing discipleship conversation.
             </h1>
             <p className="mt-6 text-lg leading-8 text-violet-50">
-              A real mentor chat should remember the passage, preserve the thread,
-              recommend next Scriptures, and help users act on what they learned.
+              A real mentor chat should remember the passage, preserve the
+              thread, recommend next Scriptures, and help users act on what they
+              learned.
             </p>
           </div>
         </div>
@@ -285,7 +298,9 @@ export default function MentorChatPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3 text-[#0f172a]">
               <Waypoints className="h-6 w-6 text-violet-700" />
-              <h2 className="text-2xl font-semibold">Conversation thread model</h2>
+              <h2 className="text-2xl font-semibold">
+                Conversation thread model
+              </h2>
             </div>
             <div className="mt-6 grid gap-4">
               {threadStages.map((stage) => (
@@ -306,8 +321,8 @@ export default function MentorChatPage() {
             </div>
             <p className="mt-4 leading-7 text-emerald-900">
               People rarely need just one response. They need guidance that can
-              deepen over several prompts, stay attached to the passage, and create
-              a trail of encouragement they can revisit later.
+              deepen over several prompts, stay attached to the passage, and
+              create a trail of encouragement they can revisit later.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
@@ -347,9 +362,13 @@ export default function MentorChatPage() {
         <section className="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Create a thread</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Create a thread
+              </h2>
               {saveFeedback ? (
-                <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {saveFeedback}
+                </p>
               ) : null}
             </div>
             <form onSubmit={handleSaveThread} className="mt-6 grid gap-4">
@@ -367,7 +386,10 @@ export default function MentorChatPage() {
               <input
                 value={threadDraft.title}
                 onChange={(event) =>
-                  setThreadDraft((current) => ({ ...current, title: event.target.value }))
+                  setThreadDraft((current) => ({
+                    ...current,
+                    title: event.target.value,
+                  }))
                 }
                 placeholder="Thread title"
                 className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#7c3aed]"
@@ -375,7 +397,10 @@ export default function MentorChatPage() {
               <textarea
                 value={threadDraft.goal}
                 onChange={(event) =>
-                  setThreadDraft((current) => ({ ...current, goal: event.target.value }))
+                  setThreadDraft((current) => ({
+                    ...current,
+                    goal: event.target.value,
+                  }))
                 }
                 rows={3}
                 placeholder="Goal for this thread"
@@ -413,7 +438,9 @@ export default function MentorChatPage() {
                         : "border-slate-200 bg-slate-50 hover:bg-slate-100"
                     }`}
                   >
-                    <p className="font-semibold text-slate-900">{thread.title}</p>
+                    <p className="font-semibold text-slate-900">
+                      {thread.title}
+                    </p>
                     <p className="mt-1 text-sm text-slate-600">
                       {thread.reference} • {thread.status}
                     </p>
@@ -429,9 +456,13 @@ export default function MentorChatPage() {
 
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Thread messages</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Thread messages
+              </h2>
               {messageFeedback ? (
-                <p className="text-sm font-medium text-emerald-700">{messageFeedback}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {messageFeedback}
+                </p>
               ) : null}
             </div>
             <div className="mt-6 grid gap-3">
@@ -444,12 +475,15 @@ export default function MentorChatPage() {
                     <p className="text-xs font-semibold uppercase tracking-wide text-violet-700">
                       {message.speaker} • {message.stage}
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-700">{message.message}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                      {message.message}
+                    </p>
                   </article>
                 ))
               ) : (
                 <p className="text-sm leading-6 text-slate-600">
-                  Select a thread and save messages to build a real mentor trail.
+                  Select a thread and save messages to build a real mentor
+                  trail.
                 </p>
               )}
             </div>

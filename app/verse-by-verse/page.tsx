@@ -1,15 +1,21 @@
- "use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { ArrowRight, BookOpenText, Layers3, ScrollText, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenText,
+  Layers3,
+  ScrollText,
+  Sparkles,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
   getVerseByVerseProgress,
   saveVerseByVerseProgress,
   updateVerseByVerseProgress,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const VERSE_PROGRESS_KEY = "christian-study-guide:verse-by-verse-progress";
 const REFERENCE = "James 1:2-4";
@@ -20,21 +26,24 @@ const verseSections = [
     emphasis: "Joy in trials",
     explanation:
       "James reframes suffering through discipleship, calling believers to evaluate hardship by what God produces through it.",
-    application: "Where do you need to let God define the purpose of your current difficulty?",
+    application:
+      "Where do you need to let God define the purpose of your current difficulty?",
   },
   {
     verse: "James 1:3",
     emphasis: "Testing produces steadfastness",
     explanation:
       "The passage does not glorify pain itself. It highlights what testing can form in a believer who remains rooted in Christ.",
-    application: "What evidence of endurance has God already begun building in you?",
+    application:
+      "What evidence of endurance has God already begun building in you?",
   },
   {
     verse: "James 1:4",
     emphasis: "Maturity and completeness",
     explanation:
       "The goal is spiritual wholeness, not just survival. James wants readers to see perseverance as part of becoming mature in faith.",
-    application: "How might patience be shaping an area where you want immediate change?",
+    application:
+      "How might patience be shaping an area where you want immediate change?",
   },
 ];
 
@@ -100,7 +109,10 @@ export default function VerseByVersePage() {
     const completedVerses = progress.completedVerses.includes(verse)
       ? progress.completedVerses
       : [...progress.completedVerses, verse];
-    const completionStatus = completedVerses.length === verseSections.length ? "completed" : "in-progress";
+    const completionStatus =
+      completedVerses.length === verseSections.length
+        ? "completed"
+        : "in-progress";
     const next = {
       ...progress,
       completedVerses,
@@ -159,11 +171,13 @@ export default function VerseByVersePage() {
               Verse-by-verse mode
             </div>
             <h1 className="text-5xl font-bold md:text-6xl">
-              Slow down the study flow and walk through Scripture one verse at a time.
+              Slow down the study flow and walk through Scripture one verse at a
+              time.
             </h1>
             <p className="mt-6 text-lg leading-8 text-emerald-50">
-              This mode breaks a passage into smaller sections so explanation, context,
-              and application stay anchored to the text instead of drifting into vague summary.
+              This mode breaks a passage into smaller sections so explanation,
+              context, and application stay anchored to the text instead of
+              drifting into vague summary.
             </p>
           </div>
         </div>
@@ -173,12 +187,23 @@ export default function VerseByVersePage() {
         <section className="mb-10 grid gap-6 md:grid-cols-3">
           {[
             { label: "Reference", value: REFERENCE },
-            { label: "Completed verses", value: `${completionCount}/${verseSections.length}` },
-            { label: "Status", value: allComplete ? "Completed" : progress.completionStatus },
+            {
+              label: "Completed verses",
+              value: `${completionCount}/${verseSections.length}`,
+            },
+            {
+              label: "Status",
+              value: allComplete ? "Completed" : progress.completionStatus,
+            },
           ].map((item) => (
-            <article key={item.label} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article
+              key={item.label}
+              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+            >
               <p className="text-sm font-medium text-slate-500">{item.label}</p>
-              <p className="mt-3 text-2xl font-bold text-slate-900">{item.value}</p>
+              <p className="mt-3 text-2xl font-bold text-slate-900">
+                {item.value}
+              </p>
             </article>
           ))}
         </section>
@@ -191,26 +216,42 @@ export default function VerseByVersePage() {
             </div>
             <div className="mt-6 space-y-4">
               {verseSections.map((section) => (
-                <article key={section.verse} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <article
+                  key={section.verse}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                >
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                     {section.verse}
                   </p>
-                  <h3 className="mt-2 text-lg font-semibold text-slate-900">{section.emphasis}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-600">{section.explanation}</p>
+                  <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                    {section.emphasis}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    {section.explanation}
+                  </p>
                   <div className="mt-4 rounded-xl bg-white p-4 text-sm text-slate-700">
-                    <span className="font-semibold text-slate-900">Application:</span> {section.application}
+                    <span className="font-semibold text-slate-900">
+                      Application:
+                    </span>{" "}
+                    {section.application}
                   </div>
                   <button
                     type="button"
                     onClick={() => handleCompleteVerse(section.verse)}
                     className="mt-4 rounded-xl bg-[#1e40af] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1e3a8a]"
                   >
-                    {progress.completedVerses.includes(section.verse) ? "Reviewed" : "Mark reviewed"}
+                    {progress.completedVerses.includes(section.verse)
+                      ? "Reviewed"
+                      : "Mark reviewed"}
                   </button>
                 </article>
               ))}
             </div>
-            {saveFeedback ? <p className="mt-6 text-sm font-semibold text-emerald-700">{saveFeedback}</p> : null}
+            {saveFeedback ? (
+              <p className="mt-6 text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
+            ) : null}
           </article>
 
           <aside className="space-y-6">
@@ -226,7 +267,10 @@ export default function VerseByVersePage() {
                   "Mentor conversations that need tighter passage grounding",
                   "Memory work tied to the exact logic of the verses",
                 ].map((item) => (
-                  <div key={item} className="rounded-2xl border border-violet-200 bg-white p-5 text-sm text-violet-950">
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-violet-200 bg-white p-5 text-sm text-violet-950"
+                  >
                     {item}
                   </div>
                 ))}
@@ -239,8 +283,9 @@ export default function VerseByVersePage() {
                 <h2 className="text-2xl font-semibold">Connect it back</h2>
               </div>
               <p className="mt-4 text-sm leading-7 text-emerald-900">
-                The strongest version of this feature lives inside the passage page so users can switch
-                between overview, context, language, and verse-by-verse study without leaving the reading flow.
+                The strongest version of this feature lives inside the passage
+                page so users can switch between overview, context, language,
+                and verse-by-verse study without leaving the reading flow.
               </p>
               <Link
                 href="/study-workspace"

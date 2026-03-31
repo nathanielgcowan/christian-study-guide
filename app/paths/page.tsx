@@ -23,7 +23,7 @@ import {
   saveWorkflowRun,
   updateGuidedPath,
   updateWorkflowRun,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const GUIDED_PATHS_KEY = "christian-study-guide:guided-paths";
 
@@ -88,9 +88,21 @@ const studyStepBlocks = [
 const badges = ["Bible Beginner", "Gospel Explorer", "Romans Scholar"];
 const guidedMapSteps = ["Start", "Week 1", "Week 2", "Week 3", "Boss level"];
 const animatedMapMoments = [
-  { title: "Checkpoint unlocked", detail: "Finish a week and watch the next node light up on the journey map." },
-  { title: "Boss level revealed", detail: "End-of-path capstones feel like big moments instead of quiet checkboxes." },
-  { title: "Reward drop", detail: "Each milestone can unlock XP, badges, or a shareable celebration card." },
+  {
+    title: "Checkpoint unlocked",
+    detail:
+      "Finish a week and watch the next node light up on the journey map.",
+  },
+  {
+    title: "Boss level revealed",
+    detail:
+      "End-of-path capstones feel like big moments instead of quiet checkboxes.",
+  },
+  {
+    title: "Reward drop",
+    detail:
+      "Each milestone can unlock XP, badges, or a shareable celebration card.",
+  },
 ];
 
 interface SavedGuidedPath {
@@ -129,11 +141,16 @@ export default function GuidedPathsPage() {
     currentWeek: "",
     currentFocus: "",
   });
-  const [pathEdits, setPathEdits] = useState<Record<string, {
-    currentWeek: string;
-    currentFocus: string;
-    status: string;
-  }>>({});
+  const [pathEdits, setPathEdits] = useState<
+    Record<
+      string,
+      {
+        currentWeek: string;
+        currentFocus: string;
+        status: string;
+      }
+    >
+  >({});
   const [supabase] = useState(() => createClient());
 
   useEffect(() => {
@@ -150,16 +167,18 @@ export default function GuidedPathsPage() {
             getWorkflowRuns(),
           ]);
           setSavedPaths(
-            (data as Array<{
-              id: string;
-              title: string;
-              path_type: string;
-              cadence: string;
-              summary: string;
-              current_week: string | null;
-              current_focus: string | null;
-              status: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                path_type: string;
+                cadence: string;
+                summary: string;
+                current_week: string | null;
+                current_focus: string | null;
+                status: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               pathType: item.path_type,
@@ -171,16 +190,18 @@ export default function GuidedPathsPage() {
             })),
           );
           setWorkflowRuns(
-            (workflowData as Array<{
-              id: string;
-              workflow_name: string;
-              linked_reference: string | null;
-              stage: string;
-              status: string;
-              summary: string;
-              next_step: string | null;
-              output: Record<string, unknown> | null;
-            }>)
+            (
+              workflowData as Array<{
+                id: string;
+                workflow_name: string;
+                linked_reference: string | null;
+                stage: string;
+                status: string;
+                summary: string;
+                next_step: string | null;
+                output: Record<string, unknown> | null;
+              }>
+            )
               .filter((item) => item.workflow_name === "guided-path")
               .map((item) => ({
                 id: item.id,
@@ -208,24 +229,28 @@ export default function GuidedPathsPage() {
 
   useEffect(() => {
     setPathEdits(
-      savedPaths.reduce<Record<string, { currentWeek: string; currentFocus: string; status: string }>>(
-        (accumulator, path) => {
-          accumulator[path.id] = {
-            currentWeek: path.currentWeek,
-            currentFocus: path.currentFocus,
-            status: path.status,
-          };
-          return accumulator;
-        },
-        {},
-      ),
+      savedPaths.reduce<
+        Record<
+          string,
+          { currentWeek: string; currentFocus: string; status: string }
+        >
+      >((accumulator, path) => {
+        accumulator[path.id] = {
+          currentWeek: path.currentWeek,
+          currentFocus: path.currentFocus,
+          status: path.status,
+        };
+        return accumulator;
+      }, {}),
     );
   }, [savedPaths]);
 
   const findLinkedWorkflow = (path: { id: string; title: string }) =>
     workflowRuns.find((run) => {
       const outputPathId =
-        run.output && typeof run.output.path_id === "string" ? run.output.path_id : null;
+        run.output && typeof run.output.path_id === "string"
+          ? run.output.path_id
+          : null;
 
       return outputPathId === path.id || run.linkedReference === path.title;
     });
@@ -252,7 +277,9 @@ export default function GuidedPathsPage() {
         output: workflow.output,
       };
 
-      const existingIndex = current.findIndex((item) => item.id === workflow.id);
+      const existingIndex = current.findIndex(
+        (item) => item.id === workflow.id,
+      );
       if (existingIndex === -1) {
         return [nextItem, ...current];
       }
@@ -297,7 +324,8 @@ export default function GuidedPathsPage() {
           stage: saved.current_week || "week-1",
           status: saved.status,
           summary: `${saved.title} is active with a ${saved.cadence} cadence and a current focus on ${saved.current_focus || saved.title}.`,
-          next_step: "Complete the current week and update the next focus checkpoint.",
+          next_step:
+            "Complete the current week and update the next focus checkpoint.",
           output: {
             path_id: saved.id,
             path_type: saved.path_type,
@@ -369,7 +397,8 @@ export default function GuidedPathsPage() {
           stage: saved.current_week || "Week 1",
           status: saved.status,
           summary: `${saved.title} was created as a custom guided path.`,
-          next_step: "Open the path in Today or update the next focus checkpoint.",
+          next_step:
+            "Open the path in Today or update the next focus checkpoint.",
           output: {
             path_id: saved.id,
             path_type: saved.path_type,
@@ -444,7 +473,12 @@ export default function GuidedPathsPage() {
 
     const next = savedPaths.map((path) =>
       path.id === id
-        ? { ...path, currentWeek: "Completed", currentFocus: "Path completed", status: "completed" }
+        ? {
+            ...path,
+            currentWeek: "Completed",
+            currentFocus: "Path completed",
+            status: "completed",
+          }
         : path,
     );
     setSavedPaths(next);
@@ -568,11 +602,13 @@ export default function GuidedPathsPage() {
               AI guided Bible study path
             </div>
             <h1 className="text-5xl font-bold md:text-6xl">
-              Duolingo for Bible understanding, built around Scripture and discipleship.
+              Duolingo for Bible understanding, built around Scripture and
+              discipleship.
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
-              Instead of random reading, the app builds a step-by-step learning path
-              around each user&apos;s maturity, interests, study rhythm, and spiritual goals.
+              Instead of random reading, the app builds a step-by-step learning
+              path around each user&apos;s maturity, interests, study rhythm,
+              and spiritual goals.
             </p>
           </div>
         </div>
@@ -624,7 +660,9 @@ export default function GuidedPathsPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                 {path.audience}
               </p>
-              <h2 className="mt-3 text-2xl font-semibold text-[#0f172a]">{path.title}</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-[#0f172a]">
+                {path.title}
+              </h2>
               <div className="mt-5 grid gap-3">
                 {path.weeks.map((week) => (
                   <article
@@ -649,22 +687,33 @@ export default function GuidedPathsPage() {
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Create a custom guided path</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Create a custom guided path
+              </h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Build your own discipleship track with a cadence, a current checkpoint,
-                and a present focus that can be updated across devices.
+                Build your own discipleship track with a cadence, a current
+                checkpoint, and a present focus that can be updated across
+                devices.
               </p>
             </div>
             {saveFeedback ? (
-              <p className="text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
 
-          <form onSubmit={handleSaveCustomPath} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSaveCustomPath}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <input
               value={customDraft.title}
               onChange={(event) =>
-                setCustomDraft((current) => ({ ...current, title: event.target.value }))
+                setCustomDraft((current) => ({
+                  ...current,
+                  title: event.target.value,
+                }))
               }
               placeholder="Path title"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -672,7 +721,10 @@ export default function GuidedPathsPage() {
             <select
               value={customDraft.pathType}
               onChange={(event) =>
-                setCustomDraft((current) => ({ ...current, pathType: event.target.value }))
+                setCustomDraft((current) => ({
+                  ...current,
+                  pathType: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -685,7 +737,10 @@ export default function GuidedPathsPage() {
             <select
               value={customDraft.cadence}
               onChange={(event) =>
-                setCustomDraft((current) => ({ ...current, cadence: event.target.value }))
+                setCustomDraft((current) => ({
+                  ...current,
+                  cadence: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -696,7 +751,10 @@ export default function GuidedPathsPage() {
             <input
               value={customDraft.currentWeek}
               onChange={(event) =>
-                setCustomDraft((current) => ({ ...current, currentWeek: event.target.value }))
+                setCustomDraft((current) => ({
+                  ...current,
+                  currentWeek: event.target.value,
+                }))
               }
               placeholder="Current checkpoint"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -704,7 +762,10 @@ export default function GuidedPathsPage() {
             <input
               value={customDraft.currentFocus}
               onChange={(event) =>
-                setCustomDraft((current) => ({ ...current, currentFocus: event.target.value }))
+                setCustomDraft((current) => ({
+                  ...current,
+                  currentFocus: event.target.value,
+                }))
               }
               placeholder="Current focus"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af] md:col-span-2"
@@ -712,7 +773,10 @@ export default function GuidedPathsPage() {
             <textarea
               value={customDraft.summary}
               onChange={(event) =>
-                setCustomDraft((current) => ({ ...current, summary: event.target.value }))
+                setCustomDraft((current) => ({
+                  ...current,
+                  summary: event.target.value,
+                }))
               }
               rows={4}
               placeholder="Summarize the discipleship goal for this path"
@@ -744,8 +808,9 @@ export default function GuidedPathsPage() {
               ))}
             </div>
             <p className="mt-5 text-sm leading-6 text-amber-900">
-              Add streaks, XP points, achievements, and completed study courses so
-              the path feels like a real journey of growth instead of a static reading plan.
+              Add streaks, XP points, achievements, and completed study courses
+              so the path feels like a real journey of growth instead of a
+              static reading plan.
             </p>
           </div>
 
@@ -794,14 +859,17 @@ export default function GuidedPathsPage() {
               ))}
             </div>
             <p className="mt-5 text-sm leading-6 text-violet-900">
-              Unlock the next lesson after each completed step so Bible learning feels progressive instead of static.
+              Unlock the next lesson after each completed step so Bible learning
+              feels progressive instead of static.
             </p>
           </div>
 
           <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <Award className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Path completion rewards</h2>
+              <h2 className="text-2xl font-semibold">
+                Path completion rewards
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {[
@@ -832,33 +900,44 @@ export default function GuidedPathsPage() {
                 key={item.title}
                 className="rounded-2xl border border-blue-200 bg-blue-50 p-5"
               >
-                <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.detail}</p>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>
           <p className="mt-5 text-sm leading-6 text-blue-900">
-            A visual path gives guided learning more momentum. It helps users feel like
-            they are traveling through Scripture with milestones, not just managing a list.
+            A visual path gives guided learning more momentum. It helps users
+            feel like they are traveling through Scripture with milestones, not
+            just managing a list.
           </p>
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Saved guided paths</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Saved guided paths
+              </h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Keep your discipleship tracks across devices when you&apos;re signed in.
+                Keep your discipleship tracks across devices when you&apos;re
+                signed in.
               </p>
             </div>
             {saveFeedback ? (
-              <p className="text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
 
           {savedPaths.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
-              Save a guided path to start building a personalized Bible learning journey.
+              Save a guided path to start building a personalized Bible learning
+              journey.
             </div>
           ) : (
             <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -869,7 +948,9 @@ export default function GuidedPathsPage() {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-lg font-semibold text-slate-900">{path.title}</h3>
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        {path.title}
+                      </h3>
                       <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                         {path.cadence} cadence • {path.status}
                       </p>
@@ -893,7 +974,9 @@ export default function GuidedPathsPage() {
                       </button>
                     </div>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{path.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {path.summary}
+                  </p>
                   <div className="mt-4 grid gap-3 text-sm text-slate-700">
                     <input
                       value={pathEdits[path.id]?.currentWeek || ""}
@@ -960,11 +1043,14 @@ export default function GuidedPathsPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <Map className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Guided path operations trail</h2>
+            <h2 className="text-2xl font-semibold">
+              Guided path operations trail
+            </h2>
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-900">
-            Signed-in path creation and progress updates now record workflow runs so your
-            discipleship tracks can be managed like real ongoing programs.
+            Signed-in path creation and progress updates now record workflow
+            runs so your discipleship tracks can be managed like real ongoing
+            programs.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {workflowRuns.length > 0 ? (
@@ -979,7 +1065,9 @@ export default function GuidedPathsPage() {
                   <h3 className="mt-2 text-lg font-semibold text-slate-900">
                     {run.linkedReference || "Guided path workflow"}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{run.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {run.summary}
+                  </p>
                   <p className="mt-3 text-sm font-medium text-blue-950">
                     Next: {run.nextStep || "No next step saved yet."}
                   </p>
@@ -987,7 +1075,8 @@ export default function GuidedPathsPage() {
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-blue-300 bg-white p-5 text-sm text-blue-950">
-                Save or update a guided path while signed in to start the operations trail.
+                Save or update a guided path while signed in to start the
+                operations trail.
               </div>
             )}
           </div>

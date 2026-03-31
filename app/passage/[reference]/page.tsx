@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useEffectEvent, useState } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import type { User } from '@supabase/supabase-js';
+import { useEffect, useEffectEvent, useState } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import type { User } from "@supabase/supabase-js";
 import {
   ArrowLeft,
   BookOpen,
@@ -22,8 +22,8 @@ import {
   PlayCircle,
   Volume2,
   Users,
-} from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import {
   getBookmarks,
   addBookmark,
@@ -34,9 +34,9 @@ import {
   saveNote,
   saveStudySession,
   saveMentorHistory,
-} from '@/lib/persistence';
+} from "../../../lib/persistence";
 
-const NotesPanel = dynamic(() => import('@/components/NotesPanel'), {
+const NotesPanel = dynamic(() => import("../../../components/NotesPanel"), {
   loading: () => (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="flex items-center gap-3 text-sm text-gray-600">
@@ -47,12 +47,12 @@ const NotesPanel = dynamic(() => import('@/components/NotesPanel'), {
   ),
 });
 
-const AuthModal = dynamic(() => import('@/components/AuthModal'));
+const AuthModal = dynamic(() => import("../../../components/AuthModal"));
 
 const translations = [
-  { code: 'web', name: 'World English Bible' },
-  { code: 'kjv', name: 'King James Version' },
-  { code: 'asv', name: 'American Standard Version' },
+  { code: "web", name: "World English Bible" },
+  { code: "kjv", name: "King James Version" },
+  { code: "asv", name: "American Standard Version" },
 ];
 
 interface PassageData {
@@ -92,7 +92,7 @@ interface HistoricalContext {
 }
 
 interface OriginalLanguageTerm {
-  language: 'Greek' | 'Hebrew' | 'Aramaic';
+  language: "Greek" | "Hebrew" | "Aramaic";
   word: string;
   transliteration: string;
   pronunciation: string;
@@ -173,103 +173,104 @@ interface MentorThreadEntry {
 }
 
 type Tradition =
-  | 'overview'
-  | 'baptist'
-  | 'reformed'
-  | 'non-denominational'
-  | 'catholic';
-
+  | "overview"
+  | "baptist"
+  | "reformed"
+  | "non-denominational"
+  | "catholic";
 
 const getPassageTheme = (ref: string) => {
   const reference = ref.toLowerCase();
 
-  if (reference.includes('3:16') || reference.includes('john')) {
+  if (reference.includes("3:16") || reference.includes("john")) {
     return {
       title: "God's love",
-      emphasis: 'receiving and reflecting the love of God',
-      action: 'show Christlike love to one specific person',
+      emphasis: "receiving and reflecting the love of God",
+      action: "show Christlike love to one specific person",
     };
   }
 
-  if (reference.includes('8:28') || reference.includes('romans 8')) {
+  if (reference.includes("8:28") || reference.includes("romans 8")) {
     return {
-      title: 'steady hope',
-      emphasis: 'trusting God in confusing or painful seasons',
-      action: 'surrender one unresolved burden to God in prayer each day',
+      title: "steady hope",
+      emphasis: "trusting God in confusing or painful seasons",
+      action: "surrender one unresolved burden to God in prayer each day",
     };
   }
 
-  if (reference.includes('2:8') || reference.includes('ephesians')) {
+  if (reference.includes("2:8") || reference.includes("ephesians")) {
     return {
-      title: 'grace',
-      emphasis: 'resting in what God has done rather than striving',
-      action: 'thank God daily for grace instead of measuring yourself by performance',
+      title: "grace",
+      emphasis: "resting in what God has done rather than striving",
+      action:
+        "thank God daily for grace instead of measuring yourself by performance",
     };
   }
 
-  if (reference.includes('psalm 23') || reference.includes('23:')) {
+  if (reference.includes("psalm 23") || reference.includes("23:")) {
     return {
       title: "God's shepherding care",
-      emphasis: 'walking with confidence because God is near',
-      action: 'pause in anxious moments and name one way God is providing for you',
+      emphasis: "walking with confidence because God is near",
+      action:
+        "pause in anxious moments and name one way God is providing for you",
     };
   }
 
   return {
-    title: 'faithful obedience',
-    emphasis: 'letting Scripture shape your next step',
-    action: 'put one truth from this passage into practice in a visible way',
+    title: "faithful obedience",
+    emphasis: "letting Scripture shape your next step",
+    action: "put one truth from this passage into practice in a visible way",
   };
 };
 
 const getReflectionQuestions = (ref: string): string[] => {
   const reference = ref.toLowerCase();
 
-  if (reference.includes('3:16')) {
+  if (reference.includes("3:16")) {
     return [
       "What does this passage show you about the depth of God's love?",
-      'Where do you need to receive that love personally instead of just understanding it intellectually?',
-      'How does this verse reshape the way you see your worth and identity today?',
+      "Where do you need to receive that love personally instead of just understanding it intellectually?",
+      "How does this verse reshape the way you see your worth and identity today?",
     ];
   }
 
-  if (reference.includes('8:28') || reference.includes('romans 8')) {
+  if (reference.includes("8:28") || reference.includes("romans 8")) {
     return [
-      'What circumstance feels hardest to trust God with right now?',
-      'How does this passage invite you to see suffering through the lens of hope?',
-      'What would trust-filled obedience look like this week?',
+      "What circumstance feels hardest to trust God with right now?",
+      "How does this passage invite you to see suffering through the lens of hope?",
+      "What would trust-filled obedience look like this week?",
     ];
   }
 
   return [
     "What does this passage reveal about God's character?",
-    'What part of this passage feels most personal to your current season?',
-    'What is one practical step of obedience this text invites you to take?',
+    "What part of this passage feels most personal to your current season?",
+    "What is one practical step of obedience this text invites you to take?",
   ];
 };
 
 const getTraditionPerspective = (tradition: Tradition) => {
   switch (tradition) {
-    case 'baptist':
-      return 'with an emphasis on personal faith, conversion, and obedience';
-    case 'reformed':
-      return 'with an emphasis on God’s sovereignty, grace, and covenant faithfulness';
-    case 'non-denominational':
-      return 'with a simple Christ-centered emphasis on practical discipleship';
-    case 'catholic':
-      return 'with attention to spiritual formation, historic faith, and life in the Church';
+    case "baptist":
+      return "with an emphasis on personal faith, conversion, and obedience";
+    case "reformed":
+      return "with an emphasis on God’s sovereignty, grace, and covenant faithfulness";
+    case "non-denominational":
+      return "with a simple Christ-centered emphasis on practical discipleship";
+    case "catholic":
+      return "with attention to spiritual formation, historic faith, and life in the Church";
     default:
-      return 'with a broad Christian overview for everyday believers';
+      return "with a broad Christian overview for everyday believers";
   }
 };
 
 const buildDevotionalContent = (
   currentPassage: PassageData,
-  slug: string
+  slug: string,
 ): DevotionalContent => {
   const reference = currentPassage.reference || slug;
   const theme = getPassageTheme(reference);
-  const passagePreview = currentPassage.text.replace(/\s+/g, ' ').trim();
+  const passagePreview = currentPassage.text.replace(/\s+/g, " ").trim();
   const excerpt =
     passagePreview.length > 180
       ? `${passagePreview.slice(0, 177).trim()}...`
@@ -298,9 +299,9 @@ const buildQuizContent = (passageRef: string): QuizContent => {
       reflectionQuestions[0],
     ],
     answers: [
-      'It shows that God is trustworthy, present, and active in the lives of His people.',
-      'A faithful answer will name one practical step of obedience connected to the passage.',
-      'A strong answer should connect the passage to a real current struggle or opportunity for trust.',
+      "It shows that God is trustworthy, present, and active in the lives of His people.",
+      "A faithful answer will name one practical step of obedience connected to the passage.",
+      "A strong answer should connect the passage to a real current struggle or opportunity for trust.",
     ],
     memoryPrompt: `Read ${passageRef} aloud three times, cover one phrase, and repeat it from memory before checking again.`,
   };
@@ -318,26 +319,26 @@ const buildPrayerModeContent = (passageRef: string): PrayerModeContent => {
 };
 
 const buildCommentaryCompare = (
-  passageRef: string
+  passageRef: string,
 ): CommentaryPerspective[] => [
   {
-    label: 'Overview',
+    label: "Overview",
     summary: `${passageRef} calls everyday believers to trust God, understand His character, and respond with practical obedience.`,
   },
   {
-    label: 'Baptist',
+    label: "Baptist",
     summary: `${passageRef} highlights personal faith, conversion-shaped living, and a clear call to respond to God in obedience.`,
   },
   {
-    label: 'Reformed',
+    label: "Reformed",
     summary: `${passageRef} can be read with an emphasis on God's sovereignty, grace, covenant faithfulness, and His work in forming His people.`,
   },
   {
-    label: 'Non-denominational',
+    label: "Non-denominational",
     summary: `${passageRef} speaks directly to discipleship, spiritual growth, and living a Christ-centered life in ordinary circumstances.`,
   },
   {
-    label: 'Catholic',
+    label: "Catholic",
     summary: `${passageRef} can be read through the lens of spiritual formation, historic Christian practice, and faith lived within the Church.`,
   },
 ];
@@ -369,12 +370,12 @@ const buildVerseBreakdown = (passage: PassageData): VerseBreakdownItem[] => {
       index === 0
         ? `This opening movement introduces ${theme.title} and sets the tone for understanding the whole passage.`
         : index === parts.length - 1
-          ? 'This closing movement turns truth toward response and invites a practical next step.'
-          : 'This part deepens the main idea and helps the passage move from meaning into application.',
+          ? "This closing movement turns truth toward response and invites a practical next step."
+          : "This part deepens the main idea and helps the passage move from meaning into application.",
     application:
       index === 0
-        ? 'Write one phrase here that reveals something true about God.'
-        : 'Ask how this sentence should affect your attitude, decision, or prayer today.',
+        ? "Write one phrase here that reveals something true about God."
+        : "Ask how this sentence should affect your attitude, decision, or prayer today.",
   }));
 };
 
@@ -393,15 +394,15 @@ const buildApologeticsContent = (passageRef: string): ApologeticsContent => ({
   question: `What if someone says ${passageRef} sounds unrealistic or too simplistic for the real world?`,
   response: `${passageRef} should not be read as pretending suffering, doubt, or complexity do not exist. Instead, it speaks into real human need with a God-centered answer. An apologetics reading asks not only whether the passage sounds difficult, but whether Scripture offers a deeper and more coherent account of hope, truth, suffering, sin, and redemption than the alternatives around us.`,
   supportingIdeas: [
-    'Christianity is not built on wishful thinking, but on a historical and theological claim about God acting in Christ.',
-    'The passage should be interpreted within the whole biblical story, not isolated from the gospel.',
-    'A hard question often becomes clearer when we ask what worldview best explains human dignity, brokenness, and hope.',
+    "Christianity is not built on wishful thinking, but on a historical and theological claim about God acting in Christ.",
+    "The passage should be interpreted within the whole biblical story, not isolated from the gospel.",
+    "A hard question often becomes clearer when we ask what worldview best explains human dignity, brokenness, and hope.",
   ],
 });
 
 const buildGroupStudyContent = (
   currentPassage: PassageData,
-  slug: string
+  slug: string,
 ): GroupStudyContent => {
   const reference = currentPassage.reference || slug;
   const theme = getPassageTheme(reference);
@@ -419,8 +420,8 @@ const buildGroupStudyContent = (
     discussionQuestions: [
       reflectionQuestions[0],
       reflectionQuestions[1],
-      'What would it look like for our group to practice this passage together this week?',
-      'Who else might need encouragement from this truth right now?',
+      "What would it look like for our group to practice this passage together this week?",
+      "Who else might need encouragement from this truth right now?",
     ],
     youthLesson: `Youth lesson idea: start with a real-life scenario about pressure, identity, or belonging, then connect it to ${reference}. Keep the teaching focused on ${theme.title}, ask students where this truth meets real life, and end by inviting them to take one visible step of faith this week.`,
     sermonOutlineStarter: [
@@ -437,121 +438,121 @@ const buildGroupStudyContent = (
 const getCrossReferences = (ref: string): CrossReference[] => {
   const reference = ref.toLowerCase();
 
-  if (reference.includes('romans 5:1')) {
+  if (reference.includes("romans 5:1")) {
     return [
       {
-        verse: 'John 3:16',
+        verse: "John 3:16",
         reason:
-          'Both passages center on salvation through faith and the peace with God that comes through Jesus.',
+          "Both passages center on salvation through faith and the peace with God that comes through Jesus.",
       },
       {
-        verse: 'Ephesians 2:8-9',
+        verse: "Ephesians 2:8-9",
         reason:
-          'Ephesians 2:8-9 explains that justification is received by grace through faith, which matches the foundation of Romans 5:1.',
+          "Ephesians 2:8-9 explains that justification is received by grace through faith, which matches the foundation of Romans 5:1.",
       },
       {
-        verse: 'Galatians 2:16',
+        verse: "Galatians 2:16",
         reason:
-          'Galatians 2:16 reinforces that people are made right with God through faith in Christ rather than by works of the law.',
+          "Galatians 2:16 reinforces that people are made right with God through faith in Christ rather than by works of the law.",
       },
     ];
   }
 
-  if (reference.includes('3:16') || reference.includes('john')) {
+  if (reference.includes("3:16") || reference.includes("john")) {
     return [
       {
-        verse: 'Romans 5:8',
+        verse: "Romans 5:8",
         reason:
           "Romans 5:8 expands on God's love by showing that Christ died for us while we were still sinners.",
       },
       {
-        verse: 'Ephesians 2:8-9',
+        verse: "Ephesians 2:8-9",
         reason:
-          'This passage connects the gift of eternal life in John 3:16 with salvation by grace through faith.',
+          "This passage connects the gift of eternal life in John 3:16 with salvation by grace through faith.",
       },
       {
-        verse: '1 John 4:9-10',
+        verse: "1 John 4:9-10",
         reason:
-          '1 John 4:9-10 echoes John 3:16 by describing God showing His love through sending His Son.',
-      },
-    ];
-  }
-
-  if (reference.includes('8:28') || reference.includes('romans 8')) {
-    return [
-      {
-        verse: 'Romans 8:38-39',
-        reason:
-          'These verses continue the same chapter and ground Romans 8 hope in the unbreakable love of God.',
-      },
-      {
-        verse: 'James 1:2-4',
-        reason:
-          'James shows how God uses trials to mature believers, which complements the promise that He works all things for good.',
-      },
-      {
-        verse: 'Genesis 50:20',
-        reason:
-          'Genesis 50:20 gives a concrete example of God turning human evil toward redemptive purposes.',
+          "1 John 4:9-10 echoes John 3:16 by describing God showing His love through sending His Son.",
       },
     ];
   }
 
-  if (reference.includes('2:8') || reference.includes('ephesians')) {
+  if (reference.includes("8:28") || reference.includes("romans 8")) {
     return [
       {
-        verse: 'Romans 3:23-24',
+        verse: "Romans 8:38-39",
         reason:
-          'Romans 3:23-24 explains humanity’s need for grace and God’s gift of justification through Christ.',
+          "These verses continue the same chapter and ground Romans 8 hope in the unbreakable love of God.",
       },
       {
-        verse: 'Titus 3:5',
+        verse: "James 1:2-4",
         reason:
-          'Titus 3:5 reinforces that salvation is not earned by righteous deeds but given by God’s mercy.',
+          "James shows how God uses trials to mature believers, which complements the promise that He works all things for good.",
       },
       {
-        verse: 'Galatians 2:21',
+        verse: "Genesis 50:20",
         reason:
-          'Galatians 2:21 emphasizes that grace would be emptied of meaning if righteousness came by the law.',
+          "Genesis 50:20 gives a concrete example of God turning human evil toward redemptive purposes.",
       },
     ];
   }
 
-  if (reference.includes('psalm 23') || reference.includes('23:')) {
+  if (reference.includes("2:8") || reference.includes("ephesians")) {
     return [
       {
-        verse: 'John 10:11',
+        verse: "Romans 3:23-24",
         reason:
-          'Jesus identifies Himself as the Good Shepherd, deepening the shepherd imagery of Psalm 23.',
+          "Romans 3:23-24 explains humanity’s need for grace and God’s gift of justification through Christ.",
       },
       {
-        verse: 'Isaiah 41:10',
+        verse: "Titus 3:5",
         reason:
-          'Isaiah 41:10 connects with Psalm 23 by emphasizing God’s nearness, help, and steady presence.',
+          "Titus 3:5 reinforces that salvation is not earned by righteous deeds but given by God’s mercy.",
       },
       {
-        verse: 'Philippians 4:19',
+        verse: "Galatians 2:21",
         reason:
-          'Philippians 4:19 mirrors the theme of God’s provision that runs through Psalm 23.',
+          "Galatians 2:21 emphasizes that grace would be emptied of meaning if righteousness came by the law.",
+      },
+    ];
+  }
+
+  if (reference.includes("psalm 23") || reference.includes("23:")) {
+    return [
+      {
+        verse: "John 10:11",
+        reason:
+          "Jesus identifies Himself as the Good Shepherd, deepening the shepherd imagery of Psalm 23.",
+      },
+      {
+        verse: "Isaiah 41:10",
+        reason:
+          "Isaiah 41:10 connects with Psalm 23 by emphasizing God’s nearness, help, and steady presence.",
+      },
+      {
+        verse: "Philippians 4:19",
+        reason:
+          "Philippians 4:19 mirrors the theme of God’s provision that runs through Psalm 23.",
       },
     ];
   }
 
   return [
     {
-      verse: 'John 3:16',
+      verse: "John 3:16",
       reason:
-        'This passage connects through the broader gospel story of God’s love and salvation in Christ.',
+        "This passage connects through the broader gospel story of God’s love and salvation in Christ.",
     },
     {
-      verse: '2 Timothy 3:16-17',
+      verse: "2 Timothy 3:16-17",
       reason:
-        '2 Timothy 3:16-17 helps frame how all Scripture teaches, corrects, and equips believers for faithful living.',
+        "2 Timothy 3:16-17 helps frame how all Scripture teaches, corrects, and equips believers for faithful living.",
     },
     {
-      verse: 'James 1:22',
+      verse: "James 1:22",
       reason:
-        'James 1:22 reinforces the move from hearing God’s Word to actually living it out.',
+        "James 1:22 reinforces the move from hearing God’s Word to actually living it out.",
     },
   ];
 };
@@ -559,164 +560,194 @@ const getCrossReferences = (ref: string): CrossReference[] => {
 const getHistoricalContext = (ref: string): HistoricalContext => {
   const reference = ref.toLowerCase();
 
-  if (reference.includes('1 corinthians') || reference.includes('corinthians')) {
+  if (
+    reference.includes("1 corinthians") ||
+    reference.includes("corinthians")
+  ) {
     return {
-      author: 'Apostle Paul',
-      date: 'Around AD 55',
-      audience: 'The church in Corinth',
-      historical: 'Corinth was a wealthy port city known for status-seeking, division, and moral compromise.',
-      background: 'Paul wrote to address church conflict, sexual immorality, misuse of spiritual gifts, and confusion about resurrection.',
-      timeline: "Written during Paul's third missionary journey, likely from Ephesus.",
+      author: "Apostle Paul",
+      date: "Around AD 55",
+      audience: "The church in Corinth",
+      historical:
+        "Corinth was a wealthy port city known for status-seeking, division, and moral compromise.",
+      background:
+        "Paul wrote to address church conflict, sexual immorality, misuse of spiritual gifts, and confusion about resurrection.",
+      timeline:
+        "Written during Paul's third missionary journey, likely from Ephesus.",
     };
   }
 
-  if (reference.includes('romans')) {
+  if (reference.includes("romans")) {
     return {
-      author: 'Apostle Paul',
-      date: 'Around AD 57',
-      audience: 'Christians in Rome, both Jewish and Gentile believers',
-      historical: 'The Roman church lived in the center of the empire and faced tension over identity, law, and unity.',
-      background: 'Paul wrote to explain the gospel clearly, show the righteousness of God, and unify believers around faith in Christ.',
-      timeline: "Written near the end of Paul's third missionary journey, likely before traveling to Jerusalem.",
+      author: "Apostle Paul",
+      date: "Around AD 57",
+      audience: "Christians in Rome, both Jewish and Gentile believers",
+      historical:
+        "The Roman church lived in the center of the empire and faced tension over identity, law, and unity.",
+      background:
+        "Paul wrote to explain the gospel clearly, show the righteousness of God, and unify believers around faith in Christ.",
+      timeline:
+        "Written near the end of Paul's third missionary journey, likely before traveling to Jerusalem.",
     };
   }
 
-  if (reference.includes('3:16') || reference.includes('john')) {
+  if (reference.includes("3:16") || reference.includes("john")) {
     return {
-      author: 'Apostle John',
-      date: 'Around AD 85-95',
-      audience: 'Early Christian communities',
-      historical: 'John wrote near the end of the first century when the church was facing pressure, confusion, and false teaching.',
-      background: 'The Gospel of John was written to help people believe that Jesus is the Son of God and find life in Him.',
-      timeline: 'One of the later New Testament books, written after the life, death, and resurrection of Jesus.',
+      author: "Apostle John",
+      date: "Around AD 85-95",
+      audience: "Early Christian communities",
+      historical:
+        "John wrote near the end of the first century when the church was facing pressure, confusion, and false teaching.",
+      background:
+        "The Gospel of John was written to help people believe that Jesus is the Son of God and find life in Him.",
+      timeline:
+        "One of the later New Testament books, written after the life, death, and resurrection of Jesus.",
     };
   }
 
-  if (reference.includes('ephesians')) {
+  if (reference.includes("ephesians")) {
     return {
-      author: 'Apostle Paul',
-      date: 'Around AD 60-62',
-      audience: 'The church in Ephesus and likely nearby believers',
-      historical: 'Ephesus was a major city shaped by trade, pagan worship, and spiritual tension.',
-      background: 'Paul emphasizes the believer’s identity in Christ, unity in the church, and daily spiritual maturity.',
+      author: "Apostle Paul",
+      date: "Around AD 60-62",
+      audience: "The church in Ephesus and likely nearby believers",
+      historical:
+        "Ephesus was a major city shaped by trade, pagan worship, and spiritual tension.",
+      background:
+        "Paul emphasizes the believer’s identity in Christ, unity in the church, and daily spiritual maturity.",
       timeline: "Written during Paul's first Roman imprisonment.",
     };
   }
 
-  if (reference.includes('psalm')) {
+  if (reference.includes("psalm")) {
     return {
-      author: 'Primarily David and other worship leaders of Israel',
-      date: 'Written across many centuries, roughly 1000-400 BC',
-      audience: 'The people of Israel in worship and prayer',
-      historical: 'The Psalms were used in personal devotion and public worship across many different seasons of Israel’s history.',
-      background: 'They give language for praise, lament, trust, repentance, and hope in God.',
-      timeline: 'Collected over time and used throughout Israel’s worship life before the New Testament era.',
+      author: "Primarily David and other worship leaders of Israel",
+      date: "Written across many centuries, roughly 1000-400 BC",
+      audience: "The people of Israel in worship and prayer",
+      historical:
+        "The Psalms were used in personal devotion and public worship across many different seasons of Israel’s history.",
+      background:
+        "They give language for praise, lament, trust, repentance, and hope in God.",
+      timeline:
+        "Collected over time and used throughout Israel’s worship life before the New Testament era.",
     };
   }
 
   return {
-    author: 'Biblical author depends on the book being studied',
-    date: 'Written within the broader biblical timeline',
-    audience: 'The original readers or hearers of that book',
-    historical: 'Each book was written in a real historical setting with real people, pressures, and purposes.',
-    background: 'Understanding the original setting helps beginners read the passage more clearly and apply it more wisely.',
-    timeline: 'This passage fits into the larger story of creation, Israel, Christ, and the early church.',
+    author: "Biblical author depends on the book being studied",
+    date: "Written within the broader biblical timeline",
+    audience: "The original readers or hearers of that book",
+    historical:
+      "Each book was written in a real historical setting with real people, pressures, and purposes.",
+    background:
+      "Understanding the original setting helps beginners read the passage more clearly and apply it more wisely.",
+    timeline:
+      "This passage fits into the larger story of creation, Israel, Christ, and the early church.",
   };
 };
 
 const getOriginalLanguageInfo = (ref: string): OriginalLanguageTerm[] => {
   const reference = ref.toLowerCase();
 
-  if (reference.includes('john 21:15')) {
+  if (reference.includes("john 21:15")) {
     return [
       {
-        language: 'Greek',
-        word: 'agapas (ἀγαπᾷς)',
-        transliteration: 'agapao',
-        pronunciation: 'ah-gah-PAHS',
-        meaning: 'Self-giving, devoted love',
-        usage: 'In John 21:15, Jesus uses this form of agapao when asking Peter about wholehearted love and loyalty.',
-        otherVerses: ['John 3:16', 'Ephesians 5:25', '1 John 4:10'],
-        rootFamily: 'agapao / agape love vocabulary',
-        morphology: 'Present active indicative, second-person singular',
-        lexicalRange: ['love', 'devotion', 'self-giving loyalty'],
+        language: "Greek",
+        word: "agapas (ἀγαπᾷς)",
+        transliteration: "agapao",
+        pronunciation: "ah-gah-PAHS",
+        meaning: "Self-giving, devoted love",
+        usage:
+          "In John 21:15, Jesus uses this form of agapao when asking Peter about wholehearted love and loyalty.",
+        otherVerses: ["John 3:16", "Ephesians 5:25", "1 John 4:10"],
+        rootFamily: "agapao / agape love vocabulary",
+        morphology: "Present active indicative, second-person singular",
+        lexicalRange: ["love", "devotion", "self-giving loyalty"],
         theologicalDepth:
-          'This form sharpens the restoration scene by centering covenant-shaped love, not mere affection. Jesus presses Peter toward costly, shepherd-like devotion.',
+          "This form sharpens the restoration scene by centering covenant-shaped love, not mere affection. Jesus presses Peter toward costly, shepherd-like devotion.",
       },
     ];
   }
 
-  if (reference.includes('3:16') || reference.includes('john')) {
+  if (reference.includes("3:16") || reference.includes("john")) {
     return [
       {
-        language: 'Greek',
-        word: 'agape (ἀγάπη)',
-        transliteration: 'agape',
-        pronunciation: 'ah-GAH-pay',
-        meaning: 'Self-sacrificial, unconditional love',
-        usage: 'This word highlights God’s initiating, generous love rather than a merely emotional feeling.',
-        otherVerses: ['Romans 5:8', '1 John 4:9-10', 'Ephesians 2:4-5'],
-        rootFamily: 'agapao / agape love vocabulary',
-        morphology: 'Noun describing the character of love',
-        lexicalRange: ['love', 'charity', 'sacrificial affection'],
+        language: "Greek",
+        word: "agape (ἀγάπη)",
+        transliteration: "agape",
+        pronunciation: "ah-GAH-pay",
+        meaning: "Self-sacrificial, unconditional love",
+        usage:
+          "This word highlights God’s initiating, generous love rather than a merely emotional feeling.",
+        otherVerses: ["Romans 5:8", "1 John 4:9-10", "Ephesians 2:4-5"],
+        rootFamily: "agapao / agape love vocabulary",
+        morphology: "Noun describing the character of love",
+        lexicalRange: ["love", "charity", "sacrificial affection"],
         theologicalDepth:
-          'Agape helps readers see that salvation flows from God’s initiating character. The emphasis is not simply intensity of feeling, but covenant mercy expressed in action.',
+          "Agape helps readers see that salvation flows from God’s initiating character. The emphasis is not simply intensity of feeling, but covenant mercy expressed in action.",
       },
     ];
   }
 
-  if (reference.includes('romans 5:1') || reference.includes('romans')) {
+  if (reference.includes("romans 5:1") || reference.includes("romans")) {
     return [
       {
-        language: 'Greek',
-        word: 'dikaiothentes (δικαιωθέντες)',
-        transliteration: 'dikaioo',
-        pronunciation: 'dee-kai-oh-THEN-tes',
-        meaning: 'Having been justified, declared righteous',
-        usage: 'Paul uses this term to describe believers being declared right with God through faith in Christ.',
-        otherVerses: ['Galatians 2:16', 'Romans 3:24', 'Titus 3:7'],
-        rootFamily: 'dikaioo / dikaios / dikaiosyne righteousness vocabulary',
-        morphology: 'Aorist passive participle, nominative plural',
-        lexicalRange: ['justify', 'declare righteous', 'vindicate'],
+        language: "Greek",
+        word: "dikaiothentes (δικαιωθέντες)",
+        transliteration: "dikaioo",
+        pronunciation: "dee-kai-oh-THEN-tes",
+        meaning: "Having been justified, declared righteous",
+        usage:
+          "Paul uses this term to describe believers being declared right with God through faith in Christ.",
+        otherVerses: ["Galatians 2:16", "Romans 3:24", "Titus 3:7"],
+        rootFamily: "dikaioo / dikaios / dikaiosyne righteousness vocabulary",
+        morphology: "Aorist passive participle, nominative plural",
+        lexicalRange: ["justify", "declare righteous", "vindicate"],
         theologicalDepth:
-          'The passive form underscores that justification is received, not achieved. Paul is grounding peace with God in a finished verdict from God Himself.',
+          "The passive form underscores that justification is received, not achieved. Paul is grounding peace with God in a finished verdict from God Himself.",
       },
     ];
   }
 
-  if (reference.includes('psalm')) {
+  if (reference.includes("psalm")) {
     return [
       {
-        language: 'Hebrew',
-        word: 'hesed (חֶסֶד)',
-        transliteration: 'hesed',
-        pronunciation: 'HEH-sed',
-        meaning: 'Steadfast love, covenant mercy',
-        usage: 'This word often describes God’s faithful love toward His people across the Psalms.',
-        otherVerses: ['Psalm 23:6', 'Psalm 136:1', 'Lamentations 3:22'],
-        rootFamily: 'hesed covenant-faithfulness vocabulary',
-        morphology: 'Hebrew noun describing covenant loyalty',
-        lexicalRange: ['steadfast love', 'mercy', 'loyal kindness', 'covenant faithfulness'],
+        language: "Hebrew",
+        word: "hesed (חֶסֶד)",
+        transliteration: "hesed",
+        pronunciation: "HEH-sed",
+        meaning: "Steadfast love, covenant mercy",
+        usage:
+          "This word often describes God’s faithful love toward His people across the Psalms.",
+        otherVerses: ["Psalm 23:6", "Psalm 136:1", "Lamentations 3:22"],
+        rootFamily: "hesed covenant-faithfulness vocabulary",
+        morphology: "Hebrew noun describing covenant loyalty",
+        lexicalRange: [
+          "steadfast love",
+          "mercy",
+          "loyal kindness",
+          "covenant faithfulness",
+        ],
         theologicalDepth:
-          'Hesed gives the Psalms their covenant texture. It points beyond momentary help to God’s enduring, relational faithfulness toward His people.',
+          "Hesed gives the Psalms their covenant texture. It points beyond momentary help to God’s enduring, relational faithfulness toward His people.",
       },
     ];
   }
 
   return [
     {
-      language: 'Greek',
-      word: 'logos (λόγος)',
-      transliteration: 'logos',
-      pronunciation: 'LOH-gos',
-      meaning: 'Word, message, divine expression',
-      usage: 'A helpful starter term for seeing how Scripture often ties God’s Word to truth, revelation, and promise.',
-      otherVerses: ['John 1:1', 'Hebrews 4:12', '2 Timothy 2:15'],
-      rootFamily: 'logos / lego speaking and message vocabulary',
-      morphology: 'Greek noun with a broad semantic range',
-      lexicalRange: ['word', 'message', 'reason', 'speech'],
+      language: "Greek",
+      word: "logos (λόγος)",
+      transliteration: "logos",
+      pronunciation: "LOH-gos",
+      meaning: "Word, message, divine expression",
+      usage:
+        "A helpful starter term for seeing how Scripture often ties God’s Word to truth, revelation, and promise.",
+      otherVerses: ["John 1:1", "Hebrews 4:12", "2 Timothy 2:15"],
+      rootFamily: "logos / lego speaking and message vocabulary",
+      morphology: "Greek noun with a broad semantic range",
+      lexicalRange: ["word", "message", "reason", "speech"],
       theologicalDepth:
-        'Logos can carry more than verbal content. In key passages it becomes a doorway into revelation, wisdom, and the self-disclosure of God.',
+        "Logos can carry more than verbal content. In key passages it becomes a doorway into revelation, wisdom, and the self-disclosure of God.",
     },
   ];
 };
@@ -725,11 +756,11 @@ const buildSermonBuilderContent = (
   topic: string,
   passageRef: string,
   audience: string,
-  tradition: Tradition
+  tradition: Tradition,
 ): SermonBuilderContent => {
   const theme = getPassageTheme(`${topic} ${passageRef}`);
   const reflectionQuestions = getReflectionQuestions(passageRef);
-  const normalizedAudience = audience.trim() || 'small group';
+  const normalizedAudience = audience.trim() || "small group";
   const normalizedTopic = topic.trim() || theme.title;
   const traditionPerspective = getTraditionPerspective(tradition);
 
@@ -747,15 +778,15 @@ const buildSermonBuilderContent = (
       `A ${normalizedAudience} needs practical next-step obedience, not just information.`,
     ],
     illustrations: [
-      'Strength training builds endurance through resistance, not comfort.',
-      'A tree deepens its roots when strong winds force it to hold fast.',
+      "Strength training builds endurance through resistance, not comfort.",
+      "A tree deepens its roots when strong winds force it to hold fast.",
       `Use a relatable ${normalizedAudience} example from school, work, friendship, or family pressure to make the passage concrete.`,
     ],
     discussionQuestions: [
       `Where does ${normalizedTopic} feel hardest to practice right now?`,
       reflectionQuestions[0],
       `What pressure is this ${normalizedAudience} most likely facing that makes ${passageRef} especially relevant?`,
-      'What is one action step we can take this week because of this passage?',
+      "What is one action step we can take this week because of this passage?",
     ],
     prayer: `Lord, thank You for speaking through ${passageRef}. Teach this ${normalizedAudience} to live with courage, endurance, and trust. Use this message on ${normalizedTopic} to lead us toward deeper faith and faithful obedience this week. Amen.`,
   };
@@ -764,145 +795,156 @@ const buildSermonBuilderContent = (
 const buildMentorResponse = (
   prompt: string,
   passageRef: string,
-  tradition: Tradition
+  tradition: Tradition,
 ): MentorResponse => {
   const lowerPrompt = prompt.toLowerCase().trim();
   const reflectionQuestions = getReflectionQuestions(passageRef);
   const traditionPerspective = getTraditionPerspective(tradition);
 
-  if (lowerPrompt.includes('anxiety') || lowerPrompt.includes('worry')) {
+  if (lowerPrompt.includes("anxiety") || lowerPrompt.includes("worry")) {
     return {
-      title: 'Biblical Perspective on Anxiety',
+      title: "Biblical Perspective on Anxiety",
       guidance: `Anxiety is not something to hide from God. Scripture invites you to bring your fears honestly into His presence and to exchange panic for trust. ${passageRef} reminds you that God is still at work even when your emotions feel unsettled. A biblical response to anxiety includes prayer, honest dependence, and filling your mind with what is true about God's character ${traditionPerspective}.`,
-      suggestedPassages: ['Philippians 4:6-8', 'Matthew 6:25-34', '1 Peter 5:7'],
+      suggestedPassages: [
+        "Philippians 4:6-8",
+        "Matthew 6:25-34",
+        "1 Peter 5:7",
+      ],
       nextSteps: [
-        'Set aside five minutes each day this week to name your worries to God in prayer.',
-        'Write one truth from Scripture on your phone lock screen or a note card.',
+        "Set aside five minutes each day this week to name your worries to God in prayer.",
+        "Write one truth from Scripture on your phone lock screen or a note card.",
         `Reflect on this question: ${reflectionQuestions[0]}`,
       ],
       encouragement:
-        'You are not failing because you feel anxious. God meets people in weakness and teaches them to trust Him one step at a time.',
+        "You are not failing because you feel anxious. God meets people in weakness and teaches them to trust Him one step at a time.",
     };
   }
 
-  if (lowerPrompt.includes('prayer habit') || lowerPrompt.includes('pray more')) {
+  if (
+    lowerPrompt.includes("prayer habit") ||
+    lowerPrompt.includes("pray more")
+  ) {
     return {
-      title: 'Building a Prayer Habit',
+      title: "Building a Prayer Habit",
       guidance: `A healthy prayer habit grows through consistency more than intensity. Start small, connect prayer to a daily rhythm, and use ${passageRef} as a prompt for conversation with God. Prayer becomes sustainable when it is honest, simple, and rooted in Scripture rather than guilt ${traditionPerspective}.`,
-      suggestedPassages: ['Luke 11:1-4', 'Psalm 5:3', '1 Thessalonians 5:16-18'],
+      suggestedPassages: [
+        "Luke 11:1-4",
+        "Psalm 5:3",
+        "1 Thessalonians 5:16-18",
+      ],
       nextSteps: [
-        'Choose one daily anchor time like breakfast, commute, or bedtime.',
-        'Pray one sentence of thanks, one sentence of confession, and one sentence of request.',
+        "Choose one daily anchor time like breakfast, commute, or bedtime.",
+        "Pray one sentence of thanks, one sentence of confession, and one sentence of request.",
         `Use ${passageRef} to guide one short prayer each day this week.`,
       ],
       encouragement:
-        'Small faithful rhythms matter. A steady prayer life is built one ordinary day at a time.',
+        "Small faithful rhythms matter. A steady prayer life is built one ordinary day at a time.",
     };
   }
 
   if (
-    lowerPrompt.includes('study plan') ||
-    lowerPrompt.includes('where should i read') ||
-    lowerPrompt.includes('what should i study')
+    lowerPrompt.includes("study plan") ||
+    lowerPrompt.includes("where should i read") ||
+    lowerPrompt.includes("what should i study")
   ) {
     return {
-      title: 'Suggested Study Direction',
+      title: "Suggested Study Direction",
       guidance: `A good study plan connects your current need with a manageable set of passages. Since you are already in ${passageRef}, it can help to pair this passage with a few supporting Scriptures and a simple weekly rhythm of reading, reflection, and prayer ${traditionPerspective}.`,
-      suggestedPassages: [passageRef, 'Psalm 1', 'John 15', 'James 1'],
+      suggestedPassages: [passageRef, "Psalm 1", "John 15", "James 1"],
       nextSteps: [
-        'Read one short passage a day for seven days instead of trying to cover too much.',
-        'Write one observation, one question, and one application after each reading.',
-        'End each study time by asking God what obedience looks like today.',
+        "Read one short passage a day for seven days instead of trying to cover too much.",
+        "Write one observation, one question, and one application after each reading.",
+        "End each study time by asking God what obedience looks like today.",
       ],
       encouragement:
-        'You do not need a complex plan to grow. Consistent time in Scripture shapes the heart over time.',
+        "You do not need a complex plan to grow. Consistent time in Scripture shapes the heart over time.",
     };
   }
 
   if (
-    lowerPrompt.includes('discouraged') ||
-    lowerPrompt.includes('tired') ||
-    lowerPrompt.includes('hopeless') ||
-    lowerPrompt.includes('encouragement')
+    lowerPrompt.includes("discouraged") ||
+    lowerPrompt.includes("tired") ||
+    lowerPrompt.includes("hopeless") ||
+    lowerPrompt.includes("encouragement")
   ) {
     return {
-      title: 'Spiritual Encouragement',
+      title: "Spiritual Encouragement",
       guidance: `God often strengthens His people by reminding them who He is before changing their circumstances. ${passageRef} can become an anchor for hope as you remember that your story is not outside His care. Biblical encouragement is not pretending things are easy; it is learning to trust God in the middle of what is hard ${traditionPerspective}.`,
-      suggestedPassages: ['Isaiah 41:10', 'Psalm 34:18', 'Romans 8:31-39'],
+      suggestedPassages: ["Isaiah 41:10", "Psalm 34:18", "Romans 8:31-39"],
       nextSteps: [
-        'Tell God honestly where you feel discouraged today.',
-        'Reach out to one trusted Christian friend for prayer this week.',
+        "Tell God honestly where you feel discouraged today.",
+        "Reach out to one trusted Christian friend for prayer this week.",
         `Meditate on ${passageRef} once in the morning and once before bed.`,
       ],
       encouragement:
-        'The Lord is near to weary people. You are not alone, and this season is not unseen by Him.',
+        "The Lord is near to weary people. You are not alone, and this season is not unseen by Him.",
     };
   }
 
   return {
-    title: 'Christian AI Mentor',
+    title: "Christian AI Mentor",
     guidance: `I can help you think through your question with Scripture, prayer, and practical next steps. Starting from ${passageRef}, I’ll focus on helping you grow as a disciple, not just collecting information ${traditionPerspective}.`,
-    suggestedPassages: [passageRef, 'Psalm 119:105', 'James 1:5'],
+    suggestedPassages: [passageRef, "Psalm 119:105", "James 1:5"],
     nextSteps: [
-      'Ask your question as honestly and specifically as you can.',
-      'Look for one truth to believe and one action step to practice.',
-      'Return to the passage and pray it back to God.',
+      "Ask your question as honestly and specifically as you can.",
+      "Look for one truth to believe and one action step to practice.",
+      "Return to the passage and pray it back to God.",
     ],
     encouragement:
-      'God uses ordinary Scripture, prayer, and faithful next steps to shape deep spiritual growth.',
+      "God uses ordinary Scripture, prayer, and faithful next steps to shape deep spiritual growth.",
   };
 };
 
 const buildMentorJourney = (
   prompt: string,
   passageRef: string,
-  tradition: Tradition
+  tradition: Tradition,
 ): MentorJourney => {
   const lowerPrompt = prompt.toLowerCase();
   const traditionPerspective = getTraditionPerspective(tradition);
 
-  if (lowerPrompt.includes('anxiety') || lowerPrompt.includes('worry')) {
+  if (lowerPrompt.includes("anxiety") || lowerPrompt.includes("worry")) {
     return {
-      title: '7-Day Peace Journey',
-      duration: '7 days',
+      title: "7-Day Peace Journey",
+      duration: "7 days",
       steps: [
-        'Day 1: Read Philippians 4:6-8 and write down your biggest current worry.',
-        'Day 2: Pray Matthew 6:25-34 aloud and name one area where you need daily trust.',
-        'Day 3: Return to the current passage and list what it says about God, not just about your feelings.',
-        'Day 4: Reach out to one trusted Christian friend and ask for prayer.',
-        'Day 5: Replace one anxious thought with one specific Scripture truth.',
-        'Day 6: Take one practical act of obedience instead of spiraling into fear.',
+        "Day 1: Read Philippians 4:6-8 and write down your biggest current worry.",
+        "Day 2: Pray Matthew 6:25-34 aloud and name one area where you need daily trust.",
+        "Day 3: Return to the current passage and list what it says about God, not just about your feelings.",
+        "Day 4: Reach out to one trusted Christian friend and ask for prayer.",
+        "Day 5: Replace one anxious thought with one specific Scripture truth.",
+        "Day 6: Take one practical act of obedience instead of spiraling into fear.",
         `Day 7: Review what God has been teaching you ${traditionPerspective}.`,
       ],
     };
   }
 
-  if (lowerPrompt.includes('prayer')) {
+  if (lowerPrompt.includes("prayer")) {
     return {
-      title: '7-Day Prayer Habit Journey',
-      duration: '7 days',
+      title: "7-Day Prayer Habit Journey",
+      duration: "7 days",
       steps: [
-        'Day 1: Choose one anchor time for prayer and keep it small.',
+        "Day 1: Choose one anchor time for prayer and keep it small.",
         `Day 2: Use ${passageRef} to guide one short prayer of gratitude.`,
-        'Day 3: Add one minute of silence before you begin praying.',
-        'Day 4: Write down three requests in your prayer journal.',
-        'Day 5: Pray for one other person by name.',
-        'Day 6: End your prayer time by asking for one act of obedience.',
+        "Day 3: Add one minute of silence before you begin praying.",
+        "Day 4: Write down three requests in your prayer journal.",
+        "Day 5: Pray for one other person by name.",
+        "Day 6: End your prayer time by asking for one act of obedience.",
         `Day 7: Reflect on what made prayer feel more natural ${traditionPerspective}.`,
       ],
     };
   }
 
   return {
-    title: '7-Day Discipleship Journey',
-    duration: '7 days',
+    title: "7-Day Discipleship Journey",
+    duration: "7 days",
     steps: [
       `Day 1: Read ${passageRef} slowly and write one honest takeaway.`,
-      'Day 2: Ask one question about the passage and bring it to God in prayer.',
-      'Day 3: Revisit the historical context and cross references.',
-      'Day 4: Practice one memory prompt from this study.',
-      'Day 5: Share one insight with a friend, group, or family member.',
-      'Day 6: Take one concrete action step flowing from the passage.',
+      "Day 2: Ask one question about the passage and bring it to God in prayer.",
+      "Day 3: Revisit the historical context and cross references.",
+      "Day 4: Practice one memory prompt from this study.",
+      "Day 5: Share one insight with a friend, group, or family member.",
+      "Day 6: Take one concrete action step flowing from the passage.",
       `Day 7: Review what God has highlighted for you ${traditionPerspective}.`,
     ],
   };
@@ -910,18 +952,18 @@ const buildMentorJourney = (
 
 export default function PassageStudy() {
   const params = useParams();
-  const slug = (params.reference as string)?.toLowerCase() || '';
+  const slug = (params.reference as string)?.toLowerCase() || "";
 
   // Bible & Display
   const [passage, setPassage] = useState<PassageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [selectedTranslation, setSelectedTranslation] = useState('web');
+  const [selectedTranslation, setSelectedTranslation] = useState("web");
 
   // Persistence
   const [isSaved, setIsSaved] = useState(false);
   const [notesCount, setNotesCount] = useState(0);
-  const [copyFeedback, setCopyFeedback] = useState('');
+  const [copyFeedback, setCopyFeedback] = useState("");
 
   // Authentication
   const [user, setUser] = useState<User | null>(null);
@@ -936,35 +978,44 @@ export default function PassageStudy() {
     useState<DevotionalContent | null>(null);
   const [groupStudyContent, setGroupStudyContent] =
     useState<GroupStudyContent | null>(null);
-  const [builderTopic, setBuilderTopic] = useState('Faith during trials');
-  const [builderAudience, setBuilderAudience] = useState('Youth group');
+  const [builderTopic, setBuilderTopic] = useState("Faith during trials");
+  const [builderAudience, setBuilderAudience] = useState("Youth group");
   const [sermonBuilderContent, setSermonBuilderContent] =
     useState<SermonBuilderContent | null>(null);
   const [quizContent, setQuizContent] = useState<QuizContent | null>(null);
   const [prayerModeContent, setPrayerModeContent] =
     useState<PrayerModeContent | null>(null);
-  const [commentaryCompare, setCommentaryCompare] = useState<CommentaryPerspective[]>([]);
-  const [verseBreakdown, setVerseBreakdown] = useState<VerseBreakdownItem[]>([]);
-  const [familyModeContent, setFamilyModeContent] = useState<FamilyModeContent | null>(
-    null
+  const [commentaryCompare, setCommentaryCompare] = useState<
+    CommentaryPerspective[]
+  >([]);
+  const [verseBreakdown, setVerseBreakdown] = useState<VerseBreakdownItem[]>(
+    [],
   );
+  const [familyModeContent, setFamilyModeContent] =
+    useState<FamilyModeContent | null>(null);
   const [apologeticsContent, setApologeticsContent] =
     useState<ApologeticsContent | null>(null);
   const [showQuizAnswers, setShowQuizAnswers] = useState(false);
-  const [studyTradition, setStudyTradition] = useState<Tradition>('overview');
-  const [selectedMode, setSelectedMode] = useState('overview');
-  const [shareFeedback, setShareFeedback] = useState('');
-  const [studySaveFeedback, setStudySaveFeedback] = useState('');
+  const [studyTradition, setStudyTradition] = useState<Tradition>("overview");
+  const [selectedMode, setSelectedMode] = useState("overview");
+  const [shareFeedback, setShareFeedback] = useState("");
+  const [studySaveFeedback, setStudySaveFeedback] = useState("");
   const [mentorDraftPrompt, setMentorDraftPrompt] = useState(
-    'Help me understand anxiety from a Biblical perspective.'
+    "Help me understand anxiety from a Biblical perspective.",
   );
   const [mentorPrompt, setMentorPrompt] = useState(
-    'Help me understand anxiety from a Biblical perspective.'
+    "Help me understand anxiety from a Biblical perspective.",
   );
-  const [mentorResponse, setMentorResponse] = useState<MentorResponse | null>(null);
-  const [mentorJourney, setMentorJourney] = useState<MentorJourney | null>(null);
-  const [mentorThreadEntries, setMentorThreadEntries] = useState<MentorThreadEntry[]>([]);
-  const [mentorSaveFeedback, setMentorSaveFeedback] = useState('');
+  const [mentorResponse, setMentorResponse] = useState<MentorResponse | null>(
+    null,
+  );
+  const [mentorJourney, setMentorJourney] = useState<MentorJourney | null>(
+    null,
+  );
+  const [mentorThreadEntries, setMentorThreadEntries] = useState<
+    MentorThreadEntry[]
+  >([]);
+  const [mentorSaveFeedback, setMentorSaveFeedback] = useState("");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   useEffect(() => {
@@ -981,13 +1032,15 @@ export default function PassageStudy() {
 
   useEffect(() => {
     try {
-      const savedTradition = localStorage.getItem('christian-study-guide:tradition');
+      const savedTradition = localStorage.getItem(
+        "christian-study-guide:tradition",
+      );
       if (
-        savedTradition === 'overview' ||
-        savedTradition === 'baptist' ||
-        savedTradition === 'reformed' ||
-        savedTradition === 'non-denominational' ||
-        savedTradition === 'catholic'
+        savedTradition === "overview" ||
+        savedTradition === "baptist" ||
+        savedTradition === "reformed" ||
+        savedTradition === "non-denominational" ||
+        savedTradition === "catholic"
       ) {
         setStudyTradition(savedTradition);
       }
@@ -999,16 +1052,16 @@ export default function PassageStudy() {
     setError(false);
 
     try {
-      let apiRef = slug.replace(/-/g, ' ').trim();
-      apiRef = apiRef.replace(/(\d+)\s+(\d+)\s+(\d+)/g, '$1:$2-$3');
-      apiRef = apiRef.replace(/(\d+)\s+(\d+)/g, '$1:$2');
-      apiRef = apiRef.replace(/\s+/g, '+');
+      let apiRef = slug.replace(/-/g, " ").trim();
+      apiRef = apiRef.replace(/(\d+)\s+(\d+)\s+(\d+)/g, "$1:$2-$3");
+      apiRef = apiRef.replace(/(\d+)\s+(\d+)/g, "$1:$2");
+      apiRef = apiRef.replace(/\s+/g, "+");
 
       const res = await fetch(
-        `https://bible-api.com/${apiRef}?translation=${selectedTranslation}`
+        `https://bible-api.com/${apiRef}?translation=${selectedTranslation}`,
       );
 
-      if (!res.ok) throw new Error('Passage not found');
+      if (!res.ok) throw new Error("Passage not found");
 
       const data = await res.json();
       setPassage(data);
@@ -1032,8 +1085,8 @@ export default function PassageStudy() {
           builderTopic,
           passage.reference,
           builderAudience,
-          studyTradition
-        )
+          studyTradition,
+        ),
       );
       setQuizContent(buildQuizContent(passage.reference));
       setPrayerModeContent(buildPrayerModeContent(passage.reference));
@@ -1042,10 +1095,10 @@ export default function PassageStudy() {
       setFamilyModeContent(buildFamilyModeContent(passage.reference));
       setApologeticsContent(buildApologeticsContent(passage.reference));
       setMentorResponse(
-        buildMentorResponse(mentorPrompt, passage.reference, studyTradition)
+        buildMentorResponse(mentorPrompt, passage.reference, studyTradition),
       );
       setMentorJourney(
-        buildMentorJourney(mentorPrompt, passage.reference, studyTradition)
+        buildMentorJourney(mentorPrompt, passage.reference, studyTradition),
       );
     } else {
       setDevotionalContent(null);
@@ -1060,7 +1113,14 @@ export default function PassageStudy() {
       setMentorResponse(null);
       setMentorJourney(null);
     }
-  }, [passage, slug, builderAudience, builderTopic, mentorPrompt, studyTradition]);
+  }, [
+    passage,
+    slug,
+    builderAudience,
+    builderTopic,
+    mentorPrompt,
+    studyTradition,
+  ]);
 
   useEffect(() => {
     const loadMentorThread = async () => {
@@ -1091,7 +1151,7 @@ export default function PassageStudy() {
               return {
                 id: item.id,
                 prompt: item.question,
-                title: parsed.title || 'Christian AI Mentor',
+                title: parsed.title || "Christian AI Mentor",
                 createdAt: item.created_at,
               };
             });
@@ -1099,7 +1159,8 @@ export default function PassageStudy() {
           setMentorThreadEntries(filtered);
         } else {
           const mentorHistory = JSON.parse(
-            localStorage.getItem('christian-study-guide:mentor-history') || '[]'
+            localStorage.getItem("christian-study-guide:mentor-history") ||
+              "[]",
           ) as Array<{
             id: string;
             reference: string;
@@ -1117,7 +1178,7 @@ export default function PassageStudy() {
                 prompt: item.prompt,
                 title: item.title,
                 createdAt: item.createdAt,
-              }))
+              })),
           );
         }
       } catch {}
@@ -1131,21 +1192,21 @@ export default function PassageStudy() {
       if (!user) return;
 
       try {
-        const response = await fetch('/api/profile');
+        const response = await fetch("/api/profile");
         if (!response.ok) return;
 
         const data = await response.json();
         const tradition = data?.tradition as Tradition | undefined;
 
         if (
-          tradition === 'overview' ||
-          tradition === 'baptist' ||
-          tradition === 'reformed' ||
-          tradition === 'non-denominational' ||
-          tradition === 'catholic'
+          tradition === "overview" ||
+          tradition === "baptist" ||
+          tradition === "reformed" ||
+          tradition === "non-denominational" ||
+          tradition === "catholic"
         ) {
           setStudyTradition(tradition);
-          localStorage.setItem('christian-study-guide:tradition', tradition);
+          localStorage.setItem("christian-study-guide:tradition", tradition);
         }
       } catch {}
     };
@@ -1163,11 +1224,11 @@ export default function PassageStudy() {
       setNotesCount(notesData.length);
 
       const isBookmarked = bookmarksData.some(
-        (b: { reference: string }) => b.reference === passage?.reference
+        (b: { reference: string }) => b.reference === passage?.reference,
       );
       setIsSaved(isBookmarked);
     } catch {
-      console.error('Error loading user data');
+      console.error("Error loading user data");
     }
   });
 
@@ -1183,9 +1244,11 @@ export default function PassageStudy() {
       if (passage?.reference) {
         const timeSpent = Math.round((Date.now() - studyStartTime) / 60000);
         if (timeSpent > 0) {
-          logStudySession(passage.reference, selectedTranslation, timeSpent).catch(
-            () => {}
-          );
+          logStudySession(
+            passage.reference,
+            selectedTranslation,
+            timeSpent,
+          ).catch(() => {});
         }
       }
     };
@@ -1208,14 +1271,14 @@ export default function PassageStudy() {
         setIsSaved(true);
       }
     } catch {
-      alert('Failed to save bookmark');
+      alert("Failed to save bookmark");
     }
   };
 
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text);
-    setCopyFeedback('Copied!');
-    setTimeout(() => setCopyFeedback(''), 2000);
+    setCopyFeedback("Copied!");
+    setTimeout(() => setCopyFeedback(""), 2000);
   };
 
   const handleSharePage = async () => {
@@ -1224,7 +1287,7 @@ export default function PassageStudy() {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: passage?.reference || 'Christian Study Guide',
+          title: passage?.reference || "Christian Study Guide",
           text: `Study ${passage?.reference} with me.`,
           url: shareUrl,
         });
@@ -1232,11 +1295,11 @@ export default function PassageStudy() {
         await navigator.clipboard.writeText(shareUrl);
       }
 
-      setShareFeedback('Shared!');
-      setTimeout(() => setShareFeedback(''), 2000);
+      setShareFeedback("Shared!");
+      setTimeout(() => setShareFeedback(""), 2000);
     } catch {
-      setShareFeedback('Share unavailable');
-      setTimeout(() => setShareFeedback(''), 2000);
+      setShareFeedback("Share unavailable");
+      setTimeout(() => setShareFeedback(""), 2000);
     }
   };
 
@@ -1253,11 +1316,12 @@ export default function PassageStudy() {
           await saveStudySession(
             passage.reference,
             selectedMode,
-            `Saved from ${selectedMode} mode with ${studyTradition} tradition selected.`
+            `Saved from ${selectedMode} mode with ${studyTradition} tradition selected.`,
           );
         } else {
           const existingSessions = JSON.parse(
-            localStorage.getItem('christian-study-guide:saved-sessions') || '[]'
+            localStorage.getItem("christian-study-guide:saved-sessions") ||
+              "[]",
           ) as Array<{
             id: string;
             reference: string;
@@ -1275,34 +1339,37 @@ export default function PassageStudy() {
           };
 
           localStorage.setItem(
-            'christian-study-guide:saved-sessions',
-            JSON.stringify([nextSession, ...existingSessions].slice(0, 30))
+            "christian-study-guide:saved-sessions",
+            JSON.stringify([nextSession, ...existingSessions].slice(0, 30)),
           );
           const existingActivity = JSON.parse(
-            localStorage.getItem('christian-study-guide:activity-timeline') || '[]'
+            localStorage.getItem("christian-study-guide:activity-timeline") ||
+              "[]",
           ) as Array<Record<string, unknown>>;
           localStorage.setItem(
-            'christian-study-guide:activity-timeline',
-            JSON.stringify([
-              {
-                id: `study-session-${Date.now()}`,
-                event_type: 'study_session_saved',
-                reference: passage.reference,
-                metadata: {
-                  mode: selectedMode,
+            "christian-study-guide:activity-timeline",
+            JSON.stringify(
+              [
+                {
+                  id: `study-session-${Date.now()}`,
+                  event_type: "study_session_saved",
+                  reference: passage.reference,
+                  metadata: {
+                    mode: selectedMode,
+                  },
+                  created_at: new Date().toISOString(),
                 },
-                created_at: new Date().toISOString(),
-              },
-              ...existingActivity,
-            ].slice(0, 30))
+                ...existingActivity,
+              ].slice(0, 30),
+            ),
           );
         }
 
-        setStudySaveFeedback('Study saved');
+        setStudySaveFeedback("Study saved");
       } catch {
-        setStudySaveFeedback('Save failed');
+        setStudySaveFeedback("Save failed");
       } finally {
-        setTimeout(() => setStudySaveFeedback(''), 2000);
+        setTimeout(() => setStudySaveFeedback(""), 2000);
       }
     };
 
@@ -1311,14 +1378,14 @@ export default function PassageStudy() {
 
   const handleTraditionChange = async (nextTradition: Tradition) => {
     setStudyTradition(nextTradition);
-    localStorage.setItem('christian-study-guide:tradition', nextTradition);
+    localStorage.setItem("christian-study-guide:tradition", nextTradition);
 
     if (!user) return;
 
     try {
-      await fetch('/api/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tradition: nextTradition }),
       });
     } catch {}
@@ -1334,20 +1401,25 @@ export default function PassageStudy() {
     const nextResponse = buildMentorResponse(
       trimmedPrompt,
       passage.reference,
-      studyTradition
+      studyTradition,
     );
     setMentorResponse(nextResponse);
     setMentorJourney(
-      buildMentorJourney(trimmedPrompt, passage.reference, studyTradition)
+      buildMentorJourney(trimmedPrompt, passage.reference, studyTradition),
     );
 
     const persist = async () => {
       try {
         if (user) {
-          await saveMentorHistory(passage.reference, trimmedPrompt, nextResponse);
+          await saveMentorHistory(
+            passage.reference,
+            trimmedPrompt,
+            nextResponse,
+          );
         } else {
           const mentorHistory = JSON.parse(
-            localStorage.getItem('christian-study-guide:mentor-history') || '[]'
+            localStorage.getItem("christian-study-guide:mentor-history") ||
+              "[]",
           ) as Array<{
             id: string;
             reference: string;
@@ -1365,41 +1437,46 @@ export default function PassageStudy() {
           };
 
           localStorage.setItem(
-            'christian-study-guide:mentor-history',
-            JSON.stringify([nextHistoryItem, ...mentorHistory].slice(0, 40))
+            "christian-study-guide:mentor-history",
+            JSON.stringify([nextHistoryItem, ...mentorHistory].slice(0, 40)),
           );
           const existingActivity = JSON.parse(
-            localStorage.getItem('christian-study-guide:activity-timeline') || '[]'
+            localStorage.getItem("christian-study-guide:activity-timeline") ||
+              "[]",
           ) as Array<Record<string, unknown>>;
           localStorage.setItem(
-            'christian-study-guide:activity-timeline',
-            JSON.stringify([
-              {
-                id: `mentor-${Date.now()}`,
-                event_type: 'mentor_question_saved',
-                reference: passage.reference,
-                metadata: {
-                  question: trimmedPrompt,
+            "christian-study-guide:activity-timeline",
+            JSON.stringify(
+              [
+                {
+                  id: `mentor-${Date.now()}`,
+                  event_type: "mentor_question_saved",
+                  reference: passage.reference,
+                  metadata: {
+                    question: trimmedPrompt,
+                  },
+                  created_at: new Date().toISOString(),
                 },
-                created_at: new Date().toISOString(),
-              },
-              ...existingActivity,
-            ].slice(0, 30))
+                ...existingActivity,
+              ].slice(0, 30),
+            ),
           );
         }
       } catch {}
     };
 
     persist();
-    setMentorThreadEntries((current) => [
-      {
-        id: `${passage.reference}-${Date.now()}`,
-        prompt: trimmedPrompt,
-        title: nextResponse.title,
-        createdAt: new Date().toISOString(),
-      },
-      ...current,
-    ].slice(0, 5));
+    setMentorThreadEntries((current) =>
+      [
+        {
+          id: `${passage.reference}-${Date.now()}`,
+          prompt: trimmedPrompt,
+          title: nextResponse.title,
+          createdAt: new Date().toISOString(),
+        },
+        ...current,
+      ].slice(0, 5),
+    );
   };
 
   const handleSaveMentorConversation = async () => {
@@ -1413,34 +1490,38 @@ export default function PassageStudy() {
     const noteContent = [
       `Christian AI Mentor`,
       `Prompt: ${mentorPrompt}`,
-      '',
+      "",
       `${mentorResponse.title}`,
       mentorResponse.guidance,
-      '',
-      `Suggested Passages: ${mentorResponse.suggestedPassages.join(', ')}`,
-      '',
+      "",
+      `Suggested Passages: ${mentorResponse.suggestedPassages.join(", ")}`,
+      "",
       `Next Steps:`,
       ...mentorResponse.nextSteps.map((step) => `- ${step}`),
-      '',
+      "",
       `Encouragement: ${mentorResponse.encouragement}`,
-    ].join('\n');
+    ].join("\n");
 
     try {
-      await saveNote(passage.reference, noteContent, 'note', '#d9f99d', [
-        'mentor',
-        'discipleship',
+      await saveNote(passage.reference, noteContent, "note", "#d9f99d", [
+        "mentor",
+        "discipleship",
       ]);
       setNotesCount((current) => current + 1);
-      setMentorSaveFeedback('Saved to notes');
-      setTimeout(() => setMentorSaveFeedback(''), 2000);
+      setMentorSaveFeedback("Saved to notes");
+      setTimeout(() => setMentorSaveFeedback(""), 2000);
     } catch {
-      setMentorSaveFeedback('Failed to save');
-      setTimeout(() => setMentorSaveFeedback(''), 2000);
+      setMentorSaveFeedback("Failed to save");
+      setTimeout(() => setMentorSaveFeedback(""), 2000);
     }
   };
 
   const handleToggleAudio = () => {
-    if (!passage || typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    if (
+      !passage ||
+      typeof window === "undefined" ||
+      !("speechSynthesis" in window)
+    ) {
       return;
     }
 
@@ -1451,7 +1532,7 @@ export default function PassageStudy() {
     }
 
     const utterance = new SpeechSynthesisUtterance(
-      `${passage.reference}. ${passage.text}`
+      `${passage.reference}. ${passage.text}`,
     );
     utterance.onend = () => setIsAudioPlaying(false);
     window.speechSynthesis.cancel();
@@ -1487,7 +1568,8 @@ export default function PassageStudy() {
             Passage Not Found
           </h2>
           <p className="text-gray-600 mb-6">
-            We couldn&apos;t find that Bible passage. Please try searching for another one.
+            We couldn&apos;t find that Bible passage. Please try searching for
+            another one.
           </p>
           <Link
             href="/"
@@ -1518,11 +1600,14 @@ export default function PassageStudy() {
               onClick={handleToggleBookmark}
               className={`p-2 rounded-lg transition ${
                 isSaved
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-white/20 hover:bg-white/30 text-white'
+                  ? "bg-yellow-500 text-white"
+                  : "bg-white/20 hover:bg-white/30 text-white"
               }`}
             >
-              <Bookmark className="h-6 w-6" fill={isSaved ? 'currentColor' : 'none'} />
+              <Bookmark
+                className="h-6 w-6"
+                fill={isSaved ? "currentColor" : "none"}
+              />
             </button>
           </div>
 
@@ -1536,7 +1621,11 @@ export default function PassageStudy() {
                 className="bg-white/20 border border-white/40 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
               >
                 {translations.map((t) => (
-                  <option key={t.code} value={t.code} className="text-[#0f172a]">
+                  <option
+                    key={t.code}
+                    value={t.code}
+                    className="text-[#0f172a]"
+                  >
                     {t.name}
                   </option>
                 ))}
@@ -1546,14 +1635,26 @@ export default function PassageStudy() {
               <span className="text-sm text-blue-100">Tradition</span>
               <select
                 value={studyTradition}
-                onChange={(e) => handleTraditionChange(e.target.value as Tradition)}
+                onChange={(e) =>
+                  handleTraditionChange(e.target.value as Tradition)
+                }
                 className="bg-white/20 border border-white/40 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
               >
-                <option value="overview" className="text-[#0f172a]">Overview</option>
-                <option value="baptist" className="text-[#0f172a]">Baptist</option>
-                <option value="reformed" className="text-[#0f172a]">Reformed</option>
-                <option value="non-denominational" className="text-[#0f172a]">Non-denominational</option>
-                <option value="catholic" className="text-[#0f172a]">Catholic</option>
+                <option value="overview" className="text-[#0f172a]">
+                  Overview
+                </option>
+                <option value="baptist" className="text-[#0f172a]">
+                  Baptist
+                </option>
+                <option value="reformed" className="text-[#0f172a]">
+                  Reformed
+                </option>
+                <option value="non-denominational" className="text-[#0f172a]">
+                  Non-denominational
+                </option>
+                <option value="catholic" className="text-[#0f172a]">
+                  Catholic
+                </option>
               </select>
             </div>
           </div>
@@ -1569,20 +1670,20 @@ export default function PassageStudy() {
               <div className="mb-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
                 <div className="mb-4 flex flex-wrap gap-2">
                   {[
-                    ['overview', 'Overview'],
-                    ['context', 'Context'],
-                    ['compare', 'Commentary Compare'],
-                    ['breakdown', 'Verse Breakdown'],
-                    ['language', 'Language'],
-                    ['apologetics', 'Apologetics'],
-                    ['crossrefs', 'Cross References'],
-                    ['devotional', 'Devotional'],
-                    ['prayer', 'Prayer'],
-                    ['family', 'Family'],
-                    ['group', 'Group'],
-                    ['sermon', 'Sermon'],
-                    ['mentor', 'Mentor'],
-                    ['quiz', 'Quiz'],
+                    ["overview", "Overview"],
+                    ["context", "Context"],
+                    ["compare", "Commentary Compare"],
+                    ["breakdown", "Verse Breakdown"],
+                    ["language", "Language"],
+                    ["apologetics", "Apologetics"],
+                    ["crossrefs", "Cross References"],
+                    ["devotional", "Devotional"],
+                    ["prayer", "Prayer"],
+                    ["family", "Family"],
+                    ["group", "Group"],
+                    ["sermon", "Sermon"],
+                    ["mentor", "Mentor"],
+                    ["quiz", "Quiz"],
                   ].map(([mode, label]) => (
                     <a
                       key={mode}
@@ -1590,8 +1691,8 @@ export default function PassageStudy() {
                       onClick={() => setSelectedMode(mode)}
                       className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                         selectedMode === mode
-                          ? 'bg-[#1e40af] text-white'
-                          : 'bg-white text-gray-700 hover:bg-blue-50'
+                          ? "bg-[#1e40af] text-white"
+                          : "bg-white text-gray-700 hover:bg-blue-50"
                       }`}
                     >
                       {label}
@@ -1603,21 +1704,21 @@ export default function PassageStudy() {
                     onClick={handleSaveStudySession}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                       studySaveFeedback
-                        ? 'bg-lime-100 text-lime-900'
-                        : 'bg-blue-100 text-blue-900 hover:bg-blue-200'
+                        ? "bg-lime-100 text-lime-900"
+                        : "bg-blue-100 text-blue-900 hover:bg-blue-200"
                     }`}
                   >
-                    {studySaveFeedback || 'Save Study Session'}
+                    {studySaveFeedback || "Save Study Session"}
                   </button>
                   <button
                     onClick={handleSharePage}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                       shareFeedback
-                        ? 'bg-emerald-100 text-emerald-900'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? "bg-emerald-100 text-emerald-900"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   >
-                    {shareFeedback || 'Share Study Page'}
+                    {shareFeedback || "Share Study Page"}
                   </button>
                   <button
                     onClick={handleExportStudy}
@@ -1629,7 +1730,7 @@ export default function PassageStudy() {
                     onClick={handleToggleAudio}
                     className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200"
                   >
-                    {isAudioPlaying ? 'Stop Audio' : 'Play Audio'}
+                    {isAudioPlaying ? "Stop Audio" : "Play Audio"}
                   </button>
                 </div>
               </div>
@@ -1643,11 +1744,13 @@ export default function PassageStudy() {
                 {/* Copy & Share Buttons */}
                 <div className="flex gap-3 mt-8">
                   <button
-                    onClick={() => handleCopy(`${passage.text}\n\n— ${passage.reference}`)}
+                    onClick={() =>
+                      handleCopy(`${passage.text}\n\n— ${passage.reference}`)
+                    }
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
                       copyFeedback
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"
                     }`}
                   >
                     {copyFeedback ? (
@@ -1667,7 +1770,7 @@ export default function PassageStudy() {
                     className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
                   >
                     <Share2 className="h-5 w-5" />
-                    {shareFeedback || 'Share'}
+                    {shareFeedback || "Share"}
                   </button>
                 </div>
               </div>
@@ -1689,7 +1792,9 @@ export default function PassageStudy() {
                         key={item.label}
                         className="rounded-xl border border-slate-200 bg-slate-50 p-6"
                       >
-                        <h4 className="font-semibold text-slate-950">{item.label}</h4>
+                        <h4 className="font-semibold text-slate-950">
+                          {item.label}
+                        </h4>
                         <p className="mt-3 text-sm leading-7 text-slate-700">
                           {item.summary}
                         </p>
@@ -1723,13 +1828,17 @@ export default function PassageStudy() {
                         </p>
                         <div className="mt-4 grid gap-4 md:grid-cols-2">
                           <div>
-                            <h4 className="font-semibold text-blue-950">Explanation</h4>
+                            <h4 className="font-semibold text-blue-950">
+                              Explanation
+                            </h4>
                             <p className="mt-2 text-sm leading-7 text-blue-950">
                               {item.insight}
                             </p>
                           </div>
                           <div>
-                            <h4 className="font-semibold text-blue-950">Application</h4>
+                            <h4 className="font-semibold text-blue-950">
+                              Application
+                            </h4>
                             <p className="mt-2 text-sm leading-7 text-blue-950">
                               {item.application}
                             </p>
@@ -1749,8 +1858,8 @@ export default function PassageStudy() {
                       Historical & Cultural Context
                     </h3>
                     <p className="mt-1 text-sm text-gray-600">
-                      Get the basic background behind this passage so the meaning is
-                      easier to understand.
+                      Get the basic background behind this passage so the
+                      meaning is easier to understand.
                     </p>
                   </div>
 
@@ -1785,7 +1894,9 @@ export default function PassageStudy() {
                           <p>{historicalContext.date}</p>
                         </div>
                         <div>
-                          <p className="font-semibold">What was happening historically</p>
+                          <p className="font-semibold">
+                            What was happening historically
+                          </p>
                           <p>{historicalContext.historical}</p>
                         </div>
                         <div>
@@ -1805,9 +1916,9 @@ export default function PassageStudy() {
                       Original Greek / Hebrew Tools
                     </h3>
                     <p className="mt-1 text-sm text-gray-600">
-                      See a key original-language word, what it means, how to say it,
-                      where else it appears in Scripture, and how its deeper range
-                      shapes theology in this passage.
+                      See a key original-language word, what it means, how to
+                      say it, where else it appears in Scripture, and how its
+                      deeper range shapes theology in this passage.
                     </p>
                   </div>
 
@@ -1842,16 +1953,20 @@ export default function PassageStudy() {
 
                           <div className="space-y-4 text-sm leading-6 text-purple-950">
                             <div>
-                              <p className="font-semibold">Why it matters here</p>
+                              <p className="font-semibold">
+                                Why it matters here
+                              </p>
                               <p>{term.usage}</p>
                             </div>
                             <div>
-                              <p className="font-semibold">Other verses using this word</p>
+                              <p className="font-semibold">
+                                Other verses using this word
+                              </p>
                               <div className="mt-2 flex flex-wrap gap-2">
                                 {term.otherVerses.map((verse) => (
                                   <Link
                                     key={verse}
-                                    href={`/passage/${verse.toLowerCase().replace(/\s+/g, '-')}`}
+                                    href={`/passage/${verse.toLowerCase().replace(/\s+/g, "-")}`}
                                     className="rounded-lg border border-purple-300 bg-white px-3 py-2 text-sm font-medium text-purple-900 transition hover:bg-purple-100"
                                   >
                                     {verse}
@@ -1865,7 +1980,9 @@ export default function PassageStudy() {
                         <div className="mt-6 rounded-xl border border-purple-300 bg-white/80 p-5">
                           <div className="mb-4 flex items-center gap-2 text-purple-950">
                             <Languages className="h-4 w-4" />
-                            <h5 className="font-semibold">Original Language Depth Mode</h5>
+                            <h5 className="font-semibold">
+                              Original Language Depth Mode
+                            </h5>
                           </div>
                           <div className="grid gap-4 text-sm leading-6 text-purple-950 md:grid-cols-2">
                             <div>
@@ -1878,10 +1995,12 @@ export default function PassageStudy() {
                             </div>
                             <div>
                               <p className="font-semibold">Lexical range</p>
-                              <p>{term.lexicalRange.join(', ')}</p>
+                              <p>{term.lexicalRange.join(", ")}</p>
                             </div>
                             <div>
-                              <p className="font-semibold">Why the depth matters</p>
+                              <p className="font-semibold">
+                                Why the depth matters
+                              </p>
                               <p>{term.theologicalDepth}</p>
                             </div>
                           </div>
@@ -1898,8 +2017,8 @@ export default function PassageStudy() {
                     Bible Cross-Reference Explorer
                   </h3>
                   <p className="mt-1 text-sm text-gray-600">
-                    See how Scripture interprets Scripture with connected passages and
-                    simple explanations of why they relate.
+                    See how Scripture interprets Scripture with connected
+                    passages and simple explanations of why they relate.
                   </p>
                 </div>
                 <div className="grid gap-4">
@@ -1911,7 +2030,7 @@ export default function PassageStudy() {
                       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                         <div className="min-w-0">
                           <Link
-                            href={`/passage/${item.verse.toLowerCase().replace(/\s+/g, '-')}`}
+                            href={`/passage/${item.verse.toLowerCase().replace(/\s+/g, "-")}`}
                             className="inline-flex rounded-lg bg-white px-3 py-2 font-semibold text-blue-900 transition hover:bg-blue-100"
                           >
                             {item.verse}
@@ -1921,7 +2040,7 @@ export default function PassageStudy() {
                           </p>
                         </div>
                         <Link
-                          href={`/passage/${item.verse.toLowerCase().replace(/\s+/g, '-')}`}
+                          href={`/passage/${item.verse.toLowerCase().replace(/\s+/g, "-")}`}
                           className="shrink-0 rounded-lg border border-blue-300 px-3 py-2 text-sm font-medium text-blue-900 transition hover:bg-blue-100"
                         >
                           Study This Verse
@@ -1940,12 +2059,15 @@ export default function PassageStudy() {
                         Devotional & Application Mode
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">
-                        Turn this passage into reflection, prayer, and action for the week.
+                        Turn this passage into reflection, prayer, and action
+                        for the week.
                       </p>
                     </div>
                     <button
                       onClick={() =>
-                        setDevotionalContent(buildDevotionalContent(passage, slug))
+                        setDevotionalContent(
+                          buildDevotionalContent(passage, slug),
+                        )
                       }
                       className="shrink-0 rounded-lg bg-amber-100 px-4 py-2 text-sm font-medium text-amber-900 transition hover:bg-amber-200"
                     >
@@ -1970,9 +2092,11 @@ export default function PassageStudy() {
                           Reflection Questions
                         </h4>
                         <ul className="space-y-3 text-sm leading-6 text-blue-950">
-                          {devotionalContent.reflectionQuestions.map((question) => (
-                            <li key={question}>• {question}</li>
-                          ))}
+                          {devotionalContent.reflectionQuestions.map(
+                            (question) => (
+                              <li key={question}>• {question}</li>
+                            ),
+                          )}
                         </ul>
                       </div>
 
@@ -2020,12 +2144,16 @@ export default function PassageStudy() {
                         Prayer Mode
                       </h3>
                       <p className="mt-1 text-sm text-gray-600">
-                        Pray the passage through confession, gratitude, intercession,
-                        and surrender.
+                        Pray the passage through confession, gratitude,
+                        intercession, and surrender.
                       </p>
                     </div>
                     <button
-                      onClick={() => setPrayerModeContent(buildPrayerModeContent(passage.reference))}
+                      onClick={() =>
+                        setPrayerModeContent(
+                          buildPrayerModeContent(passage.reference),
+                        )
+                      }
                       className="shrink-0 rounded-lg bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-900 transition hover:bg-emerald-200"
                     >
                       Refresh
@@ -2034,25 +2162,33 @@ export default function PassageStudy() {
 
                   <div className="grid gap-5 md:grid-cols-2">
                     <section className="rounded-xl border border-rose-200 bg-rose-50 p-6">
-                      <h4 className="mb-3 font-semibold text-rose-950">Confession</h4>
+                      <h4 className="mb-3 font-semibold text-rose-950">
+                        Confession
+                      </h4>
                       <p className="text-sm leading-7 text-rose-950">
                         {prayerModeContent.confession}
                       </p>
                     </section>
                     <section className="rounded-xl border border-amber-200 bg-amber-50 p-6">
-                      <h4 className="mb-3 font-semibold text-amber-950">Gratitude</h4>
+                      <h4 className="mb-3 font-semibold text-amber-950">
+                        Gratitude
+                      </h4>
                       <p className="text-sm leading-7 text-amber-950">
                         {prayerModeContent.gratitude}
                       </p>
                     </section>
                     <section className="rounded-xl border border-blue-200 bg-blue-50 p-6">
-                      <h4 className="mb-3 font-semibold text-blue-950">Intercession</h4>
+                      <h4 className="mb-3 font-semibold text-blue-950">
+                        Intercession
+                      </h4>
                       <p className="text-sm leading-7 text-blue-950">
                         {prayerModeContent.intercession}
                       </p>
                     </section>
                     <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-                      <h4 className="mb-3 font-semibold text-emerald-950">Surrender</h4>
+                      <h4 className="mb-3 font-semibold text-emerald-950">
+                        Surrender
+                      </h4>
                       <p className="text-sm leading-7 text-emerald-950">
                         {prayerModeContent.surrender}
                       </p>
@@ -2068,7 +2204,8 @@ export default function PassageStudy() {
                       Apologetics & Hard Questions Mode
                     </h3>
                     <p className="mt-1 text-sm text-gray-600">
-                      A guided way to think through doubts, objections, and worldview questions from a Christian perspective.
+                      A guided way to think through doubts, objections, and
+                      worldview questions from a Christian perspective.
                     </p>
                   </div>
                   <div className="grid gap-5">
@@ -2159,12 +2296,15 @@ export default function PassageStudy() {
                         Small Group & Teaching Tools
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">
-                        Turn this passage into a simple study plan for leading others.
+                        Turn this passage into a simple study plan for leading
+                        others.
                       </p>
                     </div>
                     <button
                       onClick={() =>
-                        setGroupStudyContent(buildGroupStudyContent(passage, slug))
+                        setGroupStudyContent(
+                          buildGroupStudyContent(passage, slug),
+                        )
                       }
                       className="shrink-0 rounded-lg bg-sky-100 px-4 py-2 text-sm font-medium text-sky-900 transition hover:bg-sky-200"
                     >
@@ -2192,12 +2332,16 @@ export default function PassageStudy() {
                       <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-6">
                         <div className="mb-3 flex items-center gap-2 text-indigo-950">
                           <Users className="h-5 w-5" />
-                          <h4 className="font-semibold">Discussion Questions</h4>
+                          <h4 className="font-semibold">
+                            Discussion Questions
+                          </h4>
                         </div>
                         <ul className="space-y-3 text-sm leading-6 text-indigo-950">
-                          {groupStudyContent.discussionQuestions.map((question) => (
-                            <li key={question}>• {question}</li>
-                          ))}
+                          {groupStudyContent.discussionQuestions.map(
+                            (question) => (
+                              <li key={question}>• {question}</li>
+                            ),
+                          )}
                         </ul>
                       </div>
 
@@ -2217,9 +2361,11 @@ export default function PassageStudy() {
                           Sermon Outline Starter
                         </h4>
                         <ul className="space-y-3 text-sm leading-6 text-teal-950">
-                          {groupStudyContent.sermonOutlineStarter.map((point) => (
-                            <li key={point}>• {point}</li>
-                          ))}
+                          {groupStudyContent.sermonOutlineStarter.map(
+                            (point) => (
+                              <li key={point}>• {point}</li>
+                            ),
+                          )}
                         </ul>
                       </div>
 
@@ -2244,7 +2390,8 @@ export default function PassageStudy() {
                         AI Sermon & Bible Study Builder
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">
-                        Build a message or study plan for pastors, leaders, and youth workers.
+                        Build a message or study plan for pastors, leaders, and
+                        youth workers.
                       </p>
                     </div>
                     <button
@@ -2254,8 +2401,8 @@ export default function PassageStudy() {
                             builderTopic,
                             passage.reference,
                             builderAudience,
-                            studyTradition
-                          )
+                            studyTradition,
+                          ),
                         )
                       }
                       className="shrink-0 rounded-lg bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-900 transition hover:bg-indigo-200"
@@ -2266,17 +2413,19 @@ export default function PassageStudy() {
                       onClick={() =>
                         handleCopy(
                           [
-                            'AI Sermon & Bible Study Builder',
+                            "AI Sermon & Bible Study Builder",
                             `Topic: ${builderTopic}`,
                             `Passage: ${passage.reference}`,
                             `Audience: ${builderAudience}`,
-                            '',
-                            'Sermon Outline:',
+                            "",
+                            "Sermon Outline:",
                             ...sermonBuilderContent.sermonOutline,
-                            '',
-                            'Key Points:',
-                            ...sermonBuilderContent.keyPoints.map((item) => `- ${item}`),
-                          ].join('\n')
+                            "",
+                            "Key Points:",
+                            ...sermonBuilderContent.keyPoints.map(
+                              (item) => `- ${item}`,
+                            ),
+                          ].join("\n"),
                         )
                       }
                       className="shrink-0 rounded-lg bg-white px-4 py-2 text-sm font-medium text-indigo-900 transition hover:bg-indigo-50"
@@ -2349,9 +2498,11 @@ export default function PassageStudy() {
                           Illustrations
                         </h4>
                         <ul className="space-y-3 text-sm leading-6 text-amber-950">
-                          {sermonBuilderContent.illustrations.map((illustration) => (
-                            <li key={illustration}>• {illustration}</li>
-                          ))}
+                          {sermonBuilderContent.illustrations.map(
+                            (illustration) => (
+                              <li key={illustration}>• {illustration}</li>
+                            ),
+                          )}
                         </ul>
                       </div>
                     </section>
@@ -2362,9 +2513,11 @@ export default function PassageStudy() {
                           Discussion Questions
                         </h4>
                         <ul className="space-y-3 text-sm leading-6 text-emerald-950">
-                          {sermonBuilderContent.discussionQuestions.map((question) => (
-                            <li key={question}>• {question}</li>
-                          ))}
+                          {sermonBuilderContent.discussionQuestions.map(
+                            (question) => (
+                              <li key={question}>• {question}</li>
+                            ),
+                          )}
                         </ul>
                       </div>
 
@@ -2389,8 +2542,8 @@ export default function PassageStudy() {
                         Christian AI Mentor
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">
-                        A discipleship coach for prayer habits, struggles, Scripture direction,
-                        and spiritual encouragement.
+                        A discipleship coach for prayer habits, struggles,
+                        Scripture direction, and spiritual encouragement.
                       </p>
                     </div>
                     <button
@@ -2419,9 +2572,9 @@ export default function PassageStudy() {
                     />
                     <div className="mt-3 flex flex-wrap gap-2">
                       {[
-                        'Help me understand anxiety from a Biblical perspective.',
-                        'Help me build a daily prayer habit.',
-                        'What Bible passages should I study when I feel discouraged?',
+                        "Help me understand anxiety from a Biblical perspective.",
+                        "Help me build a daily prayer habit.",
+                        "What Bible passages should I study when I feel discouraged?",
                       ].map((example) => (
                         <button
                           key={example}
@@ -2433,15 +2586,15 @@ export default function PassageStudy() {
                               buildMentorResponse(
                                 example,
                                 passage.reference,
-                                studyTradition
-                              )
+                                studyTradition,
+                              ),
                             );
                             setMentorJourney(
                               buildMentorJourney(
                                 example,
                                 passage.reference,
-                                studyTradition
-                              )
+                                studyTradition,
+                              ),
                             );
                           }}
                           className="rounded-full border border-emerald-300 bg-white px-3 py-2 text-xs font-medium text-emerald-900 transition hover:bg-emerald-100"
@@ -2466,31 +2619,33 @@ export default function PassageStudy() {
                         <button
                           onClick={handleSaveMentorConversation}
                           className={`shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition ${
-                            mentorSaveFeedback === 'Saved to notes'
-                              ? 'bg-lime-100 text-lime-900'
-                              : mentorSaveFeedback === 'Failed to save'
-                                ? 'bg-rose-100 text-rose-900'
-                                : 'bg-emerald-100 text-emerald-900 hover:bg-emerald-200'
+                            mentorSaveFeedback === "Saved to notes"
+                              ? "bg-lime-100 text-lime-900"
+                              : mentorSaveFeedback === "Failed to save"
+                                ? "bg-rose-100 text-rose-900"
+                                : "bg-emerald-100 text-emerald-900 hover:bg-emerald-200"
                           }`}
                         >
-                          {mentorSaveFeedback || 'Save to Notes'}
+                          {mentorSaveFeedback || "Save to Notes"}
                         </button>
                         <button
                           onClick={() =>
                             handleCopy(
                               [
                                 `Prompt: ${mentorPrompt}`,
-                                '',
+                                "",
                                 mentorResponse.title,
                                 mentorResponse.guidance,
-                                '',
-                                `Suggested Passages: ${mentorResponse.suggestedPassages.join(', ')}`,
-                                '',
-                                'Next Steps:',
-                                ...mentorResponse.nextSteps.map((step) => `- ${step}`),
-                                '',
+                                "",
+                                `Suggested Passages: ${mentorResponse.suggestedPassages.join(", ")}`,
+                                "",
+                                "Next Steps:",
+                                ...mentorResponse.nextSteps.map(
+                                  (step) => `- ${step}`,
+                                ),
+                                "",
                                 `Encouragement: ${mentorResponse.encouragement}`,
-                              ].join('\n')
+                              ].join("\n"),
                             )
                           }
                           className="shrink-0 rounded-lg bg-white px-3 py-2 text-sm font-medium text-emerald-900 transition hover:bg-emerald-50"
@@ -2512,7 +2667,7 @@ export default function PassageStudy() {
                           {mentorResponse.suggestedPassages.map((verse) => (
                             <Link
                               key={verse}
-                              href={`/passage/${verse.toLowerCase().replace(/\s+/g, '-')}`}
+                              href={`/passage/${verse.toLowerCase().replace(/\s+/g, "-")}`}
                               className="rounded-lg border border-blue-300 bg-white px-3 py-2 text-sm font-medium text-blue-900 transition hover:bg-blue-100"
                             >
                               {verse}
@@ -2559,9 +2714,11 @@ export default function PassageStudy() {
                                 [
                                   mentorJourney.title,
                                   `Duration: ${mentorJourney.duration}`,
-                                  '',
-                                  ...mentorJourney.steps.map((step) => `- ${step}`),
-                                ].join('\n')
+                                  "",
+                                  ...mentorJourney.steps.map(
+                                    (step) => `- ${step}`,
+                                  ),
+                                ].join("\n"),
                               )
                             }
                             className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-teal-900 transition hover:bg-teal-100"
@@ -2583,8 +2740,9 @@ export default function PassageStudy() {
                           Passage Companion Thread
                         </h4>
                         <p className="mb-4 text-sm leading-6 text-slate-600">
-                          Keep a running mentor conversation attached to this passage so
-                          follow-up questions feel like one ongoing thread instead of one-off prompts.
+                          Keep a running mentor conversation attached to this
+                          passage so follow-up questions feel like one ongoing
+                          thread instead of one-off prompts.
                         </p>
                         <div className="space-y-3">
                           {mentorThreadEntries.map((entry) => (
@@ -2614,7 +2772,8 @@ export default function PassageStudy() {
                             Shareable Study Card
                           </h4>
                           <p className="mt-1 text-sm text-slate-600">
-                            Copy a compact summary for a text thread, group chat, or note.
+                            Copy a compact summary for a text thread, group
+                            chat, or note.
                           </p>
                         </div>
                         <button
@@ -2622,12 +2781,12 @@ export default function PassageStudy() {
                             handleCopy(
                               [
                                 passage.reference,
-                                '',
+                                "",
                                 mentorResponse.title,
                                 mentorResponse.guidance,
-                                '',
+                                "",
                                 `Try next: ${mentorResponse.nextSteps[0]}`,
-                              ].join('\n')
+                              ].join("\n"),
                             )
                           }
                           className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-100"
@@ -2636,7 +2795,9 @@ export default function PassageStudy() {
                         </button>
                       </div>
                       <div className="rounded-xl border border-white bg-white p-5 text-sm leading-7 text-slate-700">
-                        <p className="font-semibold text-slate-950">{passage.reference}</p>
+                        <p className="font-semibold text-slate-950">
+                          {passage.reference}
+                        </p>
                         <p className="mt-3">{mentorResponse.title}</p>
                         <p className="mt-3">{mentorResponse.guidance}</p>
                         <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -2657,24 +2818,29 @@ export default function PassageStudy() {
                         Quiz & Memory Mode
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">
-                        Review the passage with a few study questions and a simple memory prompt.
+                        Review the passage with a few study questions and a
+                        simple memory prompt.
                       </p>
                     </div>
                     <button
                       onClick={() => setShowQuizAnswers((current) => !current)}
                       className="shrink-0 rounded-lg bg-violet-100 px-4 py-2 text-sm font-medium text-violet-900 transition hover:bg-violet-200"
                     >
-                      {showQuizAnswers ? 'Hide Answers' : 'Show Answers'}
+                      {showQuizAnswers ? "Hide Answers" : "Show Answers"}
                     </button>
                   </div>
 
                   <div className="grid gap-5">
                     <section className="rounded-xl border border-violet-200 bg-violet-50 p-6">
-                      <h4 className="mb-3 font-semibold text-violet-950">Study Questions</h4>
+                      <h4 className="mb-3 font-semibold text-violet-950">
+                        Study Questions
+                      </h4>
                       <ul className="space-y-4 text-sm leading-6 text-violet-950">
                         {quizContent.questions.map((question, index) => (
                           <li key={question}>
-                            <p>{index + 1}. {question}</p>
+                            <p>
+                              {index + 1}. {question}
+                            </p>
                             {showQuizAnswers && (
                               <p className="mt-2 rounded-lg bg-white px-3 py-2 text-slate-700">
                                 {quizContent.answers[index]}
@@ -2686,7 +2852,9 @@ export default function PassageStudy() {
                     </section>
 
                     <section className="rounded-xl border border-rose-200 bg-rose-50 p-6">
-                      <h4 className="mb-3 font-semibold text-rose-950">Verse Memory Prompt</h4>
+                      <h4 className="mb-3 font-semibold text-rose-950">
+                        Verse Memory Prompt
+                      </h4>
                       <p className="text-sm leading-7 text-rose-950">
                         {quizContent.memoryPrompt}
                       </p>
@@ -2700,7 +2868,10 @@ export default function PassageStudy() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             {showNotesPanel ? (
-              <NotesPanel reference={passage.reference} onClose={() => setShowNotesPanel(false)} />
+              <NotesPanel
+                reference={passage.reference}
+                onClose={() => setShowNotesPanel(false)}
+              />
             ) : (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
                 {/* Study Info Card */}
@@ -2712,7 +2883,8 @@ export default function PassageStudy() {
                     </h3>
                   </div>
                   <p className="text-sm text-blue-800 mb-4">
-                    Keep track of your spiritual growth with notes and highlights.
+                    Keep track of your spiritual growth with notes and
+                    highlights.
                   </p>
                   <button
                     onClick={() => {
@@ -2743,13 +2915,15 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-amber-900 mb-4">
-                    Generate a personal devotional, guided prayer, journaling prompts,
-                    and a weekly action step from this passage.
+                    Generate a personal devotional, guided prayer, journaling
+                    prompts, and a weekly action step from this passage.
                   </p>
                   <button
                     onClick={() => {
                       if (passage) {
-                        setDevotionalContent(buildDevotionalContent(passage, slug));
+                        setDevotionalContent(
+                          buildDevotionalContent(passage, slug),
+                        );
                       }
                     }}
                     className="w-full rounded-lg bg-amber-600 px-4 py-3 font-medium text-white transition hover:bg-amber-700"
@@ -2771,7 +2945,7 @@ export default function PassageStudy() {
                   </p>
                   <a
                     href="#prayer"
-                    onClick={() => setSelectedMode('prayer')}
+                    onClick={() => setSelectedMode("prayer")}
                     className="block w-full rounded-lg bg-emerald-600 px-4 py-3 text-center font-medium text-white transition hover:bg-emerald-700"
                   >
                     Open Prayer Mode
@@ -2787,8 +2961,9 @@ export default function PassageStudy() {
                       </h4>
                     </div>
                     <p className="text-sm text-stone-900 mb-4">
-                      {historicalContext.author} wrote this around {historicalContext.date},
-                      and it was addressed to {historicalContext.audience.toLowerCase()}.
+                      {historicalContext.author} wrote this around{" "}
+                      {historicalContext.date}, and it was addressed to{" "}
+                      {historicalContext.audience.toLowerCase()}.
                     </p>
                     <p className="text-sm text-stone-700">
                       {historicalContext.historical}
@@ -2804,13 +2979,16 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-slate-700 mb-4">
-                    Listen to the passage out loud for mobile-friendly study and review.
+                    Listen to the passage out loud for mobile-friendly study and
+                    review.
                   </p>
                   <button
                     onClick={handleToggleAudio}
                     className="w-full rounded-lg bg-slate-900 px-4 py-3 font-medium text-white transition hover:bg-slate-800"
                   >
-                    {isAudioPlaying ? 'Stop Passage Audio' : 'Play Passage Audio'}
+                    {isAudioPlaying
+                      ? "Stop Passage Audio"
+                      : "Play Passage Audio"}
                   </button>
                 </div>
 
@@ -2822,11 +3000,12 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-slate-700 mb-4">
-                    See a simple tradition-aware summary of how this passage may be framed.
+                    See a simple tradition-aware summary of how this passage may
+                    be framed.
                   </p>
                   <a
                     href="#compare"
-                    onClick={() => setSelectedMode('compare')}
+                    onClick={() => setSelectedMode("compare")}
                     className="block w-full rounded-lg bg-slate-900 px-4 py-3 text-center font-medium text-white transition hover:bg-slate-800"
                   >
                     Open Compare Mode
@@ -2841,11 +3020,12 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-blue-900 mb-4">
-                    Walk through the passage in smaller chunks with explanation and application.
+                    Walk through the passage in smaller chunks with explanation
+                    and application.
                   </p>
                   <a
                     href="#breakdown"
-                    onClick={() => setSelectedMode('breakdown')}
+                    onClick={() => setSelectedMode("breakdown")}
                     className="block w-full rounded-lg bg-blue-600 px-4 py-3 text-center font-medium text-white transition hover:bg-blue-700"
                   >
                     Open Verse Breakdown
@@ -2861,10 +3041,11 @@ export default function PassageStudy() {
                       </h4>
                     </div>
                     <p className="text-sm text-purple-900 mb-3">
-                      {originalLanguageTerms[0].language} word: {originalLanguageTerms[0].word}
+                      {originalLanguageTerms[0].language} word:{" "}
+                      {originalLanguageTerms[0].word}
                     </p>
                     <p className="text-sm text-purple-700">
-                      {originalLanguageTerms[0].meaning}. Pronounced{' '}
+                      {originalLanguageTerms[0].meaning}. Pronounced{" "}
                       {originalLanguageTerms[0].pronunciation}.
                     </p>
                   </div>
@@ -2878,13 +3059,16 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-sky-900 mb-4">
-                    Build a 15-minute Bible study, discussion questions, a youth lesson,
-                    a sermon starter, and a family devotion from this passage.
+                    Build a 15-minute Bible study, discussion questions, a youth
+                    lesson, a sermon starter, and a family devotion from this
+                    passage.
                   </p>
                   <button
                     onClick={() => {
                       if (passage) {
-                        setGroupStudyContent(buildGroupStudyContent(passage, slug));
+                        setGroupStudyContent(
+                          buildGroupStudyContent(passage, slug),
+                        );
                       }
                     }}
                     className="w-full rounded-lg bg-sky-600 px-4 py-3 font-medium text-white transition hover:bg-sky-700"
@@ -2901,8 +3085,9 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-indigo-900 mb-4">
-                    Turn this passage into a sermon outline, key points, illustrations,
-                    questions, and a closing prayer for your audience.
+                    Turn this passage into a sermon outline, key points,
+                    illustrations, questions, and a closing prayer for your
+                    audience.
                   </p>
                   <button
                     onClick={() =>
@@ -2911,8 +3096,8 @@ export default function PassageStudy() {
                           builderTopic,
                           passage.reference,
                           builderAudience,
-                          studyTradition
-                        )
+                          studyTradition,
+                        ),
                       )
                     }
                     className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-medium text-white transition hover:bg-indigo-700"
@@ -2929,8 +3114,8 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-emerald-900 mb-4">
-                    Get discipleship help with prayer habits, anxiety, study direction,
-                    and spiritual encouragement rooted in Scripture.
+                    Get discipleship help with prayer habits, anxiety, study
+                    direction, and spiritual encouragement rooted in Scripture.
                   </p>
                   <button
                     onClick={handleAskMentor}
@@ -2948,18 +3133,19 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-slate-700 mb-4">
-                    Copy a compact version of this study to send to a friend or group.
+                    Copy a compact version of this study to send to a friend or
+                    group.
                   </p>
                   <button
                     onClick={() =>
                       handleCopy(
                         [
                           passage.reference,
-                          '',
-                          mentorResponse?.title || 'Study summary',
+                          "",
+                          mentorResponse?.title || "Study summary",
                           mentorResponse?.guidance ||
-                            'Study this passage with prayer, context, and application.',
-                        ].join('\n')
+                            "Study this passage with prayer, context, and application.",
+                        ].join("\n"),
                       )
                     }
                     className="w-full rounded-lg bg-slate-900 px-4 py-3 font-medium text-white transition hover:bg-slate-800"
@@ -2976,11 +3162,12 @@ export default function PassageStudy() {
                     </h4>
                   </div>
                   <p className="text-sm text-violet-900 mb-4">
-                    Review the passage with quick questions and a verse memory prompt.
+                    Review the passage with quick questions and a verse memory
+                    prompt.
                   </p>
                   <a
                     href="#quiz"
-                    onClick={() => setSelectedMode('quiz')}
+                    onClick={() => setSelectedMode("quiz")}
                     className="block w-full rounded-lg bg-violet-600 px-4 py-3 text-center font-medium text-white transition hover:bg-violet-700"
                   >
                     Open Quiz & Memory Mode
@@ -2990,17 +3177,15 @@ export default function PassageStudy() {
                 <div className="bg-pink-50 rounded-lg p-6 border border-pink-200">
                   <div className="flex items-center gap-3 mb-3">
                     <Home className="h-5 w-5 text-pink-700" />
-                    <h4 className="font-semibold text-pink-900">
-                      Family Mode
-                    </h4>
+                    <h4 className="font-semibold text-pink-900">Family Mode</h4>
                   </div>
                   <p className="text-sm text-pink-900 mb-4">
-                    Turn this passage into a simple family devotion with one question,
-                    one prayer, and one activity.
+                    Turn this passage into a simple family devotion with one
+                    question, one prayer, and one activity.
                   </p>
                   <a
                     href="#family"
-                    onClick={() => setSelectedMode('family')}
+                    onClick={() => setSelectedMode("family")}
                     className="block w-full rounded-lg bg-pink-600 px-4 py-3 text-center font-medium text-white transition hover:bg-pink-700"
                   >
                     Open Family Mode

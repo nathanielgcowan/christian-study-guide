@@ -3,9 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { ArrowRight, BookHeart, Heart, NotebookPen, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookHeart,
+  Heart,
+  NotebookPen,
+  Sparkles,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getSavedDevotionals, saveSavedDevotional } from "@/lib/persistence";
+import {
+  getSavedDevotionals,
+  saveSavedDevotional,
+} from "../../lib/persistence";
 
 const DEVOTIONAL_LIBRARY_KEY = "christian-study-guide:saved-devotionals";
 
@@ -59,19 +68,21 @@ export default function DevotionalLibraryPage() {
         if (session) {
           const data = await getSavedDevotionals();
           setDevotionals(
-            (data as Array<{
-              id: string;
-              title: string;
-              reference: string;
-              devotional_type: string;
-              summary: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                reference: string;
+                devotional_type: string;
+                summary: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               reference: item.reference,
               devotionalType: item.devotional_type,
               summary: item.summary,
-            }))
+            })),
           );
         } else {
           const raw = localStorage.getItem(DEVOTIONAL_LIBRARY_KEY);
@@ -85,7 +96,7 @@ export default function DevotionalLibraryPage() {
                 reference: item.reference,
                 devotionalType: item.type,
                 summary: item.summary,
-              }))
+              })),
             );
           }
         }
@@ -98,7 +109,9 @@ export default function DevotionalLibraryPage() {
     load();
   }, [supabase]);
 
-  const handleSaveDevotional = async (item: (typeof starterDevotionals)[number]) => {
+  const handleSaveDevotional = async (
+    item: (typeof starterDevotionals)[number],
+  ) => {
     try {
       if (user) {
         const saved = await saveSavedDevotional({
@@ -153,10 +166,13 @@ export default function DevotionalLibraryPage() {
       <section className="bg-gradient-to-br from-[#1e40af] to-[#0f172a] py-20 text-white">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <BookHeart className="mx-auto h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">Devotional Library</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            Devotional Library
+          </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-blue-100">
             Keep your saved devotionals, prayers, journaling prompts, and weekly
-            action steps in one place instead of losing them after a single session.
+            action steps in one place instead of losing them after a single
+            session.
           </p>
         </div>
       </section>
@@ -174,7 +190,9 @@ export default function DevotionalLibraryPage() {
               <h2 className="mt-3 text-2xl font-semibold text-[#0f172a]">
                 {item.title}
               </h2>
-              <p className="mt-2 text-sm font-medium text-[#1e40af]">{item.reference}</p>
+              <p className="mt-2 text-sm font-medium text-[#1e40af]">
+                {item.reference}
+              </p>
               <p className="mt-4 leading-7 text-slate-600">{item.summary}</p>
               <button
                 type="button"
@@ -189,9 +207,13 @@ export default function DevotionalLibraryPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Saved devotionals</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Saved devotionals
+            </h2>
             {saveFeedback ? (
-              <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -203,9 +225,13 @@ export default function DevotionalLibraryPage() {
                 <p className="text-sm font-semibold uppercase tracking-wide text-[#1e40af]">
                   {item.devotionalType}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-slate-900">{item.title}</p>
+                <p className="mt-2 text-lg font-semibold text-slate-900">
+                  {item.title}
+                </p>
                 <p className="mt-1 text-sm text-slate-500">{item.reference}</p>
-                <p className="mt-3 text-sm leading-6 text-slate-700">{item.summary}</p>
+                <p className="mt-3 text-sm leading-6 text-slate-700">
+                  {item.summary}
+                </p>
               </article>
             ))}
           </div>
@@ -231,8 +257,8 @@ export default function DevotionalLibraryPage() {
               <h2 className="text-2xl font-semibold">Connect the flow</h2>
             </div>
             <p className="mt-4 leading-7 text-violet-900">
-              The devotional library becomes especially useful when it is paired with
-              mentor threads, journeys, and exports for long-term reuse.
+              The devotional library becomes especially useful when it is paired
+              with mentor threads, journeys, and exports for long-term reuse.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link

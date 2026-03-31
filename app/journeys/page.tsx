@@ -14,7 +14,7 @@ import {
   ShieldPlus,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getJourneys, saveJourney, updateJourney } from "@/lib/persistence";
+import { getJourneys, saveJourney, updateJourney } from "../../lib/persistence";
 
 const JOURNEYS_KEY = "christian-study-guide:journeys";
 
@@ -80,14 +80,16 @@ export default function JourneysPage() {
         if (session) {
           const data = await getJourneys();
           setSavedJourneys(
-            (data as Array<{
-              id: string;
-              title: string;
-              duration_label: string;
-              status: string;
-              summary: string;
-              current_step: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                duration_label: string;
+                status: string;
+                summary: string;
+                current_step: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               durationLabel: item.duration_label,
@@ -156,7 +158,11 @@ export default function JourneysPage() {
 
   const handleCompleteJourney = async (id: string) => {
     if (user) {
-      await updateJourney({ id, status: "completed", current_step: "Journey completed" });
+      await updateJourney({
+        id,
+        status: "completed",
+        current_step: "Journey completed",
+      });
     }
 
     const nextJourneys = savedJourneys.map((journey) =>
@@ -189,11 +195,13 @@ export default function JourneysPage() {
               AI discipleship journeys
             </div>
             <h1 className="text-5xl font-bold md:text-6xl">
-              Multi-day spiritual guidance for real life, not just one-off answers.
+              Multi-day spiritual guidance for real life, not just one-off
+              answers.
             </h1>
             <p className="mt-6 text-lg leading-8 text-emerald-50">
               Build guided tracks for anxiety, prayer, doubt, leadership, grief,
-              and discipline with Scripture, mentor support, and follow-through in one flow.
+              and discipline with Scripture, mentor support, and follow-through
+              in one flow.
             </p>
           </div>
         </div>
@@ -212,7 +220,9 @@ export default function JourneysPage() {
               <h2 className="mt-3 text-2xl font-semibold text-[#0f172a]">
                 {journey.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600">{journey.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {journey.description}
+              </p>
               <button
                 type="button"
                 onClick={() => handleSaveJourney(journey)}
@@ -249,20 +259,26 @@ export default function JourneysPage() {
                 <h2 className="text-2xl font-semibold">Why this matters</h2>
               </div>
               <p className="mt-6 leading-7 text-emerald-950">
-                Journeys turn the product from a study library into something that
-                can walk with a person over time, which is where discipleship starts to feel real.
+                Journeys turn the product from a study library into something
+                that can walk with a person over time, which is where
+                discipleship starts to feel real.
               </p>
             </div>
 
             <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
               <div className="flex items-center gap-3 text-amber-950">
                 <ShieldPlus className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Connect it to the app</h2>
+                <h2 className="text-2xl font-semibold">
+                  Connect it to the app
+                </h2>
               </div>
               <div className="mt-6 space-y-3 text-sm leading-6 text-amber-950">
                 <p>• Pair journeys with notifications for follow-up.</p>
                 <p>• Feed them into workflow runs for visibility.</p>
-                <p>• Use reading plans and mentor history as the journey backbone.</p>
+                <p>
+                  • Use reading plans and mentor history as the journey
+                  backbone.
+                </p>
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -287,13 +303,18 @@ export default function JourneysPage() {
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Saved journeys</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Saved journeys
+              </h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Keep your discipleship tracks across devices and mark them complete when you finish.
+                Keep your discipleship tracks across devices and mark them
+                complete when you finish.
               </p>
             </div>
             {savedMessage ? (
-              <p className="text-sm font-medium text-emerald-700">{savedMessage}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {savedMessage}
+              </p>
             ) : null}
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -304,7 +325,9 @@ export default function JourneysPage() {
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-semibold text-slate-900">{journey.title}</p>
+                    <p className="font-semibold text-slate-900">
+                      {journey.title}
+                    </p>
                     <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700">
                       {journey.status}
                     </span>
@@ -312,8 +335,12 @@ export default function JourneysPage() {
                   <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                     {journey.durationLabel}
                   </p>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{journey.summary}</p>
-                  <p className="mt-3 text-sm text-slate-600">Next: {journey.currentStep}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {journey.summary}
+                  </p>
+                  <p className="mt-3 text-sm text-slate-600">
+                    Next: {journey.currentStep}
+                  </p>
                   {journey.status !== "completed" ? (
                     <button
                       type="button"
@@ -327,7 +354,8 @@ export default function JourneysPage() {
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save one of the journeys above to start building your discipleship trail.
+                Save one of the journeys above to start building your
+                discipleship trail.
               </p>
             )}
           </div>
@@ -336,7 +364,9 @@ export default function JourneysPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <CalendarRange className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Journey progress tracking</h2>
+            <h2 className="text-2xl font-semibold">
+              Journey progress tracking
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-4">
             {[
@@ -380,7 +410,8 @@ export default function JourneysPage() {
             </div>
             <p className="mt-4 leading-7 text-blue-900">
               Journeys get much stronger when each stage can trigger a reminder,
-              mentor prompt, prayer check-in, and next-step summary automatically.
+              mentor prompt, prayer check-in, and next-step summary
+              automatically.
             </p>
           </aside>
         </section>

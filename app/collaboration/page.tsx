@@ -16,9 +16,10 @@ import { createClient } from "@/lib/supabase/client";
 import {
   getCollaborationSettings,
   saveCollaborationSettings,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
-const COLLABORATION_SETTINGS_KEY = "christian-study-guide:collaboration-settings";
+const COLLABORATION_SETTINGS_KEY =
+  "christian-study-guide:collaboration-settings";
 
 const collaborationLayers = [
   {
@@ -41,19 +42,23 @@ const collaborationLayers = [
 const infrastructureBlocks = [
   {
     label: "Roles & permissions",
-    detail: "Owners, leaders, moderators, and participants with clear publishing and moderation boundaries.",
+    detail:
+      "Owners, leaders, moderators, and participants with clear publishing and moderation boundaries.",
   },
   {
     label: "Invites & onboarding",
-    detail: "Private room links, church team invites, and guided first-time setup for new members.",
+    detail:
+      "Private room links, church team invites, and guided first-time setup for new members.",
   },
   {
     label: "Shared libraries",
-    detail: "Reusable prompts, resource boards, family-devotion packs, and lesson kits across teams.",
+    detail:
+      "Reusable prompts, resource boards, family-devotion packs, and lesson kits across teams.",
   },
   {
     label: "Moderation layer",
-    detail: "Prayer-wall review, room activity controls, and healthier ministry collaboration at scale.",
+    detail:
+      "Prayer-wall review, room activity controls, and healthier ministry collaboration at scale.",
   },
 ];
 
@@ -82,7 +87,8 @@ export default function CollaborationPage() {
           const data = await getCollaborationSettings();
           if (data) {
             setSettings({
-              preferredRoomType: data.preferred_room_type || "shared-study-room",
+              preferredRoomType:
+                data.preferred_room_type || "shared-study-room",
               moderationMode: data.moderation_mode || "guided",
               livePresenceEnabled: data.live_presence_enabled ?? true,
               sharedLibraryEnabled: data.shared_library_enabled ?? true,
@@ -116,7 +122,10 @@ export default function CollaborationPage() {
         church_team_mode: settings.churchTeamMode,
       });
     } else {
-      localStorage.setItem(COLLABORATION_SETTINGS_KEY, JSON.stringify(settings));
+      localStorage.setItem(
+        COLLABORATION_SETTINGS_KEY,
+        JSON.stringify(settings),
+      );
     }
 
     setSavedMessage("Collaboration settings saved.");
@@ -145,7 +154,8 @@ export default function CollaborationPage() {
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
               This is the collaboration system for live rooms, shared prep,
-              moderation, invitations, and the workflows ministry teams actually need.
+              moderation, invitations, and the workflows ministry teams actually
+              need.
             </p>
           </div>
         </div>
@@ -155,13 +165,18 @@ export default function CollaborationPage() {
         <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center gap-3 text-[#0f172a]">
             <Waves className="h-6 w-6 text-[#1e40af]" />
-            <h2 className="text-2xl font-semibold">Save collaboration defaults</h2>
+            <h2 className="text-2xl font-semibold">
+              Save collaboration defaults
+            </h2>
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Keep your preferred room style, moderation posture, and team-mode setup
-            consistent across devices.
+            Keep your preferred room style, moderation posture, and team-mode
+            setup consistent across devices.
           </p>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <select
               value={settings.preferredRoomType}
               onChange={(event) =>
@@ -237,7 +252,9 @@ export default function CollaborationPage() {
                 Save collaboration settings
               </button>
               {savedMessage ? (
-                <p className="text-sm font-medium text-emerald-700">{savedMessage}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {savedMessage}
+                </p>
               ) : null}
             </div>
           </form>
@@ -253,7 +270,9 @@ export default function CollaborationPage() {
               <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">
                 {layer.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600">{layer.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {layer.description}
+              </p>
             </article>
           ))}
         </section>
@@ -262,7 +281,9 @@ export default function CollaborationPage() {
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <div className="flex items-center gap-3 text-violet-950">
               <Building2 className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Community infrastructure</h2>
+              <h2 className="text-2xl font-semibold">
+                Community infrastructure
+              </h2>
             </div>
             <div className="mt-6 grid gap-4">
               {infrastructureBlocks.map((block) => (
@@ -286,21 +307,29 @@ export default function CollaborationPage() {
                 <h2 className="text-2xl font-semibold">What this unlocks</h2>
               </div>
               <p className="mt-6 leading-7 text-emerald-950">
-                Once rooms become collaborative systems, the app can support church
-                rhythms like leader prep, shared prayer follow-up, and distributed
-                teaching teams instead of just individual devotion time.
+                Once rooms become collaborative systems, the app can support
+                church rhythms like leader prep, shared prayer follow-up, and
+                distributed teaching teams instead of just individual devotion
+                time.
               </p>
             </div>
 
             <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
               <div className="flex items-center gap-3 text-amber-950">
                 <UserRoundPlus className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Start from existing layers</h2>
+                <h2 className="text-2xl font-semibold">
+                  Start from existing layers
+                </h2>
               </div>
               <div className="mt-6 space-y-3 text-sm leading-6 text-amber-950">
                 <p>• Use `Study Rooms` for shared passage flow.</p>
-                <p>• Use `Workspace` for team resources and church operations.</p>
-                <p>• Use `Community` for the wider public prayer and group surface.</p>
+                <p>
+                  • Use `Workspace` for team resources and church operations.
+                </p>
+                <p>
+                  • Use `Community` for the wider public prayer and group
+                  surface.
+                </p>
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
@@ -325,7 +354,9 @@ export default function CollaborationPage() {
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center gap-3 text-[#0f172a]">
             <ShieldCheck className="h-6 w-6 text-[#1e40af]" />
-            <h2 className="text-2xl font-semibold">Professional collaboration requirements</h2>
+            <h2 className="text-2xl font-semibold">
+              Professional collaboration requirements
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[

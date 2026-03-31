@@ -3,9 +3,16 @@
 import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Save, Search, SlidersHorizontal, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BrainCircuit,
+  Save,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getSearchHistory, saveSearchHistory } from "@/lib/persistence";
+import { getSearchHistory, saveSearchHistory } from "../../lib/persistence";
 
 interface SearchResult {
   title: string;
@@ -139,7 +146,7 @@ export default function SmartSearchPage() {
     setSelectedFilters((current) =>
       current.includes(filter)
         ? current.filter((item) => item !== filter)
-        : [...current, filter]
+        : [...current, filter],
     );
   };
 
@@ -287,7 +294,7 @@ export default function SmartSearchPage() {
                 >
                   {filter}
                 </button>
-              )
+              ),
             )}
           </div>
           {selectedFilters.length > 0 ? (
@@ -340,7 +347,9 @@ export default function SmartSearchPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
-              <p className="mt-4 leading-7 text-slate-600">{result.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {result.description}
+              </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {result.tags.map((tag) => (
                   <span
@@ -358,7 +367,9 @@ export default function SmartSearchPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <BrainCircuit className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Search that feels intelligent</h2>
+            <h2 className="text-2xl font-semibold">
+              Search that feels intelligent
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[

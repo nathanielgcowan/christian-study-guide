@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 import {
   BellRing,
   BookHeart,
@@ -13,8 +13,12 @@ import {
   CheckCheck,
   Milestone,
   Shapes,
-} from 'lucide-react';
-import { getActivityTimeline, getMentorHistory, getStudySessions } from '@/lib/persistence';
+} from "lucide-react";
+import {
+  getActivityTimeline,
+  getMentorHistory,
+  getStudySessions,
+} from "../../lib/persistence";
 
 interface SavedStudySession {
   id: string;
@@ -64,37 +68,37 @@ interface ActivityItem {
   created_at: string;
 }
 
-const SAVED_SESSIONS_KEY = 'christian-study-guide:saved-sessions';
-const MENTOR_HISTORY_KEY = 'christian-study-guide:mentor-history';
-const ACTIVITY_KEY = 'christian-study-guide:activity-timeline';
+const SAVED_SESSIONS_KEY = "christian-study-guide:saved-sessions";
+const MENTOR_HISTORY_KEY = "christian-study-guide:mentor-history";
+const ACTIVITY_KEY = "christian-study-guide:activity-timeline";
 const studyTemplates = [
   {
-    name: 'Personal quiet time',
+    name: "Personal quiet time",
     summary:
-      'Read the passage, note one insight, write one prayer, and choose one action step.',
+      "Read the passage, note one insight, write one prayer, and choose one action step.",
   },
   {
-    name: 'Small group prep',
+    name: "Small group prep",
     summary:
-      'Use context, cross references, discussion questions, and one closing prayer.',
+      "Use context, cross references, discussion questions, and one closing prayer.",
   },
   {
-    name: 'Youth lesson flow',
+    name: "Youth lesson flow",
     summary:
-      'Start with one hook, one main truth, one illustration, and a response question.',
+      "Start with one hook, one main truth, one illustration, and a response question.",
   },
 ];
 const followUpCheckIns = [
-  'How did that action step from your last mentor session go?',
-  'Did you revisit the passage you saved this week?',
-  'What prayer request needs a progress update today?',
+  "How did that action step from your last mentor session go?",
+  "Did you revisit the passage you saved this week?",
+  "What prayer request needs a progress update today?",
 ];
 const guidedPathExamples = [
-  'Foundations of Christianity',
-  'Life of Jesus',
-  'Spiritual Warfare',
-  'Theology Basics',
-  'Bible Overview',
+  "Foundations of Christianity",
+  "Life of Jesus",
+  "Spiritual Warfare",
+  "Theology Basics",
+  "Bible Overview",
 ];
 
 export default function StudyHubPage() {
@@ -103,38 +107,44 @@ export default function StudyHubPage() {
   const [activityTimeline, setActivityTimeline] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
-  const mentorThreads = mentorHistory.reduce<MentorThread[]>((threads, entry) => {
-    const existingThread = threads.find((thread) => thread.reference === entry.reference);
+  const mentorThreads = mentorHistory.reduce<MentorThread[]>(
+    (threads, entry) => {
+      const existingThread = threads.find(
+        (thread) => thread.reference === entry.reference,
+      );
 
-    if (existingThread) {
-      existingThread.count += 1;
+      if (existingThread) {
+        existingThread.count += 1;
 
-      if (
-        new Date(entry.createdAt).getTime() >
-        new Date(existingThread.latestCreatedAt).getTime()
-      ) {
-        existingThread.latestPrompt = entry.prompt;
-        existingThread.latestTitle = entry.title;
-        existingThread.latestCreatedAt = entry.createdAt;
+        if (
+          new Date(entry.createdAt).getTime() >
+          new Date(existingThread.latestCreatedAt).getTime()
+        ) {
+          existingThread.latestPrompt = entry.prompt;
+          existingThread.latestTitle = entry.title;
+          existingThread.latestCreatedAt = entry.createdAt;
+        }
+
+        return threads;
       }
 
+      threads.push({
+        reference: entry.reference,
+        count: 1,
+        latestPrompt: entry.prompt,
+        latestTitle: entry.title,
+        latestCreatedAt: entry.createdAt,
+      });
+
       return threads;
-    }
-
-    threads.push({
-      reference: entry.reference,
-      count: 1,
-      latestPrompt: entry.prompt,
-      latestTitle: entry.title,
-      latestCreatedAt: entry.createdAt,
-    });
-
-    return threads;
-  }, []);
+    },
+    [],
+  );
 
   mentorThreads.sort(
     (left, right) =>
-      new Date(right.latestCreatedAt).getTime() - new Date(left.latestCreatedAt).getTime()
+      new Date(right.latestCreatedAt).getTime() -
+      new Date(left.latestCreatedAt).getTime(),
   );
 
   useEffect(() => {
@@ -158,7 +168,7 @@ export default function StudyHubPage() {
               createdAt: sessionItem.created_at,
               mode: sessionItem.mode,
               summary: sessionItem.summary,
-            }))
+            })),
           );
 
           setMentorHistory(
@@ -172,10 +182,10 @@ export default function StudyHubPage() {
                 id: item.id,
                 reference: item.reference,
                 prompt: item.question,
-                title: parsedAnswer.title || 'Christian AI Mentor',
+                title: parsedAnswer.title || "Christian AI Mentor",
                 createdAt: item.created_at,
               };
-            })
+            }),
           );
           setActivityTimeline(activityData as ActivityItem[]);
         } else {
@@ -184,11 +194,13 @@ export default function StudyHubPage() {
           const rawActivity = localStorage.getItem(ACTIVITY_KEY);
 
           setSavedSessions(rawSessions ? JSON.parse(rawSessions) : []);
-          setMentorHistory(rawMentorHistory ? JSON.parse(rawMentorHistory) : []);
+          setMentorHistory(
+            rawMentorHistory ? JSON.parse(rawMentorHistory) : [],
+          );
           setActivityTimeline(rawActivity ? JSON.parse(rawActivity) : []);
         }
       } catch (error) {
-        console.error('Error loading study hub data:', error);
+        console.error("Error loading study hub data:", error);
       } finally {
         setLoading(false);
       }
@@ -216,7 +228,8 @@ export default function StudyHubPage() {
             <div>
               <h1 className="text-4xl font-bold">Study Hub</h1>
               <p className="mt-1 text-blue-100">
-                Revisit saved study sessions and your recent mentor conversations.
+                Revisit saved study sessions and your recent mentor
+                conversations.
               </p>
             </div>
           </div>
@@ -227,7 +240,9 @@ export default function StudyHubPage() {
         <section className="mb-8 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <BrainCircuit className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">AI Guided Bible Study Path</h2>
+            <h2 className="text-2xl font-semibold">
+              AI Guided Bible Study Path
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-5">
             {guidedPathExamples.map((item) => (
@@ -249,8 +264,8 @@ export default function StudyHubPage() {
               <h2 className="text-xl font-semibold">Reading reminders</h2>
             </div>
             <p className="mt-4 text-sm leading-6 text-amber-900">
-              Gentle nudges for unfinished plans, prayer habits, and keeping your
-              streak alive are ready as the next retention layer.
+              Gentle nudges for unfinished plans, prayer habits, and keeping
+              your streak alive are ready as the next retention layer.
             </p>
           </div>
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-6">
@@ -270,7 +285,8 @@ export default function StudyHubPage() {
               <h2 className="text-xl font-semibold">Follow-up check-ins</h2>
             </div>
             <p className="mt-4 text-sm leading-6 text-emerald-900">
-              Use saved mentor moments to prompt real obedience a few days later.
+              Use saved mentor moments to prompt real obedience a few days
+              later.
             </p>
           </div>
         </section>
@@ -279,12 +295,15 @@ export default function StudyHubPage() {
           <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
               <CalendarClock className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Saved Study Sessions</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Saved Study Sessions
+              </h2>
             </div>
 
             {savedSessions.length === 0 ? (
               <p className="text-gray-600">
-                Save a study session from any passage page to build your personal study library.
+                Save a study session from any passage page to build your
+                personal study library.
               </p>
             ) : (
               <div className="space-y-4">
@@ -295,7 +314,7 @@ export default function StudyHubPage() {
                   >
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <Link
-                        href={`/passage/${session.reference.toLowerCase().replace(/\s+/g, '-')}`}
+                        href={`/passage/${session.reference.toLowerCase().replace(/\s+/g, "-")}`}
                         className="font-semibold text-[#1e40af] hover:text-[#1e3a8a]"
                       >
                         {session.reference}
@@ -304,7 +323,9 @@ export default function StudyHubPage() {
                         {session.mode}
                       </span>
                     </div>
-                    <p className="text-sm leading-6 text-slate-700">{session.summary}</p>
+                    <p className="text-sm leading-6 text-slate-700">
+                      {session.summary}
+                    </p>
                     <p className="mt-3 text-xs text-gray-500">
                       Saved {new Date(session.createdAt).toLocaleString()}
                     </p>
@@ -317,12 +338,15 @@ export default function StudyHubPage() {
           <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
               <Brain className="h-6 w-6 text-emerald-600" />
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Mentor History</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Mentor History
+              </h2>
             </div>
 
             {mentorHistory.length === 0 ? (
               <p className="text-gray-600">
-                Ask the Christian AI Mentor a question to start building your history.
+                Ask the Christian AI Mentor a question to start building your
+                history.
               </p>
             ) : (
               <div className="space-y-4">
@@ -333,15 +357,19 @@ export default function StudyHubPage() {
                   >
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <Link
-                        href={`/passage/${entry.reference.toLowerCase().replace(/\s+/g, '-')}`}
+                        href={`/passage/${entry.reference.toLowerCase().replace(/\s+/g, "-")}`}
                         className="font-semibold text-[#1e40af] hover:text-[#1e3a8a]"
                       >
                         {entry.reference}
                       </Link>
                       <BookOpen className="h-4 w-4 text-gray-400" />
                     </div>
-                    <p className="text-sm font-medium text-slate-900">{entry.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-700">{entry.prompt}</p>
+                    <p className="text-sm font-medium text-slate-900">
+                      {entry.title}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                      {entry.prompt}
+                    </p>
                     <p className="mt-3 text-xs text-gray-500">
                       Asked {new Date(entry.createdAt).toLocaleString()}
                     </p>
@@ -360,16 +388,16 @@ export default function StudyHubPage() {
                 AI Study Companion Threads
               </h2>
               <p className="text-sm text-emerald-900">
-                Keep mentor conversations grouped by passage so each study page starts to
-                feel like an ongoing discipleship thread.
+                Keep mentor conversations grouped by passage so each study page
+                starts to feel like an ongoing discipleship thread.
               </p>
             </div>
           </div>
 
           {mentorThreads.length === 0 ? (
             <p className="text-sm leading-6 text-emerald-900">
-              Ask the mentor a question from a passage page and this hub will start
-              collecting passage-based companion threads here.
+              Ask the mentor a question from a passage page and this hub will
+              start collecting passage-based companion threads here.
             </p>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
@@ -380,13 +408,13 @@ export default function StudyHubPage() {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <Link
-                      href={`/passage/${thread.reference.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={`/passage/${thread.reference.toLowerCase().replace(/\s+/g, "-")}`}
                       className="font-semibold text-emerald-900 hover:text-emerald-700"
                     >
                       {thread.reference}
                     </Link>
                     <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-900">
-                      {thread.count} thread{thread.count === 1 ? '' : 's'}
+                      {thread.count} thread{thread.count === 1 ? "" : "s"}
                     </span>
                   </div>
                   <p className="mt-3 text-sm font-medium text-slate-900">
@@ -396,7 +424,8 @@ export default function StudyHubPage() {
                     {thread.latestPrompt}
                   </p>
                   <p className="mt-3 text-xs text-gray-500">
-                    Latest activity {new Date(thread.latestCreatedAt).toLocaleString()}
+                    Latest activity{" "}
+                    {new Date(thread.latestCreatedAt).toLocaleString()}
                   </p>
                 </article>
               ))}
@@ -408,24 +437,26 @@ export default function StudyHubPage() {
           <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
               <Milestone className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Journal timeline</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Journal timeline
+              </h2>
             </div>
             <div className="space-y-4">
               {(activityTimeline.length > 0
                 ? activityTimeline
                 : [
                     {
-                      id: 'fallback-study',
-                      event_type: 'study_session_saved',
-                      reference: 'James 1:2-4',
+                      id: "fallback-study",
+                      event_type: "study_session_saved",
+                      reference: "James 1:2-4",
                       metadata: null,
                       created_at: new Date().toISOString(),
                     },
                     {
-                      id: 'fallback-prayer',
-                      event_type: 'prayer_entry_created',
+                      id: "fallback-prayer",
+                      event_type: "prayer_entry_created",
                       reference: null,
-                      metadata: { title: 'Family wisdom' },
+                      metadata: { title: "Family wisdom" },
                       created_at: new Date(Date.now() - 86400000).toISOString(),
                     },
                   ]
@@ -438,11 +469,11 @@ export default function StudyHubPage() {
                     {index + 1} days ago
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
-                    {item.event_type.replace(/_/g, ' ')}
-                    {item.reference ? ` • ${item.reference}` : ''}
-                    {typeof item.metadata?.title === 'string'
+                    {item.event_type.replace(/_/g, " ")}
+                    {item.reference ? ` • ${item.reference}` : ""}
+                    {typeof item.metadata?.title === "string"
                       ? ` • ${item.metadata.title}`
-                      : ''}
+                      : ""}
                   </p>
                 </article>
               ))}
@@ -452,7 +483,9 @@ export default function StudyHubPage() {
           <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
               <Brain className="h-6 w-6 text-emerald-600" />
-              <h2 className="text-2xl font-semibold text-[#0f172a]">AI follow-up check-ins</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                AI follow-up check-ins
+              </h2>
             </div>
             <div className="space-y-4">
               {followUpCheckIns.map((prompt) => (

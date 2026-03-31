@@ -14,7 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getAIStudioOutputs, saveAIStudioOutput } from "@/lib/persistence";
+import { getAIStudioOutputs, saveAIStudioOutput } from "../../lib/persistence";
 
 const AI_STUDIO_OUTPUTS_KEY = "christian-study-guide:ai-studio-outputs";
 
@@ -42,15 +42,18 @@ const liveGenerationLayers = [
 const passageGenerationMoments = [
   {
     title: "Passage explanation",
-    detail: "Explain the text through immediate context, related verses, and historical background before application.",
+    detail:
+      "Explain the text through immediate context, related verses, and historical background before application.",
   },
   {
     title: "Devotional pack",
-    detail: "Generate reflection questions, journaling prompts, prayer, and one action step from the same passage.",
+    detail:
+      "Generate reflection questions, journaling prompts, prayer, and one action step from the same passage.",
   },
   {
     title: "Teaching draft",
-    detail: "Create a sermon outline, small-group guide, or family devotion while keeping the passage central.",
+    detail:
+      "Create a sermon outline, small-group guide, or family devotion while keeping the passage central.",
   },
 ];
 
@@ -82,15 +85,17 @@ export default function AIStudioPage() {
         if (session) {
           const data = await getAIStudioOutputs();
           setOutputs(
-            (data as Array<{
-              id: string;
-              title: string;
-              generation_type: string;
-              source_reference: string | null;
-              summary: string;
-              prompt_template: string | null;
-              status: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                generation_type: string;
+                source_reference: string | null;
+                summary: string;
+                prompt_template: string | null;
+                status: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               generationType: item.generation_type,
@@ -118,8 +123,10 @@ export default function AIStudioPage() {
       title: "Anchored study guide draft",
       generation_type: "study-guide",
       source_reference: "James 1:2-4",
-      summary: "A study guide draft that combines context, reflection, and prayer from James 1:2-4.",
-      prompt_template: "Explain passage -> context -> cross references -> reflection -> prayer",
+      summary:
+        "A study guide draft that combines context, reflection, and prayer from James 1:2-4.",
+      prompt_template:
+        "Explain passage -> context -> cross references -> reflection -> prayer",
       status: "draft",
     };
 
@@ -181,11 +188,13 @@ export default function AIStudioPage() {
               Real AI generation layer
             </div>
             <h1 className="text-5xl font-bold md:text-6xl">
-              Move from sample outputs to a serious Scripture-anchored AI studio.
+              Move from sample outputs to a serious Scripture-anchored AI
+              studio.
             </h1>
             <p className="mt-6 text-lg leading-8 text-orange-50">
-              This is the generation layer for explanations, devotionals, quizzes,
-              sermons, mentor responses, and study packs grounded in the passage.
+              This is the generation layer for explanations, devotionals,
+              quizzes, sermons, mentor responses, and study packs grounded in
+              the passage.
             </p>
           </div>
         </div>
@@ -234,9 +243,12 @@ export default function AIStudioPage() {
             className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
           >
             <FileText className="h-6 w-6 text-[#1e40af]" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Study outputs</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Study outputs
+            </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Generate explanation, cross references, application, and notes from the same passage context.
+              Generate explanation, cross references, application, and notes
+              from the same passage context.
             </p>
           </Link>
           <Link
@@ -244,9 +256,12 @@ export default function AIStudioPage() {
             className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
           >
             <MessagesSquare className="h-6 w-6 text-violet-700" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Mentor replies</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Mentor replies
+            </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Keep mentor conversations passage-aware, personalized, and grounded in Scripture.
+              Keep mentor conversations passage-aware, personalized, and
+              grounded in Scripture.
             </p>
           </Link>
           <Link
@@ -254,9 +269,12 @@ export default function AIStudioPage() {
             className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
           >
             <NotebookPen className="h-6 w-6 text-emerald-700" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Leader drafts</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Leader drafts
+            </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Build sermon starters, group guides, and lesson packs with clearer editorial flow.
+              Build sermon starters, group guides, and lesson packs with clearer
+              editorial flow.
             </p>
           </Link>
         </section>
@@ -264,7 +282,9 @@ export default function AIStudioPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <Gauge className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Real AI backend direction</h2>
+            <h2 className="text-2xl font-semibold">
+              Real AI backend direction
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {liveGenerationLayers.map((item) => (
@@ -282,7 +302,9 @@ export default function AIStudioPage() {
           <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <BrainCircuit className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Real passage generation</h2>
+              <h2 className="text-2xl font-semibold">
+                Real passage generation
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {passageGenerationMoments.map((item) => (
@@ -290,8 +312,12 @@ export default function AIStudioPage() {
                   key={item.title}
                   className="rounded-2xl border border-blue-200 bg-white p-5"
                 >
-                  <h3 className="text-base font-semibold text-blue-950">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-blue-900">{item.detail}</p>
+                  <h3 className="text-base font-semibold text-blue-950">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-blue-900">
+                    {item.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -303,9 +329,10 @@ export default function AIStudioPage() {
               <h2 className="text-2xl font-semibold">Product direction</h2>
             </div>
             <p className="mt-4 text-sm leading-7 text-amber-950">
-              The strongest version of AI studio is not a one-off generator. It is a
-              passage-aware engine that can create a study guide, a devotional, a quiz,
-              a prayer, and a teaching draft from one anchored source of truth.
+              The strongest version of AI studio is not a one-off generator. It
+              is a passage-aware engine that can create a study guide, a
+              devotional, a quiz, a prayer, and a teaching draft from one
+              anchored source of truth.
             </p>
             <Link
               href="/today"
@@ -320,10 +347,13 @@ export default function AIStudioPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-semibold text-blue-950">Next implementation layer</h2>
+              <h2 className="text-2xl font-semibold text-blue-950">
+                Next implementation layer
+              </h2>
               <p className="mt-3 text-sm leading-6 text-blue-900">
-                Wire these surfaces to a real OpenAI backend with saved prompt templates,
-                token tracking, and feature gating for free versus premium usage.
+                Wire these surfaces to a real OpenAI backend with saved prompt
+                templates, token tracking, and feature gating for free versus
+                premium usage.
               </p>
             </div>
             <Link
@@ -338,7 +368,9 @@ export default function AIStudioPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Saved AI outputs</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Saved AI outputs
+            </h2>
             <button
               type="button"
               onClick={handleSaveOutput}
@@ -348,7 +380,9 @@ export default function AIStudioPage() {
             </button>
           </div>
           {saveFeedback ? (
-            <p className="mt-3 text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+            <p className="mt-3 text-sm font-semibold text-emerald-700">
+              {saveFeedback}
+            </p>
           ) : null}
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {outputs.length > 0 ? (
@@ -360,16 +394,22 @@ export default function AIStudioPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                     {output.generationType} • {output.status}
                   </p>
-                  <h3 className="mt-2 text-lg font-semibold text-slate-900">{output.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{output.summary}</p>
+                  <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                    {output.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {output.summary}
+                  </p>
                   <p className="mt-3 text-xs leading-5 text-slate-500">
-                    {output.sourceReference || "No reference"} • {output.promptTemplate || "No prompt template"}
+                    {output.sourceReference || "No reference"} •{" "}
+                    {output.promptTemplate || "No prompt template"}
                   </p>
                 </article>
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
-                Save AI output drafts here so generated study assets follow the user across devices.
+                Save AI output drafts here so generated study assets follow the
+                user across devices.
               </div>
             )}
           </div>

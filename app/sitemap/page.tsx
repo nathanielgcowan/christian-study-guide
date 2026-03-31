@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Compass, Map } from "lucide-react";
-import { siteMapSections } from "@/lib/site-map";
+import { siteMapSections } from "../../lib/site-map";
 
 export const metadata: Metadata = {
   title: "Sitemap | Christian Study Guide",
@@ -23,8 +23,9 @@ export default function SiteMapPage() {
               A simple map of the platform.
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
-              The header stays focused on the most important paths. This page collects the
-              wider set of destinations in one place so the site remains easy to explore.
+              The header stays focused on the most important paths. This page
+              collects the wider set of destinations in one place so the site
+              remains easy to explore.
             </p>
           </div>
         </div>
@@ -35,8 +36,9 @@ export default function SiteMapPage() {
           <div className="flex items-start gap-3">
             <Compass className="mt-1 h-5 w-5 shrink-0" />
             <p className="text-sm leading-7">
-              Looking for a faster route? Start with `Today`, `Study`, `Bible`, `Paths`, or
-              `Prayer` in the main navigation, then use this sitemap for deeper exploration.
+              Looking for a faster route? Start with `Today`, `Study`, `Bible`,
+              `Paths`, or `Prayer` in the main navigation, then use this sitemap
+              for deeper exploration.
             </p>
           </div>
         </div>
@@ -47,8 +49,12 @@ export default function SiteMapPage() {
               key={section.title}
               className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
             >
-              <h2 className="text-2xl font-semibold text-slate-950">{section.title}</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600">{section.description}</p>
+              <h2 className="text-2xl font-semibold text-slate-950">
+                {section.title}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                {section.description}
+              </p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {section.links.map((link) => (
                   <Link

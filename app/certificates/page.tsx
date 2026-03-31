@@ -2,9 +2,20 @@
 
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Award, BadgeCheck, GraduationCap, ShieldCheck, Sparkles, Trophy } from "lucide-react";
+import {
+  Award,
+  BadgeCheck,
+  GraduationCap,
+  ShieldCheck,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getCertificates, saveCertificate, updateCertificate } from "@/lib/persistence";
+import {
+  getCertificates,
+  saveCertificate,
+  updateCertificate,
+} from "../../lib/persistence";
 
 const CERTIFICATES_KEY = "christian-study-guide:certificates";
 
@@ -12,17 +23,20 @@ const certificates = [
   {
     title: "Foundations of Christianity",
     reward: "Certificate of completion",
-    detail: "Awarded when a user finishes the full guided path, prayer prompts, quiz checks, and final review.",
+    detail:
+      "Awarded when a user finishes the full guided path, prayer prompts, quiz checks, and final review.",
   },
   {
     title: "Life of Jesus track",
     reward: "Gospel Explorer badge",
-    detail: "Recognizes completion of the reading path, study reflections, and a final course milestone.",
+    detail:
+      "Recognizes completion of the reading path, study reflections, and a final course milestone.",
   },
   {
     title: "Theology Basics",
     reward: "Course distinction badge",
-    detail: "Adds a more serious learning milestone for doctrine-focused users and church classes.",
+    detail:
+      "Adds a more serious learning milestone for doctrine-focused users and church classes.",
   },
 ];
 
@@ -31,7 +45,13 @@ export default function CertificatesPage() {
   const [loading, setLoading] = useState(true);
   const [saveFeedback, setSaveFeedback] = useState("");
   const [savedCertificates, setSavedCertificates] = useState<
-    Array<{ id: string; title: string; reward: string; status: string; shareCardState: string }>
+    Array<{
+      id: string;
+      title: string;
+      reward: string;
+      status: string;
+      shareCardState: string;
+    }>
   >([]);
   const [supabase] = useState(() => createClient());
 
@@ -46,13 +66,15 @@ export default function CertificatesPage() {
         if (session) {
           const data = await getCertificates();
           setSavedCertificates(
-            (data as Array<{
-              id: string;
-              title: string;
-              reward: string;
-              status: string;
-              share_card_state: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                reward: string;
+                status: string;
+                share_card_state: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               reward: item.reward,
@@ -76,7 +98,12 @@ export default function CertificatesPage() {
   const handleEarnCertificate = async (title: string, reward: string) => {
     try {
       if (user) {
-        const saved = await saveCertificate({ title, reward, status: "earned", share_card_state: "private" });
+        const saved = await saveCertificate({
+          title,
+          reward,
+          status: "earned",
+          share_card_state: "private",
+        });
         setSavedCertificates((current) => [
           {
             id: saved.id,
@@ -89,7 +116,13 @@ export default function CertificatesPage() {
         ]);
       } else {
         const next = [
-          { id: `${Date.now()}`, title, reward, status: "earned", shareCardState: "private" },
+          {
+            id: `${Date.now()}`,
+            title,
+            reward,
+            status: "earned",
+            shareCardState: "private",
+          },
           ...savedCertificates,
         ];
         setSavedCertificates(next);
@@ -106,7 +139,8 @@ export default function CertificatesPage() {
   const handleToggleShare = async (id: string) => {
     const existing = savedCertificates.find((item) => item.id === id);
     if (!existing) return;
-    const nextState = existing.shareCardState === "shared" ? "private" : "shared";
+    const nextState =
+      existing.shareCardState === "shared" ? "private" : "shared";
 
     try {
       if (user) {
@@ -143,11 +177,13 @@ export default function CertificatesPage() {
               Certificates and completion rewards
             </div>
             <h1 className="text-5xl font-bold md:text-6xl">
-              Make learning paths feel like real journeys with meaningful completion moments.
+              Make learning paths feel like real journeys with meaningful
+              completion moments.
             </h1>
             <p className="mt-6 text-lg leading-8 text-orange-50">
-              Certificates, distinction badges, and course milestones give users a clear sense of progress
-              without turning Bible learning into empty achievement hunting.
+              Certificates, distinction badges, and course milestones give users
+              a clear sense of progress without turning Bible learning into
+              empty achievement hunting.
             </p>
           </div>
         </div>
@@ -156,11 +192,20 @@ export default function CertificatesPage() {
       <main className="mx-auto max-w-6xl px-6 py-14">
         <section className="grid gap-6 md:grid-cols-3">
           {certificates.map((item) => (
-            <article key={item.title} className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+            <article
+              key={item.title}
+              className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
+            >
               <Award className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="mt-4 text-2xl font-semibold text-slate-900">{item.title}</h2>
-              <p className="mt-3 text-sm font-semibold text-amber-700">{item.reward}</p>
-              <p className="mt-4 text-sm leading-7 text-slate-600">{item.detail}</p>
+              <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+                {item.title}
+              </h2>
+              <p className="mt-3 text-sm font-semibold text-amber-700">
+                {item.reward}
+              </p>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                {item.detail}
+              </p>
               <button
                 type="button"
                 onClick={() => handleEarnCertificate(item.title, item.reward)}
@@ -174,8 +219,14 @@ export default function CertificatesPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-slate-900">Saved certificates</h2>
-            {saveFeedback ? <p className="text-sm font-semibold text-emerald-700">{saveFeedback}</p> : null}
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Saved certificates
+            </h2>
+            {saveFeedback ? (
+              <p className="text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
+            ) : null}
           </div>
           {savedCertificates.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
@@ -184,9 +235,16 @@ export default function CertificatesPage() {
           ) : (
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {savedCertificates.map((item) => (
-                <article key={item.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
-                  <p className="mt-2 text-sm font-semibold text-amber-700">{item.reward}</p>
+                <article
+                  key={item.id}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                >
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm font-semibold text-amber-700">
+                    {item.reward}
+                  </p>
                   <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                     {item.status} • {item.shareCardState}
                   </p>
@@ -195,7 +253,9 @@ export default function CertificatesPage() {
                     onClick={() => handleToggleShare(item.id)}
                     className="mt-4 rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-white"
                   >
-                    {item.shareCardState === "shared" ? "Make private" : "Mark shared"}
+                    {item.shareCardState === "shared"
+                      ? "Make private"
+                      : "Mark shared"}
                   </button>
                 </article>
               ))}
@@ -206,23 +266,32 @@ export default function CertificatesPage() {
         <section className="mt-10 grid gap-6 lg:grid-cols-3">
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <BadgeCheck className="h-6 w-6 text-emerald-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">For learners</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+              For learners
+            </h2>
             <p className="mt-4 text-sm leading-7 text-emerald-900">
-              Completion rewards help users see that they are actually growing through Scripture, not just clicking through features.
+              Completion rewards help users see that they are actually growing
+              through Scripture, not just clicking through features.
             </p>
           </article>
           <article className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <ShieldCheck className="h-6 w-6 text-violet-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-violet-950">For churches</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-violet-950">
+              For churches
+            </h2>
             <p className="mt-4 text-sm leading-7 text-violet-900">
-              Churches and leaders can use certificates for onboarding tracks, class completion, and discipleship cohorts.
+              Churches and leaders can use certificates for onboarding tracks,
+              class completion, and discipleship cohorts.
             </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <Trophy className="h-6 w-6 text-amber-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-amber-950">For retention</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-amber-950">
+              For retention
+            </h2>
             <p className="mt-4 text-sm leading-7 text-amber-900">
-              Completion moments pair especially well with XP, badges, guided paths, and dashboard celebrations.
+              Completion moments pair especially well with XP, badges, guided
+              paths, and dashboard celebrations.
             </p>
           </article>
         </section>
@@ -233,8 +302,9 @@ export default function CertificatesPage() {
             <h2 className="text-2xl font-semibold">Best next step</h2>
           </div>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-900">
-            The strongest version of this feature is automatic certificate unlocking when a user finishes a guided path
-            or course, paired with a printable and shareable completion card.
+            The strongest version of this feature is automatic certificate
+            unlocking when a user finishes a guided path or course, paired with
+            a printable and shareable completion card.
           </p>
         </section>
       </main>

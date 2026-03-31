@@ -16,7 +16,10 @@ import {
   Users2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getChurchAdminSettings, saveChurchAdminSettings } from "@/lib/persistence";
+import {
+  getChurchAdminSettings,
+  saveChurchAdminSettings,
+} from "../../lib/persistence";
 import { familyChurchSystems } from "@/lib/product-expansion";
 
 const CHURCH_ADMIN_KEY = "christian-study-guide:church-admin-settings";
@@ -171,8 +174,9 @@ export default function ChurchAdminPage() {
               A control layer for real ministries, not just individual users.
             </h1>
             <p className="mt-6 text-lg leading-8 text-emerald-50">
-              This is the church-facing operating system for dashboards, role management,
-              room oversight, publishing approvals, and ministry collaboration.
+              This is the church-facing operating system for dashboards, role
+              management, room oversight, publishing approvals, and ministry
+              collaboration.
             </p>
           </div>
         </div>
@@ -185,9 +189,13 @@ export default function ChurchAdminPage() {
             <h2 className="text-2xl font-semibold">Save admin defaults</h2>
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Keep ministry-level oversight settings and publishing posture synced with your account.
+            Keep ministry-level oversight settings and publishing posture synced
+            with your account.
           </p>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <input
               value={settings.ministryName}
               onChange={(event) =>
@@ -261,7 +269,9 @@ export default function ChurchAdminPage() {
                 Save church admin settings
               </button>
               {savedMessage ? (
-                <p className="text-sm font-medium text-emerald-700">{savedMessage}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {savedMessage}
+                </p>
               ) : null}
             </div>
           </form>
@@ -270,7 +280,9 @@ export default function ChurchAdminPage() {
         <section className="mb-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <Users2 className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Family and church operating systems</h2>
+            <h2 className="text-2xl font-semibold">
+              Family and church operating systems
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {familyChurchSystems.map((item) => (
@@ -281,7 +293,9 @@ export default function ChurchAdminPage() {
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-900">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-blue-950">{item.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-blue-950">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>
@@ -297,7 +311,9 @@ export default function ChurchAdminPage() {
               <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">
                 {item.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600">{item.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {item.description}
+              </p>
             </article>
           ))}
         </section>
@@ -305,23 +321,32 @@ export default function ChurchAdminPage() {
         <section className="mt-10 grid gap-6 md:grid-cols-3">
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <LayoutDashboard className="h-6 w-6 text-[#14532d]" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Church dashboards</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Church dashboards
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              See active groups, reading-plan engagement, leader workflow status, and ministry adoption in one place.
+              See active groups, reading-plan engagement, leader workflow
+              status, and ministry adoption in one place.
             </p>
           </article>
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <LineChart className="h-6 w-6 text-blue-700" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Engagement visibility</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Engagement visibility
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              Compare group participation, study completion, and sermon companion usage across ministries.
+              Compare group participation, study completion, and sermon
+              companion usage across ministries.
             </p>
           </article>
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <ClipboardList className="h-6 w-6 text-amber-700" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Leader coordination</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Leader coordination
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              Give pastors, editors, and moderators one shared operating surface instead of scattered tools.
+              Give pastors, editors, and moderators one shared operating surface
+              instead of scattered tools.
             </p>
           </article>
         </section>
@@ -347,7 +372,9 @@ export default function ChurchAdminPage() {
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <div className="flex items-center gap-3 text-violet-950">
               <Users2 className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Role-based team permissions</h2>
+              <h2 className="text-2xl font-semibold">
+                Role-based team permissions
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {[
@@ -369,11 +396,14 @@ export default function ChurchAdminPage() {
           <aside className="rounded-3xl border border-rose-200 bg-rose-50 p-8">
             <div className="flex items-center gap-3 text-rose-950">
               <ShieldCheck className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Moderation and oversight</h2>
+              <h2 className="text-2xl font-semibold">
+                Moderation and oversight
+              </h2>
             </div>
             <p className="mt-4 leading-7 text-rose-900">
-              Add approval queues, audit history, room escalation tools, and content review
-              so church teams can scale collaboration without losing trust.
+              Add approval queues, audit history, room escalation tools, and
+              content review so church teams can scale collaboration without
+              losing trust.
             </p>
           </aside>
         </section>
@@ -400,11 +430,14 @@ export default function ChurchAdminPage() {
             <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
               <div className="flex items-center gap-3 text-emerald-950">
                 <Users2 className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Admin + collaboration</h2>
+                <h2 className="text-2xl font-semibold">
+                  Admin + collaboration
+                </h2>
               </div>
               <p className="mt-6 leading-7 text-emerald-950">
-                Church admin becomes especially valuable when it is connected to live rooms,
-                journeys, content publishing, and leader workspaces instead of sitting alone.
+                Church admin becomes especially valuable when it is connected to
+                live rooms, journeys, content publishing, and leader workspaces
+                instead of sitting alone.
               </p>
             </div>
 
@@ -448,7 +481,9 @@ export default function ChurchAdminPage() {
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-[#14532d]">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.detail}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {item.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -478,8 +513,9 @@ export default function ChurchAdminPage() {
                 <h2 className="text-2xl font-semibold">Trust and escalation</h2>
               </div>
               <p className="mt-4 text-sm leading-7 text-rose-900">
-                A professional church layer should make it easy to spot stalled rooms, unresolved care needs,
-                unreviewed content, and moderation issues before they become ministry pain points.
+                A professional church layer should make it easy to spot stalled
+                rooms, unresolved care needs, unreviewed content, and moderation
+                issues before they become ministry pain points.
               </p>
             </div>
 
@@ -489,8 +525,9 @@ export default function ChurchAdminPage() {
                 <h2 className="text-2xl font-semibold">Best outcome</h2>
               </div>
               <p className="mt-4 text-sm leading-7 text-amber-950">
-                The goal is not more admin work. It is a calmer ministry system where pastors, leaders,
-                editors, and volunteers can see what matters and act on it together.
+                The goal is not more admin work. It is a calmer ministry system
+                where pastors, leaders, editors, and volunteers can see what
+                matters and act on it together.
               </p>
             </div>
           </aside>

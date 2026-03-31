@@ -12,7 +12,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getPassageDashboards, savePassageDashboard } from "@/lib/persistence";
+import {
+  getPassageDashboards,
+  savePassageDashboard,
+} from "../../lib/persistence";
 
 const PASSAGE_DASHBOARDS_KEY = "christian-study-guide:passage-dashboards";
 
@@ -77,16 +80,18 @@ export default function PassageDashboardPage() {
         if (session) {
           const data = await getPassageDashboards();
           setDashboards(
-            (data as Array<{
-              id: string;
-              reference: string;
-              title: string;
-              study_mode: string;
-              summary: string;
-              mentor_thread_summary: string | null;
-              prayer_focus: string | null;
-              next_action: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                reference: string;
+                title: string;
+                study_mode: string;
+                summary: string;
+                mentor_thread_summary: string | null;
+                prayer_focus: string | null;
+                next_action: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               reference: item.reference,
               title: item.title,
@@ -114,7 +119,8 @@ export default function PassageDashboardPage() {
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!draft.reference.trim() || !draft.title.trim() || !draft.summary.trim()) return;
+    if (!draft.reference.trim() || !draft.title.trim() || !draft.summary.trim())
+      return;
 
     try {
       if (user) {
@@ -190,8 +196,8 @@ export default function PassageDashboardPage() {
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
               A saved passage dashboard keeps interpretation, mentor guidance,
-              prayer, exports, and follow-up in one place so the user does not lose
-              momentum between visits.
+              prayer, exports, and follow-up in one place so the user does not
+              lose momentum between visits.
             </p>
           </div>
         </div>
@@ -208,7 +214,9 @@ export default function PassageDashboardPage() {
               <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">
                 {block.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600">{block.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {block.description}
+              </p>
             </article>
           ))}
         </section>
@@ -217,7 +225,9 @@ export default function PassageDashboardPage() {
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <div className="flex items-center gap-3 text-violet-950">
               <BookHeart className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">What gets saved together</h2>
+              <h2 className="text-2xl font-semibold">
+                What gets saved together
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {[
@@ -267,16 +277,26 @@ export default function PassageDashboardPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Save a dashboard</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Save a dashboard
+            </h2>
             {saveFeedback ? (
-              <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <input
               value={draft.reference}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, reference: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  reference: event.target.value,
+                }))
               }
               placeholder="Reference"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -284,7 +304,10 @@ export default function PassageDashboardPage() {
             <input
               value={draft.title}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, title: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  title: event.target.value,
+                }))
               }
               placeholder="Dashboard title"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -292,7 +315,10 @@ export default function PassageDashboardPage() {
             <select
               value={draft.studyMode}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, studyMode: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  studyMode: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -304,7 +330,10 @@ export default function PassageDashboardPage() {
             <input
               value={draft.nextAction}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, nextAction: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  nextAction: event.target.value,
+                }))
               }
               placeholder="Next action"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -312,7 +341,10 @@ export default function PassageDashboardPage() {
             <textarea
               value={draft.summary}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, summary: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  summary: event.target.value,
+                }))
               }
               rows={4}
               placeholder="Study summary"
@@ -332,7 +364,10 @@ export default function PassageDashboardPage() {
             <input
               value={draft.prayerFocus}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, prayerFocus: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  prayerFocus: event.target.value,
+                }))
               }
               placeholder="Prayer focus"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -347,7 +382,9 @@ export default function PassageDashboardPage() {
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#0f172a]">Saved dashboards</h2>
+          <h2 className="text-2xl font-semibold text-[#0f172a]">
+            Saved dashboards
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {dashboards.length > 0 ? (
               dashboards.map((dashboard) => (
@@ -383,7 +420,8 @@ export default function PassageDashboardPage() {
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save your first passage dashboard to keep a full study workspace together.
+                Save your first passage dashboard to keep a full study workspace
+                together.
               </p>
             )}
           </div>

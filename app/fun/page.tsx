@@ -18,7 +18,7 @@ import {
   getSurpriseStudies,
   saveSeasonalChallenge,
   saveSurpriseStudy,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const surpriseStudies = [
   {
@@ -29,7 +29,8 @@ const surpriseStudies = [
   {
     title: "Courage in pressure",
     reference: "Joshua 1:9",
-    prompt: "Ask where God is calling you to trust Him instead of shrinking back.",
+    prompt:
+      "Ask where God is calling you to trust Him instead of shrinking back.",
   },
   {
     title: "Joy in hard seasons",
@@ -41,22 +42,26 @@ const surpriseStudies = [
 const playfulModes = [
   {
     title: "Spin for a passage",
-    detail: "Discover a Psalm, Proverb, Gospel story, or topical verse with one tap.",
+    detail:
+      "Discover a Psalm, Proverb, Gospel story, or topical verse with one tap.",
     icon: Shuffle,
   },
   {
     title: "Memory battles",
-    detail: "Beat your best score in fast fill-in-the-blank and rapid recall rounds.",
+    detail:
+      "Beat your best score in fast fill-in-the-blank and rapid recall rounds.",
     icon: Swords,
   },
   {
     title: "Animated progress map",
-    detail: "Move through a visible discipleship journey instead of checking a flat list.",
+    detail:
+      "Move through a visible discipleship journey instead of checking a flat list.",
     icon: Map,
   },
   {
     title: "Shareable win cards",
-    detail: "Turn milestones into beautiful celebration cards for streaks, paths, and badges.",
+    detail:
+      "Turn milestones into beautiful celebration cards for streaks, paths, and badges.",
     icon: Gift,
   },
 ];
@@ -100,7 +105,9 @@ export default function FunPage() {
   const [loading, setLoading] = useState(true);
   const [saveFeedback, setSaveFeedback] = useState("");
   const [savedStudies, setSavedStudies] = useState<SavedSurpriseStudy[]>([]);
-  const [savedChallenges, setSavedChallenges] = useState<SavedSeasonalChallenge[]>([]);
+  const [savedChallenges, setSavedChallenges] = useState<
+    SavedSeasonalChallenge[]
+  >([]);
   const [supabase] = useState(() => createClient());
 
   useEffect(() => {
@@ -118,13 +125,15 @@ export default function FunPage() {
           ]);
 
           setSavedStudies(
-            (studies as Array<{
-              id: string;
-              title: string;
-              reference: string;
-              prompt: string;
-              category: string;
-            }>).map((item) => ({
+            (
+              studies as Array<{
+                id: string;
+                title: string;
+                reference: string;
+                prompt: string;
+                category: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               reference: item.reference,
@@ -134,14 +143,16 @@ export default function FunPage() {
           );
 
           setSavedChallenges(
-            (challenges as Array<{
-              id: string;
-              challenge_title: string;
-              challenge_season: string;
-              status: string;
-              progress_note: string | null;
-              reward_claimed: boolean;
-            }>).map((item) => ({
+            (
+              challenges as Array<{
+                id: string;
+                challenge_title: string;
+                challenge_season: string;
+                status: string;
+                progress_note: string | null;
+                reward_claimed: boolean;
+              }>
+            ).map((item) => ({
               id: item.id,
               challengeTitle: item.challenge_title,
               challengeSeason: item.challenge_season,
@@ -165,7 +176,9 @@ export default function FunPage() {
     load();
   }, [supabase]);
 
-  const handleSaveSurpriseStudy = async (study: (typeof surpriseStudies)[number]) => {
+  const handleSaveSurpriseStudy = async (
+    study: (typeof surpriseStudies)[number],
+  ) => {
     try {
       if (user) {
         const saved = await saveSurpriseStudy({
@@ -215,7 +228,9 @@ export default function FunPage() {
           progress_note: "Joined from the fun layer",
         });
         setSavedChallenges((current) => {
-          const next = current.filter((item) => item.challengeTitle !== challenge);
+          const next = current.filter(
+            (item) => item.challengeTitle !== challenge,
+          );
           return [
             {
               id: saved.id,
@@ -238,7 +253,9 @@ export default function FunPage() {
             progressNote: "Joined from the fun layer",
             rewardClaimed: false,
           },
-          ...savedChallenges.filter((item) => item.challengeTitle !== challenge),
+          ...savedChallenges.filter(
+            (item) => item.challengeTitle !== challenge,
+          ),
         ];
         setSavedChallenges(next);
         localStorage.setItem(SEASONAL_CHALLENGES_KEY, JSON.stringify(next));
@@ -272,8 +289,8 @@ export default function FunPage() {
               Make Bible learning feel alive, rewarding, and worth returning to.
             </h1>
             <p className="mt-6 text-lg leading-8 text-violet-100">
-              This layer adds surprise, momentum, and celebration without flattening
-              spiritual growth into empty gimmicks.
+              This layer adds surprise, momentum, and celebration without
+              flattening spiritual growth into empty gimmicks.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -303,9 +320,15 @@ export default function FunPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-[#7c3aed]">
                 Daily surprise study
               </p>
-              <h2 className="mt-3 text-2xl font-semibold text-slate-900">{study.title}</h2>
-              <p className="mt-2 text-sm font-medium text-slate-500">{study.reference}</p>
-              <p className="mt-4 text-sm leading-6 text-slate-600">{study.prompt}</p>
+              <h2 className="mt-3 text-2xl font-semibold text-slate-900">
+                {study.title}
+              </h2>
+              <p className="mt-2 text-sm font-medium text-slate-500">
+                {study.reference}
+              </p>
+              <p className="mt-4 text-sm leading-6 text-slate-600">
+                {study.prompt}
+              </p>
               <button
                 type="button"
                 onClick={() => handleSaveSurpriseStudy(study)}
@@ -326,8 +349,12 @@ export default function FunPage() {
                 className="rounded-3xl border border-blue-200 bg-blue-50 p-8"
               >
                 <Icon className="h-6 w-6 text-blue-900" />
-                <h2 className="mt-4 text-2xl font-semibold text-blue-950">{mode.title}</h2>
-                <p className="mt-3 text-sm leading-6 text-blue-900">{mode.detail}</p>
+                <h2 className="mt-4 text-2xl font-semibold text-blue-950">
+                  {mode.title}
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-blue-900">
+                  {mode.detail}
+                </p>
               </article>
             );
           })}
@@ -379,10 +406,12 @@ export default function FunPage() {
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-semibold text-slate-900">Best next step</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Best next step
+              </h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Connect these moments to progression so users feel real momentum across
-                paths, memory work, and daily discipleship.
+                Connect these moments to progression so users feel real momentum
+                across paths, memory work, and daily discipleship.
               </p>
             </div>
             <Link
@@ -394,13 +423,17 @@ export default function FunPage() {
             </Link>
           </div>
           {saveFeedback ? (
-            <p className="mt-4 text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+            <p className="mt-4 text-sm font-semibold text-emerald-700">
+              {saveFeedback}
+            </p>
           ) : null}
         </section>
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-slate-900">Saved surprise studies</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Saved surprise studies
+            </h2>
             <div className="mt-6 grid gap-4">
               {savedStudies.length > 0 ? (
                 savedStudies.map((item) => (
@@ -411,8 +444,12 @@ export default function FunPage() {
                     <p className="text-xs font-semibold uppercase tracking-wide text-[#7c3aed]">
                       {item.reference}
                     </p>
-                    <h3 className="mt-2 text-lg font-semibold text-slate-900">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.prompt}</p>
+                    <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {item.prompt}
+                    </p>
                   </article>
                 ))
               ) : (
@@ -424,7 +461,9 @@ export default function FunPage() {
           </div>
 
           <aside className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-slate-900">Challenge progress</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Challenge progress
+            </h2>
             <div className="mt-6 grid gap-4">
               {savedChallenges.length > 0 ? (
                 savedChallenges.map((item) => (
@@ -432,11 +471,15 @@ export default function FunPage() {
                     key={item.id}
                     className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                   >
-                    <h3 className="text-lg font-semibold text-slate-900">{item.challengeTitle}</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">
+                      {item.challengeTitle}
+                    </h3>
                     <p className="mt-2 text-sm text-slate-600">
                       {item.challengeSeason} • {item.status}
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.progressNote}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {item.progressNote}
+                    </p>
                   </article>
                 ))
               ) : (

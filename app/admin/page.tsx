@@ -20,7 +20,7 @@ import {
   getGuidedPaths,
   getPublishingFlows,
   getWorkflowRuns,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 import { publishingSystems } from "@/lib/product-expansion";
 
 const adminBlocks = [
@@ -96,18 +96,20 @@ export default function AdminPage() {
   const [publishingFlows, setPublishingFlows] = useState<PublishingFlow[]>([]);
   const [guidedPaths, setGuidedPaths] = useState<GuidedPath[]>([]);
   const [workflowRuns, setWorkflowRuns] = useState<WorkflowRun[]>([]);
-  const [churchSettings, setChurchSettings] = useState<ChurchAdminSettings>(null);
+  const [churchSettings, setChurchSettings] =
+    useState<ChurchAdminSettings>(null);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [analyticsResponse, flows, paths, workflows, churchAdmin] = await Promise.all([
-          fetch("/api/admin-analytics"),
-          getPublishingFlows(),
-          getGuidedPaths(),
-          getWorkflowRuns(),
-          getChurchAdminSettings(),
-        ]);
+        const [analyticsResponse, flows, paths, workflows, churchAdmin] =
+          await Promise.all([
+            fetch("/api/admin-analytics"),
+            getPublishingFlows(),
+            getGuidedPaths(),
+            getWorkflowRuns(),
+            getChurchAdminSettings(),
+          ]);
 
         if (analyticsResponse.ok) {
           setAnalytics((await analyticsResponse.json()) as AdminAnalytics);
@@ -160,7 +162,8 @@ export default function AdminPage() {
     {
       label: "Ministry scope",
       value: churchSettings?.role_scope || "Not set",
-      detail: churchSettings?.ministry_name || "Church admin settings not saved yet",
+      detail:
+        churchSettings?.ministry_name || "Church admin settings not saved yet",
     },
   ];
 
@@ -189,8 +192,9 @@ export default function AdminPage() {
               </div>
               <h1 className="text-5xl font-bold md:text-6xl">Admin CMS</h1>
               <p className="mt-6 text-lg leading-8 text-emerald-50">
-                This surface now combines your publishing, guided-path, workflow, and ministry
-                settings into a real control dashboard instead of only a concept page.
+                This surface now combines your publishing, guided-path,
+                workflow, and ministry settings into a real control dashboard
+                instead of only a concept page.
               </p>
             </div>
           </div>
@@ -206,8 +210,12 @@ export default function AdminPage() {
                 <p className="text-sm font-medium uppercase tracking-wide text-slate-500">
                   {card.label}
                 </p>
-                <p className="mt-3 text-4xl font-bold text-[#0f172a]">{card.value}</p>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{card.detail}</p>
+                <p className="mt-3 text-4xl font-bold text-[#0f172a]">
+                  {card.value}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  {card.detail}
+                </p>
               </article>
             ))}
           </section>
@@ -218,11 +226,21 @@ export default function AdminPage() {
                 key={block.title}
                 className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
               >
-                {index === 0 && <LayoutPanelTop className="h-6 w-6 text-blue-700" />}
-                {index === 1 && <Sparkles className="h-6 w-6 text-violet-700" />}
-                {index === 2 && <FilePenLine className="h-6 w-6 text-emerald-700" />}
-                <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">{block.title}</h2>
-                <p className="mt-4 leading-7 text-slate-600">{block.description}</p>
+                {index === 0 && (
+                  <LayoutPanelTop className="h-6 w-6 text-blue-700" />
+                )}
+                {index === 1 && (
+                  <Sparkles className="h-6 w-6 text-violet-700" />
+                )}
+                {index === 2 && (
+                  <FilePenLine className="h-6 w-6 text-emerald-700" />
+                )}
+                <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">
+                  {block.title}
+                </h2>
+                <p className="mt-4 leading-7 text-slate-600">
+                  {block.description}
+                </p>
               </article>
             ))}
           </div>
@@ -231,38 +249,63 @@ export default function AdminPage() {
             <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
               <div className="flex items-center gap-3 text-blue-950">
                 <BarChart3 className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Admin analytics portal</h2>
+                <h2 className="text-2xl font-semibold">
+                  Admin analytics portal
+                </h2>
               </div>
               {analytics ? (
                 <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   <article className="rounded-2xl border border-blue-200 bg-white p-5">
                     <p className="text-sm font-medium text-slate-600">Users</p>
-                    <p className="mt-2 text-3xl font-bold text-blue-950">{analytics.users}</p>
+                    <p className="mt-2 text-3xl font-bold text-blue-950">
+                      {analytics.users}
+                    </p>
                   </article>
                   <article className="rounded-2xl border border-blue-200 bg-white p-5">
-                    <p className="text-sm font-medium text-slate-600">Weekly studies</p>
-                    <p className="mt-2 text-3xl font-bold text-blue-950">{analytics.weeklyStudies}</p>
+                    <p className="text-sm font-medium text-slate-600">
+                      Weekly studies
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-blue-950">
+                      {analytics.weeklyStudies}
+                    </p>
                   </article>
                   <article className="rounded-2xl border border-blue-200 bg-white p-5">
-                    <p className="text-sm font-medium text-slate-600">Active learners</p>
-                    <p className="mt-2 text-3xl font-bold text-blue-950">{analytics.weeklyActiveLearners}</p>
+                    <p className="text-sm font-medium text-slate-600">
+                      Active learners
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-blue-950">
+                      {analytics.weeklyActiveLearners}
+                    </p>
                   </article>
                   <article className="rounded-2xl border border-blue-200 bg-white p-5">
-                    <p className="text-sm font-medium text-slate-600">Guided paths</p>
-                    <p className="mt-2 text-3xl font-bold text-blue-950">{analytics.guidedPaths}</p>
+                    <p className="text-sm font-medium text-slate-600">
+                      Guided paths
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-blue-950">
+                      {analytics.guidedPaths}
+                    </p>
                   </article>
                   <article className="rounded-2xl border border-blue-200 bg-white p-5">
-                    <p className="text-sm font-medium text-slate-600">Answered prayers</p>
-                    <p className="mt-2 text-3xl font-bold text-blue-950">{analytics.answeredPrayers}</p>
+                    <p className="text-sm font-medium text-slate-600">
+                      Answered prayers
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-blue-950">
+                      {analytics.answeredPrayers}
+                    </p>
                   </article>
                   <article className="rounded-2xl border border-blue-200 bg-white p-5">
-                    <p className="text-sm font-medium text-slate-600">Activity events</p>
-                    <p className="mt-2 text-3xl font-bold text-blue-950">{analytics.activityCount}</p>
+                    <p className="text-sm font-medium text-slate-600">
+                      Activity events
+                    </p>
+                    <p className="mt-2 text-3xl font-bold text-blue-950">
+                      {analytics.activityCount}
+                    </p>
                   </article>
                 </div>
               ) : (
                 <div className="mt-6 rounded-2xl border border-blue-200 bg-white p-5 text-sm text-blue-950">
-                  Admin analytics are unavailable. Check admin role access and Supabase admin env vars.
+                  Admin analytics are unavailable. Check admin role access and
+                  Supabase admin env vars.
                 </div>
               )}
             </div>
@@ -270,20 +313,32 @@ export default function AdminPage() {
             <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
               <div className="flex items-center gap-3 text-emerald-950">
                 <ShieldCheck className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Operational connection</h2>
+                <h2 className="text-2xl font-semibold">
+                  Operational connection
+                </h2>
               </div>
               <div className="mt-6 space-y-4 text-sm leading-7 text-emerald-900">
                 <p>
-                  • Ministry name: {churchSettings?.ministry_name || "Not configured"}
+                  • Ministry name:{" "}
+                  {churchSettings?.ministry_name || "Not configured"}
                 </p>
                 <p>
-                  • Approvals: {churchSettings?.approvals_enabled ? "Enabled" : "Not enabled"}
+                  • Approvals:{" "}
+                  {churchSettings?.approvals_enabled
+                    ? "Enabled"
+                    : "Not enabled"}
                 </p>
                 <p>
-                  • Room oversight: {churchSettings?.room_oversight_enabled ? "Enabled" : "Not enabled"}
+                  • Room oversight:{" "}
+                  {churchSettings?.room_oversight_enabled
+                    ? "Enabled"
+                    : "Not enabled"}
                 </p>
                 <p>
-                  • Publishing queue: {churchSettings?.publishing_queue_enabled ? "Enabled" : "Not enabled"}
+                  • Publishing queue:{" "}
+                  {churchSettings?.publishing_queue_enabled
+                    ? "Enabled"
+                    : "Not enabled"}
                 </p>
               </div>
               <Link
@@ -299,7 +354,9 @@ export default function AdminPage() {
           <section className="mt-10 rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <FilePenLine className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Publishing systems now mapped out</h2>
+              <h2 className="text-2xl font-semibold">
+                Publishing systems now mapped out
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {publishingSystems.map((item) => (
@@ -310,7 +367,9 @@ export default function AdminPage() {
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-emerald-950">{item.detail}</p>
+                  <p className="mt-3 text-sm leading-6 text-emerald-950">
+                    {item.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -320,7 +379,9 @@ export default function AdminPage() {
             <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
               <div className="flex items-center gap-3 text-amber-950">
                 <Workflow className="h-6 w-6" />
-                <h2 className="text-2xl font-semibold">Recent workflow operations</h2>
+                <h2 className="text-2xl font-semibold">
+                  Recent workflow operations
+                </h2>
               </div>
               <div className="mt-6 grid gap-4">
                 {workflowRuns.slice(0, 5).map((run) => (
@@ -334,7 +395,9 @@ export default function AdminPage() {
                     <h3 className="mt-2 text-lg font-semibold text-slate-900">
                       {run.linked_reference || "Workflow item"}
                     </h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-700">{run.summary}</p>
+                    <p className="mt-3 text-sm leading-6 text-slate-700">
+                      {run.summary}
+                    </p>
                     <p className="mt-3 text-sm font-medium text-amber-950">
                       {run.next_step || "No next step saved"}
                     </p>
@@ -355,7 +418,9 @@ export default function AdminPage() {
               </div>
               <div className="mt-6 space-y-4">
                 <article className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-sm font-medium text-slate-600">Publishing queue</p>
+                  <p className="text-sm font-medium text-slate-600">
+                    Publishing queue
+                  </p>
                   <p className="mt-2 text-lg font-semibold text-slate-900">
                     {publishingFlows.length} saved flows
                   </p>
@@ -364,16 +429,21 @@ export default function AdminPage() {
                   </p>
                 </article>
                 <article className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-sm font-medium text-slate-600">Guided paths</p>
+                  <p className="text-sm font-medium text-slate-600">
+                    Guided paths
+                  </p>
                   <p className="mt-2 text-lg font-semibold text-slate-900">
                     {guidedPaths.length} saved paths
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
-                    {guidedPaths.slice(0, 1)[0]?.current_focus || "No current path focus yet."}
+                    {guidedPaths.slice(0, 1)[0]?.current_focus ||
+                      "No current path focus yet."}
                   </p>
                 </article>
                 <article className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-sm font-medium text-slate-600">Top activity</p>
+                  <p className="text-sm font-medium text-slate-600">
+                    Top activity
+                  </p>
                   <div className="mt-2 space-y-2 text-sm leading-6 text-slate-700">
                     {analytics?.topActivity?.length ? (
                       analytics.topActivity.map((item) => (
@@ -393,23 +463,32 @@ export default function AdminPage() {
           <section className="mt-10 grid gap-6 md:grid-cols-3">
             <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
               <Users2 className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="mt-4 text-2xl font-semibold text-slate-900">User management</h2>
+              <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+                User management
+              </h2>
               <p className="mt-4 text-sm leading-7 text-slate-600">
-                Search users, view role distribution, inspect adoption, and support church or team onboarding.
+                Search users, view role distribution, inspect adoption, and
+                support church or team onboarding.
               </p>
             </article>
             <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
               <ShieldAlert className="h-6 w-6 text-amber-700" />
-              <h2 className="mt-4 text-2xl font-semibold text-slate-900">Moderation</h2>
+              <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+                Moderation
+              </h2>
               <p className="mt-4 text-sm leading-7 text-slate-600">
-                Review reported content, room activity, shared-study comments, and trust signals from one place.
+                Review reported content, room activity, shared-study comments,
+                and trust signals from one place.
               </p>
             </article>
             <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
               <FilePenLine className="h-6 w-6 text-emerald-700" />
-              <h2 className="mt-4 text-2xl font-semibold text-slate-900">Publishing</h2>
+              <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+                Publishing
+              </h2>
               <p className="mt-4 text-sm leading-7 text-slate-600">
-                Curate church-ready studies, publish devotional campaigns, and stage leader resources for teams.
+                Curate church-ready studies, publish devotional campaigns, and
+                stage leader resources for teams.
               </p>
             </article>
           </section>

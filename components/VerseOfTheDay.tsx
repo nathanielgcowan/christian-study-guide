@@ -65,7 +65,7 @@ export default function VerseOfTheDay() {
 
         <div className="card card-elevated p-8 text-center shadow-glow md:p-12">
           <div className="mb-8 font-serif text-2xl italic leading-relaxed text-text-primary md:text-3xl">
-            "{verse.text}"
+            &ldquo;{verse.text}&rdquo;
           </div>
           <div className="mb-4 text-xl font-semibold text-primary md:text-2xl">
             {verse.reference}

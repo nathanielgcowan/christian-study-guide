@@ -19,7 +19,7 @@ import {
   saveWorkflowRun,
   updatePublishingFlow,
   updateWorkflowRun,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const PUBLISHING_FLOWS_KEY = "christian-study-guide:publishing-flows";
 
@@ -94,16 +94,18 @@ export default function PublishingPage() {
             getWorkflowRuns(),
           ]);
           setFlows(
-            (data as Array<{
-              id: string;
-              title: string;
-              audience: string;
-              content_type: string;
-              status: string;
-              destination: string;
-              summary: string;
-              share_scope: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                audience: string;
+                content_type: string;
+                status: string;
+                destination: string;
+                summary: string;
+                share_scope: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               audience: item.audience,
@@ -115,16 +117,18 @@ export default function PublishingPage() {
             })),
           );
           setWorkflowRuns(
-            (workflowData as Array<{
-              id: string;
-              workflow_name: string;
-              linked_reference: string | null;
-              stage: string;
-              status: string;
-              summary: string;
-              next_step: string | null;
-              output: Record<string, unknown> | null;
-            }>)
+            (
+              workflowData as Array<{
+                id: string;
+                workflow_name: string;
+                linked_reference: string | null;
+                stage: string;
+                status: string;
+                summary: string;
+                next_step: string | null;
+                output: Record<string, unknown> | null;
+              }>
+            )
               .filter((item) => item.workflow_name === "publishing-flow")
               .map((item) => ({
                 id: item.id,
@@ -155,7 +159,9 @@ export default function PublishingPage() {
   const findLinkedWorkflow = (flow: { id: string; title: string }) =>
     workflowRuns.find((run) => {
       const outputFlowId =
-        run.output && typeof run.output.flow_id === "string" ? run.output.flow_id : null;
+        run.output && typeof run.output.flow_id === "string"
+          ? run.output.flow_id
+          : null;
 
       return outputFlowId === flow.id || run.linkedReference === flow.title;
     });
@@ -238,7 +244,11 @@ export default function PublishingPage() {
 
   const handleAdvance = async (flow: PublishingFlow) => {
     const nextStatus =
-      flow.status === "draft" ? "review" : flow.status === "review" ? "published" : "published";
+      flow.status === "draft"
+        ? "review"
+        : flow.status === "review"
+          ? "published"
+          : "published";
     const nextStage = nextStatus;
     const linkedWorkflow = findLinkedWorkflow(flow);
 
@@ -250,7 +260,7 @@ export default function PublishingPage() {
         share_scope: flow.shareScope,
       });
 
-       if (linkedWorkflow) {
+      if (linkedWorkflow) {
         const updatedWorkflow = await updateWorkflowRun({
           id: linkedWorkflow.id,
           stage: nextStage,
@@ -360,13 +370,17 @@ export default function PublishingPage() {
               key={stage.title}
               className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
             >
-              {index === 0 && <ClipboardCheck className="h-6 w-6 text-[#1e40af]" />}
+              {index === 0 && (
+                <ClipboardCheck className="h-6 w-6 text-[#1e40af]" />
+              )}
               {index === 1 && <CheckCheck className="h-6 w-6 text-[#7c2d12]" />}
               {index === 2 && <Send className="h-6 w-6 text-[#14532d]" />}
               <h2 className="mt-4 text-2xl font-semibold text-[#0f172a]">
                 {stage.title}
               </h2>
-              <p className="mt-4 leading-7 text-slate-600">{stage.description}</p>
+              <p className="mt-4 leading-7 text-slate-600">
+                {stage.description}
+              </p>
             </article>
           ))}
         </section>
@@ -422,16 +436,26 @@ export default function PublishingPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Create a publishing flow</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Create a publishing flow
+            </h2>
             {saveFeedback ? (
-              <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <input
               value={draft.title}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, title: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  title: event.target.value,
+                }))
               }
               placeholder="Title"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -439,7 +463,10 @@ export default function PublishingPage() {
             <select
               value={draft.audience}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, audience: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  audience: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -451,7 +478,10 @@ export default function PublishingPage() {
             <select
               value={draft.contentType}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, contentType: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  contentType: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -463,7 +493,10 @@ export default function PublishingPage() {
             <select
               value={draft.destination}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, destination: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  destination: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -474,7 +507,10 @@ export default function PublishingPage() {
             <select
               value={draft.shareScope}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, shareScope: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  shareScope: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -485,7 +521,10 @@ export default function PublishingPage() {
             <textarea
               value={draft.summary}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, summary: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  summary: event.target.value,
+                }))
               }
               rows={4}
               placeholder="Summary"
@@ -515,21 +554,25 @@ export default function PublishingPage() {
                   <h3 className="mt-2 text-lg font-semibold text-slate-900">
                     {flow.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{flow.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {flow.summary}
+                  </p>
                   {flow.status !== "published" ? (
                     <button
                       type="button"
                       onClick={() => handleAdvance(flow)}
                       className="mt-4 rounded-xl border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-900 transition hover:bg-amber-100"
                     >
-                      Advance to {flow.status === "draft" ? "review" : "published"}
+                      Advance to{" "}
+                      {flow.status === "draft" ? "review" : "published"}
                     </button>
                   ) : null}
                 </article>
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save a publishing flow to track draft, review, and publish states.
+                Save a publishing flow to track draft, review, and publish
+                states.
               </p>
             )}
           </div>
@@ -538,11 +581,14 @@ export default function PublishingPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <ClipboardCheck className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Publishing operations trail</h2>
+            <h2 className="text-2xl font-semibold">
+              Publishing operations trail
+            </h2>
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-900">
-            Signed-in publishing work now writes to workflow history so leaders can track
-            draft, review, and publish movement with a clearer next step.
+            Signed-in publishing work now writes to workflow history so leaders
+            can track draft, review, and publish movement with a clearer next
+            step.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {workflowRuns.length > 0 ? (
@@ -557,7 +603,9 @@ export default function PublishingPage() {
                   <h3 className="mt-2 text-lg font-semibold text-slate-900">
                     {run.linkedReference || "Publishing workflow"}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{run.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {run.summary}
+                  </p>
                   <p className="mt-3 text-sm font-medium text-blue-950">
                     Next: {run.nextStep || "No next step saved yet."}
                   </p>
@@ -565,7 +613,8 @@ export default function PublishingPage() {
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-blue-300 bg-white p-5 text-sm text-blue-950">
-                Save a publishing flow while signed in to start building an operational trail.
+                Save a publishing flow while signed in to start building an
+                operational trail.
               </div>
             )}
           </div>

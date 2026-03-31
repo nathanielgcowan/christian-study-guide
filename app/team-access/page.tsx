@@ -16,7 +16,7 @@ import {
   getTeamInvites,
   saveTeamAccessSettings,
   saveTeamInvite,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const TEAM_ACCESS_SETTINGS_KEY = "christian-study-guide:team-access-settings";
 const TEAM_INVITES_KEY = "christian-study-guide:team-invites";
@@ -31,15 +31,18 @@ const roles = [
 const inviteFlows = [
   {
     title: "Email invites",
-    detail: "Add a leader, volunteer, or team member directly into the right workspace context.",
+    detail:
+      "Add a leader, volunteer, or team member directly into the right workspace context.",
   },
   {
     title: "Room-specific access",
-    detail: "Keep discussion rooms private while letting the wider church reuse published resources.",
+    detail:
+      "Keep discussion rooms private while letting the wider church reuse published resources.",
   },
   {
     title: "Permission bundles",
-    detail: "Apply presets like youth team, teaching team, or pastoral staff instead of configuring from scratch.",
+    detail:
+      "Apply presets like youth team, teaching team, or pastoral staff instead of configuring from scratch.",
   },
 ];
 
@@ -95,13 +98,15 @@ export default function TeamAccessPage() {
           }
 
           setInvites(
-            (invitesData as Array<{
-              id: string;
-              team_name: string;
-              invite_email: string;
-              role: string;
-              status: string;
-            }>).map((item) => ({
+            (
+              invitesData as Array<{
+                id: string;
+                team_name: string;
+                invite_email: string;
+                role: string;
+                status: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               teamName: item.team_name,
               inviteEmail: item.invite_email,
@@ -137,7 +142,10 @@ export default function TeamAccessPage() {
           seat_limit: settings.seatLimit,
         });
       } else {
-        localStorage.setItem(TEAM_ACCESS_SETTINGS_KEY, JSON.stringify(settings));
+        localStorage.setItem(
+          TEAM_ACCESS_SETTINGS_KEY,
+          JSON.stringify(settings),
+        );
       }
       setSaveFeedback("Team access settings saved");
     } catch {
@@ -251,8 +259,12 @@ export default function TeamAccessPage() {
                   key={flow.title}
                   className="rounded-2xl border border-blue-200 bg-white p-5"
                 >
-                  <h3 className="text-lg font-semibold text-blue-950">{flow.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-blue-900">{flow.detail}</p>
+                  <h3 className="text-lg font-semibold text-blue-950">
+                    {flow.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-blue-900">
+                    {flow.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -262,23 +274,32 @@ export default function TeamAccessPage() {
         <section className="mt-10 grid gap-6 md:grid-cols-3">
           <article className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <Building2 className="h-6 w-6 text-violet-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-violet-950">Church-wide access</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-violet-950">
+              Church-wide access
+            </h2>
             <p className="mt-4 leading-7 text-violet-900">
-              Separate church admin controls from room-level and study-level permissions.
+              Separate church admin controls from room-level and study-level
+              permissions.
             </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <Users2 className="h-6 w-6 text-amber-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-amber-950">Team seat model</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-amber-950">
+              Team seat model
+            </h2>
             <p className="mt-4 leading-7 text-amber-900">
-              Tie access tiers to subscriptions without making the collaboration layer confusing.
+              Tie access tiers to subscriptions without making the collaboration
+              layer confusing.
             </p>
           </article>
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <Workflow className="h-6 w-6 text-emerald-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">Approval paths</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+              Approval paths
+            </h2>
             <p className="mt-4 leading-7 text-emerald-900">
-              Route publishing, moderation, and shared-resource changes through clear review flows.
+              Route publishing, moderation, and shared-resource changes through
+              clear review flows.
             </p>
           </article>
         </section>
@@ -286,16 +307,23 @@ export default function TeamAccessPage() {
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Team settings</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Team settings
+              </h2>
               {saveFeedback ? (
-                <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {saveFeedback}
+                </p>
               ) : null}
             </div>
             <form onSubmit={handleSaveSettings} className="mt-6 grid gap-4">
               <input
                 value={settings.teamName}
                 onChange={(event) =>
-                  setSettings((current) => ({ ...current, teamName: event.target.value }))
+                  setSettings((current) => ({
+                    ...current,
+                    teamName: event.target.value,
+                  }))
                 }
                 placeholder="Team name"
                 className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -365,9 +393,13 @@ export default function TeamAccessPage() {
 
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold text-[#0f172a]">Invite a teammate</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                Invite a teammate
+              </h2>
               {inviteFeedback ? (
-                <p className="text-sm font-medium text-emerald-700">{inviteFeedback}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {inviteFeedback}
+                </p>
               ) : null}
             </div>
             <form onSubmit={handleInvite} className="mt-6 grid gap-4">
@@ -385,7 +417,10 @@ export default function TeamAccessPage() {
               <select
                 value={inviteDraft.role}
                 onChange={(event) =>
-                  setInviteDraft((current) => ({ ...current, role: event.target.value }))
+                  setInviteDraft((current) => ({
+                    ...current,
+                    role: event.target.value,
+                  }))
                 }
                 className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
               >
@@ -409,7 +444,9 @@ export default function TeamAccessPage() {
                     key={invite.id}
                     className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
                   >
-                    <p className="font-semibold text-slate-900">{invite.inviteEmail}</p>
+                    <p className="font-semibold text-slate-900">
+                      {invite.inviteEmail}
+                    </p>
                     <p className="mt-1 text-sm text-slate-600">
                       {invite.teamName} • {invite.role} • {invite.status}
                     </p>

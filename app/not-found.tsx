@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, Home, ArrowLeft } from "lucide-react";
+import { BookOpen, Home } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -20,8 +20,8 @@ export default function NotFound() {
         </h2>
 
         <p className="text-xl text-zinc-600 mb-12 max-w-md mx-auto">
-          Sorry, the Bible study or page you're looking for could not be found.
-          It may have been moved or doesn't exist yet.
+          Sorry, the Bible study or page you&apos;re looking for could not be
+          found. It may have been moved or doesn&apos;t exist yet.
         </p>
 
         {/* Action Buttons */}

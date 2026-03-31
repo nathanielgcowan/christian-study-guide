@@ -12,7 +12,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getQualityReports, saveQualityReport } from "@/lib/persistence";
+import { getQualityReports, saveQualityReport } from "../../lib/persistence";
 
 const QUALITY_REPORTS_KEY = "christian-study-guide:quality-reports";
 
@@ -46,17 +46,19 @@ export default function QualityPage() {
         if (session) {
           const data = await getQualityReports();
           setReports(
-            (data as Array<{
-              id: string;
-              report_type: string;
-              status: string;
-              summary: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                report_type: string;
+                status: string;
+                summary: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               reportType: item.report_type,
               status: item.status,
               summary: item.summary,
-            }))
+            })),
           );
         } else {
           const raw = localStorage.getItem(QUALITY_REPORTS_KEY);
@@ -129,10 +131,12 @@ export default function QualityPage() {
       <section className="bg-gradient-to-br from-[#0f172a] to-[#14532d] py-20 text-white">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <BadgeCheck className="mx-auto h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">Platform Quality</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            Platform Quality
+          </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-emerald-50">
-            Accessibility, testing, observability, and production-readiness systems
-            for a healthier, more trustworthy product.
+            Accessibility, testing, observability, and production-readiness
+            systems for a healthier, more trustworthy product.
           </p>
         </div>
       </section>
@@ -140,16 +144,26 @@ export default function QualityPage() {
       <main className="mx-auto max-w-5xl px-6 py-14">
         <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Quality tracking</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Quality tracking
+            </h2>
             {saveFeedback ? (
-              <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
-          <form onSubmit={handleSaveReport} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSaveReport}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <select
               value={draft.reportType}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, reportType: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  reportType: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -161,7 +175,10 @@ export default function QualityPage() {
             <select
               value={draft.status}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, status: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  status: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -172,7 +189,10 @@ export default function QualityPage() {
             <textarea
               value={draft.summary}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, summary: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  summary: event.target.value,
+                }))
               }
               rows={4}
               placeholder="What are you improving or tracking?"
@@ -190,30 +210,42 @@ export default function QualityPage() {
         <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <article className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <Accessibility className="h-6 w-6 text-blue-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-blue-950">Accessibility</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-blue-950">
+              Accessibility
+            </h2>
             <p className="mt-4 leading-7 text-blue-900">
-              Keyboard flow, contrast, reduced motion, screen-reader polish, and transcripts.
+              Keyboard flow, contrast, reduced motion, screen-reader polish, and
+              transcripts.
             </p>
           </article>
           <article className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <Bug className="h-6 w-6 text-violet-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-violet-950">Testing</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-violet-950">
+              Testing
+            </h2>
             <p className="mt-4 leading-7 text-violet-900">
-              Better coverage for passage flows, notes, mentor saves, and premium systems.
+              Better coverage for passage flows, notes, mentor saves, and
+              premium systems.
             </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <Activity className="h-6 w-6 text-amber-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-amber-950">Observability</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-amber-950">
+              Observability
+            </h2>
             <p className="mt-4 leading-7 text-amber-900">
-              Error monitoring, usage analytics, and key funnel tracking across the app.
+              Error monitoring, usage analytics, and key funnel tracking across
+              the app.
             </p>
           </article>
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <Gauge className="h-6 w-6 text-emerald-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">Readiness</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+              Readiness
+            </h2>
             <p className="mt-4 leading-7 text-emerald-900">
-              Production checks for reliability, performance, and confidence during growth.
+              Production checks for reliability, performance, and confidence
+              during growth.
             </p>
           </article>
         </section>
@@ -244,17 +276,22 @@ export default function QualityPage() {
           <aside className="rounded-3xl border border-rose-200 bg-rose-50 p-8">
             <div className="flex items-center gap-3 text-rose-950">
               <AlertCircle className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Testing and observability</h2>
+              <h2 className="text-2xl font-semibold">
+                Testing and observability
+              </h2>
             </div>
             <p className="mt-4 leading-7 text-rose-900">
-              This is the systems layer for catching regressions faster, understanding
-              usage patterns, and keeping advanced features stable as the app grows.
+              This is the systems layer for catching regressions faster,
+              understanding usage patterns, and keeping advanced features stable
+              as the app grows.
             </p>
           </aside>
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#0f172a]">Saved reports</h2>
+          <h2 className="text-2xl font-semibold text-[#0f172a]">
+            Saved reports
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {reports.length > 0 ? (
               reports.map((report) => (
@@ -265,13 +302,18 @@ export default function QualityPage() {
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#14532d]">
                     {report.reportType}
                   </p>
-                  <p className="mt-2 text-xs font-medium text-slate-500">{report.status}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{report.summary}</p>
+                  <p className="mt-2 text-xs font-medium text-slate-500">
+                    {report.status}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                    {report.summary}
+                  </p>
                 </article>
               ))
             ) : (
               <p className="text-sm leading-6 text-slate-600">
-                Save one quality report above to start tracking platform-readiness work.
+                Save one quality report above to start tracking
+                platform-readiness work.
               </p>
             )}
           </div>
@@ -300,7 +342,9 @@ export default function QualityPage() {
         </section>
 
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
-          <h2 className="text-2xl font-semibold text-blue-950">Production hardening checklist</h2>
+          <h2 className="text-2xl font-semibold text-blue-950">
+            Production hardening checklist
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[
               "End-to-end coverage for auth, notes, mentor, prayer, and persistence flows",

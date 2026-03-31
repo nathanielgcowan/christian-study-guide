@@ -2,25 +2,26 @@
 
 @theme {
   /* Modern Spiritual Color Palette */
-  --color-primary: #2563eb; /* Modern blue - trust, peace */
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #3b82f6;
-  --color-secondary: #7c3aed; /* Purple - wisdom, spirituality */
-  --color-secondary-light: #a78bfa;
-  --color-accent: #f59e0b; /* Warm amber - light, guidance */
-  --color-accent-light: #fbbf24;
+  --color-gold: #d4af37;
+  --color-primary: #001f3f; /* Navy blue - classic, deep */
+  --color-primary-dark: #000080; /* Navy */
+  --color-primary-light: #1976d2; /* Lighter blue */
+  --color-secondary: #003366; /* Deep blue */
+  --color-secondary-light: #2196f3; /* Bright blue */
+  --color-accent: #42a5f5; /* Accent blue */
+  --color-accent-light: #90caf9; /* Light accent blue */
 
   /* Neutral Colors */
-  --color-background: #f4f7fb;
+  --color-background: #e3f2fd;
   --color-surface: #ffffff;
-  --color-surface-hover: #edf2f7;
-  --color-border: #cbd5e1;
-  --color-border-light: #dbe4ee;
+  --color-surface-hover: #bbdefb;
+  --color-border: #1976d2;
+  --color-border-light: #90caf9;
 
   /* Text Colors */
-  --color-text-primary: #020617;
-  --color-text-secondary: #1e293b;
-  --color-text-muted: #334155;
+  --color-text-primary: #001f3f;
+  --color-text-secondary: #1565c0;
+  --color-text-muted: #1976d2;
   --color-text-inverse: #ffffff;
 
   /* Status Colors */
@@ -158,12 +159,14 @@
   }
 
   .btn-primary {
-    background-color: var(--color-primary);
-    color: var(--color-text-inverse);
+    background-color: var(--color-gold);
+    color: var(--color-primary);
+    font-weight: 600;
   }
 
   .btn-primary:hover {
-    background-color: var(--color-primary-dark);
+    background-color: #bfa133;
+    color: var(--color-text-inverse);
     transform: translateY(-1px);
     box-shadow: var(--shadow-lg);
   }

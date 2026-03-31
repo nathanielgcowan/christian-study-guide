@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { Sparkles } from "lucide-react";
 
-const AncientWorldMap = dynamic(() => import("@/components/AncientWorldMap"), {
+const AncientWorldMap = dynamic(() => import("./AncientWorldMap"), {
   ssr: false,
   loading: () => (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">

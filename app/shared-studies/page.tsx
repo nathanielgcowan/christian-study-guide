@@ -3,9 +3,20 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Gift, MessageCircle, MessagesSquare, Share2, ShieldCheck, Sparkles, Users } from "lucide-react";
+import {
+  Gift,
+  MessageCircle,
+  MessagesSquare,
+  Share2,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getSharedStudyComments, saveSharedStudyComment } from "@/lib/persistence";
+import {
+  getSharedStudyComments,
+  saveSharedStudyComment,
+} from "../../lib/persistence";
 
 const SHARED_STUDY_COMMENTS_KEY = "christian-study-guide:shared-study-comments";
 
@@ -76,17 +87,19 @@ export default function SharedStudiesPage() {
         if (session) {
           const data = await getSharedStudyComments();
           setComments(
-            (data as Array<{
-              id: string;
-              study_title: string;
-              author_name: string;
-              content: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                study_title: string;
+                author_name: string;
+                content: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               studyTitle: item.study_title,
               authorName: item.author_name,
               content: item.content,
-            }))
+            })),
           );
         } else {
           const raw = localStorage.getItem(SHARED_STUDY_COMMENTS_KEY);
@@ -99,7 +112,7 @@ export default function SharedStudiesPage() {
                 studyTitle: "Romans 5 peace with God study",
                 authorName: "Community",
                 content,
-              }))
+              })),
             );
           }
         }
@@ -168,7 +181,9 @@ export default function SharedStudiesPage() {
       <section className="bg-gradient-to-br from-[#0f172a] to-[#1e40af] py-20 text-white">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <Share2 className="mx-auto h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">Shared Studies</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            Shared Studies
+          </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-blue-100">
             Publish a passage study, devotional flow, or leader guide as a clean
             public page that others can review, reuse, and discuss together.
@@ -186,8 +201,12 @@ export default function SharedStudiesPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                 {study.type}
               </p>
-              <h2 className="mt-3 text-2xl font-semibold text-[#0f172a]">{study.title}</h2>
-              <p className="mt-2 text-sm font-medium text-slate-500">By {study.author}</p>
+              <h2 className="mt-3 text-2xl font-semibold text-[#0f172a]">
+                {study.title}
+              </h2>
+              <p className="mt-2 text-sm font-medium text-slate-500">
+                By {study.author}
+              </p>
               <p className="mt-4 leading-7 text-slate-600">{study.summary}</p>
             </article>
           ))}
@@ -197,7 +216,9 @@ export default function SharedStudiesPage() {
           <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <MessagesSquare className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Comments on shared studies</h2>
+              <h2 className="text-2xl font-semibold">
+                Comments on shared studies
+              </h2>
             </div>
             <div className="mt-6 grid gap-4">
               {comments.map((comment) => (
@@ -205,7 +226,9 @@ export default function SharedStudiesPage() {
                   key={comment.id}
                   className="rounded-2xl border border-emerald-200 bg-white p-5 text-sm leading-6 text-emerald-950"
                 >
-                  <p className="font-semibold text-emerald-950">{comment.authorName}</p>
+                  <p className="font-semibold text-emerald-950">
+                    {comment.authorName}
+                  </p>
                   <p className="mt-1 text-xs uppercase tracking-wide text-emerald-700">
                     {comment.studyTitle}
                   </p>
@@ -221,8 +244,9 @@ export default function SharedStudiesPage() {
               <h2 className="text-2xl font-semibold">Why this helps</h2>
             </div>
             <p className="mt-4 leading-7 text-violet-900">
-              Shared public study pages make the app useful for teachers, group leaders,
-              classes, and friends who want to engage the same Scripture together.
+              Shared public study pages make the app useful for teachers, group
+              leaders, classes, and friends who want to engage the same
+              Scripture together.
             </p>
             <Link
               href="/community"
@@ -236,16 +260,26 @@ export default function SharedStudiesPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Add a comment</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Add a comment
+            </h2>
             {saveFeedback ? (
-              <p className="text-sm font-medium text-emerald-700">{saveFeedback}</p>
+              <p className="text-sm font-medium text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </div>
-          <form onSubmit={handleSaveComment} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSaveComment}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <select
               value={draft.studyTitle}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, studyTitle: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  studyTitle: event.target.value,
+                }))
               }
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
             >
@@ -258,7 +292,10 @@ export default function SharedStudiesPage() {
             <input
               value={draft.authorName}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, authorName: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  authorName: event.target.value,
+                }))
               }
               placeholder="Your name"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -266,7 +303,10 @@ export default function SharedStudiesPage() {
             <textarea
               value={draft.content}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, content: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  content: event.target.value,
+                }))
               }
               rows={4}
               placeholder="Share your feedback or discussion insight"
@@ -282,7 +322,9 @@ export default function SharedStudiesPage() {
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-slate-900">Public sharing direction</h2>
+          <h2 className="text-2xl font-semibold text-slate-900">
+            Public sharing direction
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {[
               "Share a completed study as a clean public landing page",
@@ -323,7 +365,9 @@ export default function SharedStudiesPage() {
           <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <ShieldCheck className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">When sharing works best</h2>
+              <h2 className="text-2xl font-semibold">
+                When sharing works best
+              </h2>
             </div>
             <div className="mt-6 space-y-3">
               {sharingUseCases.map((item) => (

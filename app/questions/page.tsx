@@ -3,9 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { User } from "@supabase/supabase-js";
-import { BookOpen, HelpCircle, MessageSquare, Search, Sparkles } from "lucide-react";
+import {
+  BookOpen,
+  HelpCircle,
+  MessageSquare,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getBibleQuestions, saveBibleQuestion } from "@/lib/persistence";
+import { getBibleQuestions, saveBibleQuestion } from "../../lib/persistence";
 
 const BIBLE_QUESTIONS_KEY = "christian-study-guide:bible-questions";
 
@@ -79,13 +85,15 @@ export default function BibleQuestionsPage() {
         if (session) {
           const data = await getBibleQuestions();
           setSavedQuestions(
-            (data as Array<{
-              id: string;
-              question: string;
-              answer_summary: string;
-              selected_topic: string | null;
-              key_verses: string[];
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                question: string;
+                answer_summary: string;
+                selected_topic: string | null;
+                key_verses: string[];
+              }>
+            ).map((item) => ({
               id: item.id,
               question: item.question,
               answerSummary: item.answer_summary,
@@ -178,7 +186,8 @@ export default function BibleQuestionsPage() {
             </h1>
             <p className="mt-6 text-lg leading-8 text-emerald-50">
               This mode is designed for Bible answers, theological questions,
-              and discipleship conversations that need real verses, not generic advice.
+              and discipleship conversations that need real verses, not generic
+              advice.
             </p>
           </div>
         </div>
@@ -213,7 +222,9 @@ export default function BibleQuestionsPage() {
                       : "border-slate-200 bg-slate-50 hover:bg-slate-100"
                   }`}
                 >
-                  <p className="font-semibold text-slate-900">{item.question}</p>
+                  <p className="font-semibold text-slate-900">
+                    {item.question}
+                  </p>
                 </button>
               ))}
             </div>
@@ -223,7 +234,9 @@ export default function BibleQuestionsPage() {
             <div className="flex items-center justify-between gap-4 text-[#0f172a]">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-6 w-6 text-violet-700" />
-                <h2 className="text-2xl font-semibold">Scripture-anchored answer</h2>
+                <h2 className="text-2xl font-semibold">
+                  Scripture-anchored answer
+                </h2>
               </div>
               <button
                 type="button"
@@ -293,7 +306,9 @@ export default function BibleQuestionsPage() {
                   key={item.id}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
-                  <p className="font-semibold text-slate-900">{item.question}</p>
+                  <p className="font-semibold text-slate-900">
+                    {item.question}
+                  </p>
                   <p className="mt-3 text-sm leading-6 text-slate-700">
                     {item.answerSummary}
                   </p>

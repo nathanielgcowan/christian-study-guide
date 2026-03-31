@@ -3,48 +3,50 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import {
-  ArrowRight,
-  BookMarked,
-  Cross,
-  Network,
-  Shield,
-} from "lucide-react";
+import { ArrowRight, BookMarked, Cross, Network, Shield } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getTheologyTopics, saveTheologyTopic } from "@/lib/persistence";
+import { getTheologyTopics, saveTheologyTopic } from "../../lib/persistence";
 
 const THEOLOGY_TOPICS_KEY = "christian-study-guide:theology-topics";
 
 const doctrineTopics = [
   {
     title: "Salvation",
-    summary: "Grace, faith, justification, and the new life believers receive in Christ.",
+    summary:
+      "Grace, faith, justification, and the new life believers receive in Christ.",
     verses: ["Ephesians 2:8-9", "Romans 5:1", "John 3:16"],
-    views: "Broad Christian agreement on salvation by grace, with differences around order, assurance, and sacraments.",
+    views:
+      "Broad Christian agreement on salvation by grace, with differences around order, assurance, and sacraments.",
   },
   {
     title: "Trinity",
     summary: "One God in three Persons: Father, Son, and Holy Spirit.",
     verses: ["Matthew 28:19", "John 1:1-14", "2 Corinthians 13:14"],
-    views: "Historic orthodoxy affirms one essence and three Persons, while traditions vary in emphasis and language.",
+    views:
+      "Historic orthodoxy affirms one essence and three Persons, while traditions vary in emphasis and language.",
   },
   {
     title: "Heaven",
-    summary: "The hope of resurrection, the presence of God, and the renewal of all things.",
+    summary:
+      "The hope of resurrection, the presence of God, and the renewal of all things.",
     verses: ["Revelation 21:1-4", "John 14:1-3", "Philippians 3:20-21"],
-    views: "Traditions differ on intermediate state details, but center hope on resurrection and eternal life with God.",
+    views:
+      "Traditions differ on intermediate state details, but center hope on resurrection and eternal life with God.",
   },
   {
     title: "Angels",
     summary: "God's messengers and servants in redemptive history.",
     verses: ["Hebrews 1:14", "Luke 1:26-38", "Psalm 91:11"],
-    views: "Christian traditions affirm angels as created beings, while differing on how much attention believers should give them.",
+    views:
+      "Christian traditions affirm angels as created beings, while differing on how much attention believers should give them.",
   },
   {
     title: "Spiritual Warfare",
-    summary: "Resisting evil, standing in Christ, and living alert with truth and prayer.",
+    summary:
+      "Resisting evil, standing in Christ, and living alert with truth and prayer.",
     verses: ["Ephesians 6:10-18", "1 Peter 5:8-9", "James 4:7"],
-    views: "Traditions differ in tone and practice, but all emphasize Christ's victory, holiness, and discernment.",
+    views:
+      "Traditions differ in tone and practice, but all emphasize Christ's victory, holiness, and discernment.",
   },
 ];
 
@@ -58,19 +60,23 @@ const doctrineTools = [
 const doctrineTracks = [
   {
     title: "Theology basics",
-    detail: "Start with God, Scripture, sin, salvation, Christ, and the Holy Spirit before moving to harder doctrines.",
+    detail:
+      "Start with God, Scripture, sin, salvation, Christ, and the Holy Spirit before moving to harder doctrines.",
   },
   {
     title: "Christian life",
-    detail: "Study grace, repentance, sanctification, prayer, assurance, and perseverance in a practical sequence.",
+    detail:
+      "Study grace, repentance, sanctification, prayer, assurance, and perseverance in a practical sequence.",
   },
   {
     title: "Future hope",
-    detail: "Explore resurrection, heaven, judgment, the new creation, and how hope changes daily faithfulness.",
+    detail:
+      "Explore resurrection, heaven, judgment, the new creation, and how hope changes daily faithfulness.",
   },
   {
     title: "Spiritual realities",
-    detail: "Follow angels, demons, spiritual warfare, authority in Christ, and discernment without sensationalism.",
+    detail:
+      "Follow angels, demons, spiritual warfare, authority in Christ, and discernment without sensationalism.",
   },
 ];
 
@@ -100,13 +106,15 @@ export default function TheologyExplorerPage() {
         if (session) {
           const data = await getTheologyTopics();
           setSavedTopics(
-            (data as Array<{
-              id: string;
-              title: string;
-              focus: string;
-              key_verse: string | null;
-              tradition_view: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                focus: string;
+                key_verse: string | null;
+                tradition_view: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               focus: item.focus,
@@ -190,8 +198,9 @@ export default function TheologyExplorerPage() {
               Explore doctrine with Scripture, clarity, and perspective.
             </h1>
             <p className="mt-6 text-lg leading-8 text-orange-50">
-              Study key Christian doctrines through anchor verses, simple explanations,
-              and a respectful overview of denominational differences.
+              Study key Christian doctrines through anchor verses, simple
+              explanations, and a respectful overview of denominational
+              differences.
             </p>
           </div>
         </div>
@@ -204,7 +213,9 @@ export default function TheologyExplorerPage() {
               key={topic.title}
               className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
             >
-              <h2 className="text-2xl font-semibold text-[#0f172a]">{topic.title}</h2>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">
+                {topic.title}
+              </h2>
               <p className="mt-4 leading-7 text-slate-600">{topic.summary}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {topic.verses.map((verse) => (
@@ -218,8 +229,12 @@ export default function TheologyExplorerPage() {
                 ))}
               </div>
               <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                <p className="text-sm font-semibold text-amber-950">Denominational views</p>
-                <p className="mt-2 text-sm leading-6 text-amber-900">{topic.views}</p>
+                <p className="text-sm font-semibold text-amber-950">
+                  Denominational views
+                </p>
+                <p className="mt-2 text-sm leading-6 text-amber-900">
+                  {topic.views}
+                </p>
               </div>
               <button
                 type="button"
@@ -236,11 +251,14 @@ export default function TheologyExplorerPage() {
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <div className="flex items-center gap-3 text-violet-950">
               <Network className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Knowledge graph direction</h2>
+              <h2 className="text-2xl font-semibold">
+                Knowledge graph direction
+              </h2>
             </div>
             <p className="mt-4 leading-7 text-violet-900">
-              The strongest theology experience links doctrines, people, passages,
-              and themes together instead of leaving them as isolated cards.
+              The strongest theology experience links doctrines, people,
+              passages, and themes together instead of leaving them as isolated
+              cards.
             </p>
           </div>
 
@@ -250,7 +268,9 @@ export default function TheologyExplorerPage() {
                 <BookMarked className="h-6 w-6" />
                 <h2 className="text-2xl font-semibold">Saved topics</h2>
               </div>
-              {saveFeedback ? <p className="text-sm font-medium">{saveFeedback}</p> : null}
+              {saveFeedback ? (
+                <p className="text-sm font-medium">{saveFeedback}</p>
+              ) : null}
             </div>
             <div className="mt-6 grid gap-3">
               {savedTopics.length > 0 ? (
@@ -259,8 +279,12 @@ export default function TheologyExplorerPage() {
                     key={topic.id}
                     className="rounded-2xl border border-emerald-200 bg-white p-4"
                   >
-                    <p className="font-semibold text-slate-900">{topic.title}</p>
-                    <p className="mt-1 text-sm text-slate-600">{topic.keyVerse}</p>
+                    <p className="font-semibold text-slate-900">
+                      {topic.title}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {topic.keyVerse}
+                    </p>
                   </article>
                 ))
               ) : (
@@ -291,7 +315,9 @@ export default function TheologyExplorerPage() {
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center gap-3 text-slate-950">
             <BookMarked className="h-6 w-6 text-[#1e40af]" />
-            <h2 className="text-2xl font-semibold">Doctrine deep-dive direction</h2>
+            <h2 className="text-2xl font-semibold">
+              Doctrine deep-dive direction
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
@@ -313,7 +339,9 @@ export default function TheologyExplorerPage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <Cross className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">How to study doctrine well</h2>
+            <h2 className="text-2xl font-semibold">
+              How to study doctrine well
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {doctrineTools.map((item) => (
@@ -330,7 +358,9 @@ export default function TheologyExplorerPage() {
         <section className="mt-10 rounded-3xl border border-amber-200 bg-amber-50 p-8">
           <div className="flex items-center gap-3 text-amber-950">
             <Shield className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Suggested doctrine tracks</h2>
+            <h2 className="text-2xl font-semibold">
+              Suggested doctrine tracks
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {doctrineTracks.map((item) => (
@@ -338,8 +368,12 @@ export default function TheologyExplorerPage() {
                 key={item.title}
                 className="rounded-2xl border border-amber-200 bg-white p-5"
               >
-                <h3 className="text-lg font-semibold text-amber-950">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-amber-900">{item.detail}</p>
+                <h3 className="text-lg font-semibold text-amber-950">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-amber-900">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>

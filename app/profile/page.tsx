@@ -3,9 +3,16 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { BookOpen, Heart, Save, Share2, Sparkles, UserRound } from "lucide-react";
+import {
+  BookOpen,
+  Heart,
+  Save,
+  Share2,
+  Sparkles,
+  UserRound,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getPublicProfile, savePublicProfile } from "@/lib/persistence";
+import { getPublicProfile, savePublicProfile } from "../../lib/persistence";
 
 const PROFILE_STORAGE_KEY = "christian-study-guide:public-profile";
 
@@ -45,7 +52,10 @@ export default function PublicProfilePage() {
           const profile = await getPublicProfile();
           if (profile) {
             setDraft({
-              displayName: profile.display_name || session.user.email?.split("@")[0] || "Member",
+              displayName:
+                profile.display_name ||
+                session.user.email?.split("@")[0] ||
+                "Member",
               currentFocus: profile.current_focus || "",
               favoritePassages: (profile.favorite_passages || []).join(", "),
               recentHighlights: (profile.recent_highlights || []).join("\n"),
@@ -126,8 +136,8 @@ export default function PublicProfilePage() {
                 {draft.displayName}&apos;s Study Page
               </h1>
               <p className="mt-3 max-w-2xl text-lg leading-8 text-blue-100">
-                A shareable profile for favorite passages, recent study momentum,
-                and encouragement worth passing along.
+                A shareable profile for favorite passages, recent study
+                momentum, and encouragement worth passing along.
               </p>
             </div>
           </div>
@@ -220,21 +230,29 @@ export default function PublicProfilePage() {
         <section className="grid gap-6 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <Sparkles className="h-6 w-6 text-violet-700" />
-            <p className="mt-4 text-sm font-medium text-slate-600">Current focus</p>
+            <p className="mt-4 text-sm font-medium text-slate-600">
+              Current focus
+            </p>
             <p className="mt-2 text-xl font-semibold text-[#0f172a]">
               {draft.currentFocus || "Add your current study focus"}
             </p>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <Heart className="h-6 w-6 text-rose-700" />
-            <p className="mt-4 text-sm font-medium text-slate-600">Prayer milestone</p>
+            <p className="mt-4 text-sm font-medium text-slate-600">
+              Prayer milestone
+            </p>
             <p className="mt-2 text-xl font-semibold text-[#0f172a]">
-              {draft.isPublic ? "Visible to people you share with" : "Private draft"}
+              {draft.isPublic
+                ? "Visible to people you share with"
+                : "Private draft"}
             </p>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <Share2 className="h-6 w-6 text-blue-700" />
-            <p className="mt-4 text-sm font-medium text-slate-600">Profile use case</p>
+            <p className="mt-4 text-sm font-medium text-slate-600">
+              Profile use case
+            </p>
             <p className="mt-2 text-xl font-semibold text-[#0f172a]">
               Share encouragement without exposing private notes
             </p>
@@ -275,11 +293,14 @@ export default function PublicProfilePage() {
         <section className="mt-10 rounded-3xl border border-blue-200 bg-blue-50 p-8">
           <div className="flex items-center gap-3 text-blue-950">
             <Share2 className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Shared public study pages</h2>
+            <h2 className="text-2xl font-semibold">
+              Shared public study pages
+            </h2>
           </div>
           <p className="mt-4 leading-7 text-blue-900">
-            Public profiles can naturally extend into shareable study pages for saved passage work,
-            devotionals, leader guides, and mentor-shaped reflection sets.
+            Public profiles can naturally extend into shareable study pages for
+            saved passage work, devotionals, leader guides, and mentor-shaped
+            reflection sets.
           </p>
           <Link
             href="/shared-studies"

@@ -2,14 +2,21 @@
 
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Database, Languages, Scale, SplitSquareVertical, TableProperties } from "lucide-react";
+import {
+  Database,
+  Languages,
+  Scale,
+  SplitSquareVertical,
+  TableProperties,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
   getTranslationCompareStates,
   saveTranslationCompareState,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
-const TRANSLATION_COMPARE_STATES_KEY = "christian-study-guide:translation-compare-states";
+const TRANSLATION_COMPARE_STATES_KEY =
+  "christian-study-guide:translation-compare-states";
 
 const comparisonRows = [
   {
@@ -38,7 +45,9 @@ interface SavedTranslationCompareState {
 export default function TranslationsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [savedStates, setSavedStates] = useState<SavedTranslationCompareState[]>([]);
+  const [savedStates, setSavedStates] = useState<
+    SavedTranslationCompareState[]
+  >([]);
   const [saveFeedback, setSaveFeedback] = useState("");
   const [supabase] = useState(() => createClient());
 
@@ -53,14 +62,16 @@ export default function TranslationsPage() {
         if (session) {
           const data = await getTranslationCompareStates();
           setSavedStates(
-            (data as Array<{
-              id: string;
-              reference: string;
-              primary_translation: string;
-              secondary_translation: string;
-              tertiary_translation: string;
-              notes: string | null;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                reference: string;
+                primary_translation: string;
+                secondary_translation: string;
+                tertiary_translation: string;
+                notes: string | null;
+              }>
+            ).map((item) => ({
               id: item.id,
               reference: item.reference,
               primaryTranslation: item.primary_translation,
@@ -88,7 +99,8 @@ export default function TranslationsPage() {
       primary_translation: "ESV",
       secondary_translation: "NIV",
       tertiary_translation: "KJV",
-      notes: "Useful for comparing readability and doctrinal phrasing in evangelistic passages.",
+      notes:
+        "Useful for comparing readability and doctrinal phrasing in evangelistic passages.",
     };
 
     try {
@@ -118,7 +130,10 @@ export default function TranslationsPage() {
           ...savedStates,
         ];
         setSavedStates(next);
-        localStorage.setItem(TRANSLATION_COMPARE_STATES_KEY, JSON.stringify(next));
+        localStorage.setItem(
+          TRANSLATION_COMPARE_STATES_KEY,
+          JSON.stringify(next),
+        );
       }
 
       setSaveFeedback("Comparison saved");
@@ -142,9 +157,12 @@ export default function TranslationsPage() {
       <section className="bg-gradient-to-br from-[#0f172a] to-[#1e40af] py-20 text-white">
         <div className="mx-auto max-w-6xl px-6">
           <Languages className="h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">Translation Comparison</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            Translation Comparison
+          </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-blue-100">
-            Compare wording, tone, and translation philosophy side by side so users can study with more clarity.
+            Compare wording, tone, and translation philosophy side by side so
+            users can study with more clarity.
           </p>
         </div>
       </section>
@@ -154,7 +172,9 @@ export default function TranslationsPage() {
           <div className="border-b border-slate-200 px-8 py-6">
             <div className="flex items-center gap-3 text-[#0f172a]">
               <TableProperties className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold">Side-by-side verse view</h2>
+              <h2 className="text-2xl font-semibold">
+                Side-by-side verse view
+              </h2>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -169,11 +189,22 @@ export default function TranslationsPage() {
               </thead>
               <tbody>
                 {comparisonRows.map((row) => (
-                  <tr key={row.verse} className="border-t border-slate-200 align-top">
-                    <td className="px-6 py-5 font-semibold text-slate-900">{row.verse}</td>
-                    <td className="px-6 py-5 leading-6 text-slate-600">{row.esv}</td>
-                    <td className="px-6 py-5 leading-6 text-slate-600">{row.niv}</td>
-                    <td className="px-6 py-5 leading-6 text-slate-600">{row.kjv}</td>
+                  <tr
+                    key={row.verse}
+                    className="border-t border-slate-200 align-top"
+                  >
+                    <td className="px-6 py-5 font-semibold text-slate-900">
+                      {row.verse}
+                    </td>
+                    <td className="px-6 py-5 leading-6 text-slate-600">
+                      {row.esv}
+                    </td>
+                    <td className="px-6 py-5 leading-6 text-slate-600">
+                      {row.niv}
+                    </td>
+                    <td className="px-6 py-5 leading-6 text-slate-600">
+                      {row.kjv}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -184,23 +215,32 @@ export default function TranslationsPage() {
         <section className="mt-10 grid gap-6 md:grid-cols-3">
           <article className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <SplitSquareVertical className="h-6 w-6 text-violet-900" />
-            <h2 className="mt-4 text-2xl font-semibold text-violet-950">Study depth</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-violet-950">
+              Study depth
+            </h2>
             <p className="mt-4 text-sm leading-6 text-violet-900">
-              Useful for seeing where wording changes affect tone, precision, or readability.
+              Useful for seeing where wording changes affect tone, precision, or
+              readability.
             </p>
           </article>
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <Scale className="h-6 w-6 text-emerald-900" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">Translation philosophy</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+              Translation philosophy
+            </h2>
             <p className="mt-4 text-sm leading-6 text-emerald-900">
-              Surface formal versus dynamic translation choices so beginners understand the differences.
+              Surface formal versus dynamic translation choices so beginners
+              understand the differences.
             </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <Languages className="h-6 w-6 text-amber-900" />
-            <h2 className="mt-4 text-2xl font-semibold text-amber-950">Best next step</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-amber-950">
+              Best next step
+            </h2>
             <p className="mt-4 text-sm leading-6 text-amber-900">
-              Connect this to the passage page so users can compare translations without leaving their study flow.
+              Connect this to the passage page so users can compare translations
+              without leaving their study flow.
             </p>
           </article>
         </section>
@@ -208,7 +248,9 @@ export default function TranslationsPage() {
         <section className="mt-10 rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
           <div className="flex items-center gap-3 text-emerald-950">
             <Database className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Real-data comparison direction</h2>
+            <h2 className="text-2xl font-semibold">
+              Real-data comparison direction
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {[
@@ -228,7 +270,9 @@ export default function TranslationsPage() {
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-[#0f172a]">Saved comparisons</h2>
+            <h2 className="text-2xl font-semibold text-[#0f172a]">
+              Saved comparisons
+            </h2>
             <button
               type="button"
               onClick={handleSaveState}
@@ -238,7 +282,9 @@ export default function TranslationsPage() {
             </button>
           </div>
           {saveFeedback ? (
-            <p className="mt-3 text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+            <p className="mt-3 text-sm font-semibold text-emerald-700">
+              {saveFeedback}
+            </p>
           ) : null}
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {savedStates.length > 0 ? (
@@ -247,23 +293,31 @@ export default function TranslationsPage() {
                   key={state.id}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
-                  <h3 className="text-lg font-semibold text-slate-900">{state.reference}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {state.reference}
+                  </h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
-                    {state.primaryTranslation} • {state.secondaryTranslation} • {state.tertiaryTranslation}
+                    {state.primaryTranslation} • {state.secondaryTranslation} •{" "}
+                    {state.tertiaryTranslation}
                   </p>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{state.notes}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {state.notes}
+                  </p>
                 </article>
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
-                Save translation compare states so preferred verse comparisons carry across devices.
+                Save translation compare states so preferred verse comparisons
+                carry across devices.
               </div>
             )}
           </div>
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-slate-900">Translation depth worth adding</h2>
+          <h2 className="text-2xl font-semibold text-slate-900">
+            Translation depth worth adding
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
               "Explain why wording changes matter in study, doctrine, and memorization",

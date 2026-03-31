@@ -7,24 +7,28 @@ import {
   WifiOff,
   Zap,
 } from "lucide-react";
-import { mobileSystems } from "@/lib/product-expansion";
+import { mobileSystems } from "../../lib/product-expansion";
 
 const mobileLayers = [
   {
     title: "Installable experience",
-    detail: "Treat the app like a daily mobile tool with homescreen presence and stronger session continuity.",
+    detail:
+      "Treat the app like a daily mobile tool with homescreen presence and stronger session continuity.",
   },
   {
     title: "Offline reading",
-    detail: "Cache passages, saved studies, and devotionals for low-connection moments.",
+    detail:
+      "Cache passages, saved studies, and devotionals for low-connection moments.",
   },
   {
     title: "Persistent audio",
-    detail: "Keep Scripture audio and devotional playback feeling steady on phones.",
+    detail:
+      "Keep Scripture audio and devotional playback feeling steady on phones.",
   },
   {
     title: "Touch-first study tools",
-    detail: "Larger tap targets, quicker save flows, and fewer desktop-only assumptions.",
+    detail:
+      "Larger tap targets, quicker save flows, and fewer desktop-only assumptions.",
   },
 ];
 
@@ -42,8 +46,9 @@ export default function MobilePage() {
               Make daily Bible study feel native on the phone.
             </h1>
             <p className="mt-6 text-lg leading-8 text-cyan-50">
-              A strong discipleship product should work beautifully during commute,
-              lunch break, quiet time, and church life, not just on a laptop.
+              A strong discipleship product should work beautifully during
+              commute, lunch break, quiet time, and church life, not just on a
+              laptop.
             </p>
           </div>
         </div>
@@ -68,23 +73,32 @@ export default function MobilePage() {
         <section className="mt-10 grid gap-6 lg:grid-cols-3">
           <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <Download className="h-6 w-6 text-emerald-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">Install flow</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-emerald-950">
+              Install flow
+            </h2>
             <p className="mt-4 leading-7 text-emerald-900">
-              Better install prompts, offline states, and app-shell polish make the habit loop stronger.
+              Better install prompts, offline states, and app-shell polish make
+              the habit loop stronger.
             </p>
           </article>
           <article className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <Headphones className="h-6 w-6 text-violet-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-violet-950">Audio mode</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-violet-950">
+              Audio mode
+            </h2>
             <p className="mt-4 leading-7 text-violet-900">
-              Scripture, prayer, and devotional playback should feel first-class on mobile.
+              Scripture, prayer, and devotional playback should feel first-class
+              on mobile.
             </p>
           </article>
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8">
             <BellRing className="h-6 w-6 text-amber-950" />
-            <h2 className="mt-4 text-2xl font-semibold text-amber-950">Reminder stack</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-amber-950">
+              Reminder stack
+            </h2>
             <p className="mt-4 leading-7 text-amber-900">
-              Reading nudges, prayer follow-ups, and journey checkpoints matter more on phones than desktops.
+              Reading nudges, prayer follow-ups, and journey checkpoints matter
+              more on phones than desktops.
             </p>
           </article>
         </section>
@@ -95,8 +109,9 @@ export default function MobilePage() {
             <h2 className="text-2xl font-semibold">Offline-first direction</h2>
           </div>
           <p className="mt-4 max-w-3xl leading-7 text-blue-900">
-            The app already has a manifest. The next mobile leap is reliable offline passage access,
-            cached study sessions, and resilient audio behavior that does not depend on perfect connectivity.
+            The app already has a manifest. The next mobile leap is reliable
+            offline passage access, cached study sessions, and resilient audio
+            behavior that does not depend on perfect connectivity.
           </p>
         </section>
 
@@ -130,7 +145,9 @@ export default function MobilePage() {
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-emerald-950">{item.detail}</p>
+                <p className="mt-3 text-sm leading-6 text-emerald-950">
+                  {item.detail}
+                </p>
               </article>
             ))}
           </div>
@@ -140,7 +157,9 @@ export default function MobilePage() {
           <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <Download className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">PWA and offline direction</h2>
+              <h2 className="text-2xl font-semibold">
+                PWA and offline direction
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {[
@@ -165,8 +184,9 @@ export default function MobilePage() {
               <h2 className="text-2xl font-semibold">Voice on mobile</h2>
             </div>
             <p className="mt-4 text-sm leading-7 text-violet-900">
-              Voice and audio are part of mobile polish, not a side idea. Scripture playback,
-              spoken Q&amp;A, and prayer prompts become much more valuable on phones.
+              Voice and audio are part of mobile polish, not a side idea.
+              Scripture playback, spoken Q&amp;A, and prayer prompts become much
+              more valuable on phones.
             </p>
           </aside>
         </section>

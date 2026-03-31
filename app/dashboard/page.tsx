@@ -30,7 +30,7 @@ import {
   getStudySessions,
   getWorkflowRuns,
   saveDashboardState,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 import {
   buildContinuityMoments,
   buildRecommendations,
@@ -50,7 +50,8 @@ const todayStudy = {
   explanation:
     "James teaches believers to see trials through the lens of spiritual formation, because testing produces endurance.",
   reflection: "What trial are you facing that needs a new perspective today?",
-  prayer: "Ask God for perseverance, wisdom, and joy in the middle of pressure.",
+  prayer:
+    "Ask God for perseverance, wisdom, and joy in the middle of pressure.",
   quiz: "What does James say trials produce?",
 };
 
@@ -69,13 +70,15 @@ const dashboardCards = [
   },
   {
     title: "Memorization review",
-    detail: "2 verses are due for review today with fill-in-the-blank practice.",
+    detail:
+      "2 verses are due for review today with fill-in-the-blank practice.",
     href: "/memorize",
     icon: CheckCircle2,
   },
   {
     title: "Prayer reminder",
-    detail: "Update your family guidance prayer request and mark answered prayers.",
+    detail:
+      "Update your family guidance prayer request and mark answered prayers.",
     href: "/prayer",
     icon: BellRing,
   },
@@ -118,7 +121,8 @@ const spiritualMilestones = [
 const surpriseStudy = {
   title: "Wisdom when you need direction",
   reference: "Proverbs 3:5-6",
-  detail: "A one-tap study with a quick explanation, reflection prompt, and prayer for guidance.",
+  detail:
+    "A one-tap study with a quick explanation, reflection prompt, and prayer for guidance.",
 };
 
 interface SavedDashboardState {
@@ -164,26 +168,35 @@ export default function DashboardPage() {
         setUser(session?.user ?? null);
 
         if (session) {
-          const [data, activity, journeys, preferences, prayers, sessions, workflows] =
-            await Promise.all([
-              getDashboardStates(),
-              getActivityTimeline(),
-              getJourneys(),
-              getPersonalizationPreferences(),
-              getPrayerEntries(),
-              getStudySessions(),
-              getWorkflowRuns(),
-            ]);
+          const [
+            data,
+            activity,
+            journeys,
+            preferences,
+            prayers,
+            sessions,
+            workflows,
+          ] = await Promise.all([
+            getDashboardStates(),
+            getActivityTimeline(),
+            getJourneys(),
+            getPersonalizationPreferences(),
+            getPrayerEntries(),
+            getStudySessions(),
+            getWorkflowRuns(),
+          ]);
           setSavedStates(
-            (data as Array<{
-              id: string;
-              title: string;
-              topic: string;
-              reading: string;
-              summary: string;
-              focus_mode: string;
-              reminder_state: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                topic: string;
+                reading: string;
+                summary: string;
+                focus_mode: string;
+                reminder_state: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               topic: item.topic,
@@ -196,7 +209,8 @@ export default function DashboardPage() {
           setDashboardData({
             activity: activity as ActivityItem[],
             journeys: journeys as JourneyItem[],
-            preferences: (preferences as PersonalizationPreferencesItem | null) ?? null,
+            preferences:
+              (preferences as PersonalizationPreferencesItem | null) ?? null,
             prayers: prayers as PrayerEntryItem[],
             sessions: sessions as StudySessionItem[],
             workflows: workflows as WorkflowRunItem[],
@@ -257,7 +271,15 @@ export default function DashboardPage() {
           ...current,
         ]);
       } else {
-        const next = [{ id: `${Date.now()}`, ...payload, focusMode: payload.focus_mode, reminderState: payload.reminder_state }, ...savedStates];
+        const next = [
+          {
+            id: `${Date.now()}`,
+            ...payload,
+            focusMode: payload.focus_mode,
+            reminderState: payload.reminder_state,
+          },
+          ...savedStates,
+        ];
         setSavedStates(next);
         localStorage.setItem(DASHBOARD_STATES_KEY, JSON.stringify(next));
       }
@@ -291,8 +313,8 @@ export default function DashboardPage() {
               One place for today&apos;s study, growth habits, and next steps.
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
-              This is the practical home screen: what to read, what to review, what to pray,
-              and where your guided journey is headed next.
+              This is the practical home screen: what to read, what to review,
+              what to pray, and where your guided journey is headed next.
             </p>
           </div>
         </div>
@@ -315,21 +337,37 @@ export default function DashboardPage() {
                 </h3>
               </div>
               <div className="rounded-2xl border border-slate-200 p-5">
-                <p className="text-sm font-semibold text-slate-900">AI explanation</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{todayStudy.explanation}</p>
+                <p className="text-sm font-semibold text-slate-900">
+                  AI explanation
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {todayStudy.explanation}
+                </p>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-2xl border border-slate-200 p-5">
-                  <p className="text-sm font-semibold text-slate-900">Reflection</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{todayStudy.reflection}</p>
+                  <p className="text-sm font-semibold text-slate-900">
+                    Reflection
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {todayStudy.reflection}
+                  </p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 p-5">
-                  <p className="text-sm font-semibold text-slate-900">Prayer prompt</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{todayStudy.prayer}</p>
+                  <p className="text-sm font-semibold text-slate-900">
+                    Prayer prompt
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {todayStudy.prayer}
+                  </p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 p-5">
-                  <p className="text-sm font-semibold text-slate-900">Quiz check</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{todayStudy.quiz}</p>
+                  <p className="text-sm font-semibold text-slate-900">
+                    Quiz check
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {todayStudy.quiz}
+                  </p>
                 </div>
               </div>
             </div>
@@ -341,7 +379,9 @@ export default function DashboardPage() {
               Save dashboard snapshot
             </button>
             {saveFeedback ? (
-              <p className="mt-3 text-sm font-semibold text-emerald-700">{saveFeedback}</p>
+              <p className="mt-3 text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
             ) : null}
           </article>
 
@@ -357,8 +397,12 @@ export default function DashboardPage() {
                     key={metric.label}
                     className="rounded-2xl border border-amber-200 bg-white p-5"
                   >
-                    <p className="text-sm font-medium text-amber-900">{metric.label}</p>
-                    <p className="mt-2 text-2xl font-bold text-amber-950">{metric.value}</p>
+                    <p className="text-sm font-medium text-amber-900">
+                      {metric.label}
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-amber-950">
+                      {metric.value}
+                    </p>
                   </article>
                 ))}
               </div>
@@ -371,7 +415,10 @@ export default function DashboardPage() {
               </div>
               <div className="mt-6 grid gap-3">
                 {[
-                  { label: "Open today’s passage", href: "/passage/james-1-2-4" },
+                  {
+                    label: "Open today’s passage",
+                    href: "/passage/james-1-2-4",
+                  },
                   { label: "Resume guided path", href: "/paths" },
                   { label: "Check notifications", href: "/notifications" },
                   { label: "Open prayer journal", href: "/prayer" },
@@ -400,8 +447,12 @@ export default function DashboardPage() {
                 className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
                 <Icon className="h-6 w-6 text-[#1e40af]" />
-                <h2 className="mt-4 text-xl font-semibold text-slate-900">{card.title}</h2>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{card.detail}</p>
+                <h2 className="mt-4 text-xl font-semibold text-slate-900">
+                  {card.title}
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  {card.detail}
+                </p>
               </Link>
             );
           })}
@@ -411,7 +462,9 @@ export default function DashboardPage() {
           <div className="rounded-3xl border border-blue-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3 text-slate-950">
               <BrainCircuit className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold">Personalized next steps</h2>
+              <h2 className="text-2xl font-semibold">
+                Personalized next steps
+              </h2>
             </div>
             <div className="mt-6 grid gap-4">
               {recommendedNextSteps.map((item) => (
@@ -421,13 +474,19 @@ export default function DashboardPage() {
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5 transition hover:border-blue-200 hover:bg-blue-50"
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
+                    <h3 className="text-lg font-semibold text-slate-950">
+                      {item.title}
+                    </h3>
                     <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
                       {item.theme}
                     </span>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.detail}</p>
-                  <p className="mt-3 text-sm font-medium text-[#1e40af]">{item.reason}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {item.detail}
+                  </p>
+                  <p className="mt-3 text-sm font-medium text-[#1e40af]">
+                    {item.reason}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -436,7 +495,9 @@ export default function DashboardPage() {
           <aside className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <Clock3 className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Continue where you left off</h2>
+              <h2 className="text-2xl font-semibold">
+                Continue where you left off
+              </h2>
             </div>
             <div className="mt-6 grid gap-3">
               {continuityMoments.length > 0 ? (
@@ -449,13 +510,18 @@ export default function DashboardPage() {
                     <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
                       {item.category}
                     </p>
-                    <h3 className="mt-2 text-sm font-semibold text-emerald-950">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.detail}</p>
+                    <h3 className="mt-2 text-sm font-semibold text-emerald-950">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {item.detail}
+                    </p>
                   </Link>
                 ))
               ) : (
                 <div className="rounded-2xl border border-dashed border-emerald-300 bg-white p-4 text-sm text-emerald-950">
-                  Save a study, prayer, or journey update and the dashboard will bring it back here.
+                  Save a study, prayer, or journey update and the dashboard will
+                  bring it back here.
                 </div>
               )}
             </div>
@@ -465,7 +531,9 @@ export default function DashboardPage() {
         <section className="mt-10 rounded-3xl border border-amber-200 bg-amber-50 p-8">
           <div className="flex items-center gap-3 text-amber-950">
             <Clock3 className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">A stronger daily home experience</h2>
+            <h2 className="text-2xl font-semibold">
+              A stronger daily home experience
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {todayFlow.map((item) => (
@@ -483,11 +551,18 @@ export default function DashboardPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3 text-slate-950">
               <BookOpenText className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold">Structured daily journey</h2>
+              <h2 className="text-2xl font-semibold">
+                Structured daily journey
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {todayFlow.map((item, index) => {
-                const icons = [BookOpenText, NotebookPen, HeartHandshake, Target];
+                const icons = [
+                  BookOpenText,
+                  NotebookPen,
+                  HeartHandshake,
+                  Target,
+                ];
                 const Icon = icons[index] || BookOpenText;
                 return (
                   <article
@@ -495,7 +570,9 @@ export default function DashboardPage() {
                     className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                   >
                     <Icon className="h-5 w-5 text-[#1e40af]" />
-                    <p className="mt-3 text-sm font-medium leading-6 text-slate-700">{item}</p>
+                    <p className="mt-3 text-sm font-medium leading-6 text-slate-700">
+                      {item}
+                    </p>
                   </article>
                 );
               })}
@@ -545,13 +622,19 @@ export default function DashboardPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
               {surpriseStudy.reference}
             </p>
-            <h3 className="mt-2 text-xl font-semibold text-slate-900">{surpriseStudy.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600">{surpriseStudy.detail}</p>
+            <h3 className="mt-2 text-xl font-semibold text-slate-900">
+              {surpriseStudy.title}
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              {surpriseStudy.detail}
+            </p>
           </div>
         </section>
 
         <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#0f172a]">Saved dashboard snapshots</h2>
+          <h2 className="text-2xl font-semibold text-[#0f172a]">
+            Saved dashboard snapshots
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {savedStates.length > 0 ? (
               savedStates.map((item) => (
@@ -559,16 +642,21 @@ export default function DashboardPage() {
                   key={item.id}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
-                  <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {item.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
                     {item.topic} • {item.reading}
                   </p>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.summary}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {item.summary}
+                  </p>
                 </article>
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
-                Save a dashboard snapshot to keep today&apos;s study state across devices.
+                Save a dashboard snapshot to keep today&apos;s study state
+                across devices.
               </div>
             )}
           </div>
@@ -589,7 +677,9 @@ export default function DashboardPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
                     Quest {index + 1}
                   </p>
-                  <p className="mt-2 text-sm font-medium text-amber-950">{quest}</p>
+                  <p className="mt-2 text-sm font-medium text-amber-950">
+                    {quest}
+                  </p>
                 </article>
               ))}
             </div>
@@ -624,7 +714,9 @@ export default function DashboardPage() {
           <div className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
             <div className="flex items-center gap-3 text-violet-950">
               <Sparkle className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Personalization in the dashboard</h2>
+              <h2 className="text-2xl font-semibold">
+                Personalization in the dashboard
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {[
@@ -646,11 +738,14 @@ export default function DashboardPage() {
           <aside className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <Target className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Professional dashboard direction</h2>
+              <h2 className="text-2xl font-semibold">
+                Professional dashboard direction
+              </h2>
             </div>
             <p className="mt-4 text-sm leading-6 text-blue-900">
-              The dashboard becomes the app’s real home when it blends reminders,
-              personalization, saved state, and actionable next steps instead of just showing stats.
+              The dashboard becomes the app’s real home when it blends
+              reminders, personalization, saved state, and actionable next steps
+              instead of just showing stats.
             </p>
           </aside>
         </section>

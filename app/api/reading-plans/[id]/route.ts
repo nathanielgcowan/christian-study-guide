@@ -2,6 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth-server';
 
+interface ReadingPlanUpdatePayload {
+  planId?: string;
+  currentDay?: number;
+  completed?: boolean;
+}
+
+interface ReadingPlanUpdates {
+  updated_at: string;
+  current_day?: number;
+  completed?: boolean;
+  completed_at?: string;
+}
+
 export async function PATCH(request: NextRequest) {
   try {
     const user = await getCurrentUser();
@@ -9,7 +22,8 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { planId, currentDay, completed } = await request.json();
+    const { planId, currentDay, completed } =
+      (await request.json()) as ReadingPlanUpdatePayload;
 
     if (!planId) {
       return NextResponse.json(
@@ -21,7 +35,7 @@ export async function PATCH(request: NextRequest) {
     const supabase = await createClient();
 
     // Update progress
-    const updates: any = {
+    const updates: ReadingPlanUpdates = {
       updated_at: new Date().toISOString(),
     };
 

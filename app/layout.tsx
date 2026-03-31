@@ -18,11 +18,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-sans bg-[#f8fafc] text-[#1f2937] antialiased">
+      <body
+        className="font-sans antialiased"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--color-primary) 70%, var(--color-background) 100%)",
+          color: "var(--color-text-primary)",
+        }}
+      >
         <SkipToMain />
         <Header />
 
-        <main id="main-content" className="min-h-screen focus:outline-none">
+        <main
+          id="main-content"
+          className="min-h-screen focus:outline-none"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--color-background) 80%, var(--color-gold) 100%)",
+            borderTop: "4px solid var(--color-gold)",
+            borderBottom: "4px solid var(--color-gold)",
+          }}
+        >
           {children}
         </main>
 

@@ -2,12 +2,19 @@
 
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { BrainCircuit, Compass, GitBranch, HeartHandshake, Sparkles, Target } from "lucide-react";
+import {
+  BrainCircuit,
+  Compass,
+  GitBranch,
+  HeartHandshake,
+  Sparkles,
+  Target,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
   getPersonalizationPreferences,
   savePersonalizationPreferences,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const PERSONALIZATION_KEY = "christian-study-guide:personalization-preferences";
 
@@ -21,15 +28,18 @@ const inputs = [
 const graphMoments = [
   {
     title: "Study -> Prayer",
-    description: "Link a passage insight to a live prayer burden and a follow-up prompt.",
+    description:
+      "Link a passage insight to a live prayer burden and a follow-up prompt.",
   },
   {
     title: "Mentor -> Goal",
-    description: "Turn mentor advice into a measurable next-step goal instead of leaving it as inspiration.",
+    description:
+      "Turn mentor advice into a measurable next-step goal instead of leaving it as inspiration.",
   },
   {
     title: "Note -> Collection -> Plan",
-    description: "Promote strong notes into collections and then into custom study plans.",
+    description:
+      "Promote strong notes into collections and then into custom study plans.",
   },
 ];
 
@@ -134,8 +144,9 @@ export default function PersonalizationPage() {
               Make the product respond to the person, not just the passage.
             </h1>
             <p className="mt-6 text-lg leading-8 text-blue-100">
-              This layer connects preferences, habits, struggles, history, and goals
-              so every recommendation starts to feel more guided and less generic.
+              This layer connects preferences, habits, struggles, history, and
+              goals so every recommendation starts to feel more guided and less
+              generic.
             </p>
           </div>
         </div>
@@ -145,13 +156,18 @@ export default function PersonalizationPage() {
         <section className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center gap-3 text-[#0f172a]">
             <Sparkles className="h-6 w-6 text-violet-700" />
-            <h2 className="text-2xl font-semibold">Save personalization profile</h2>
+            <h2 className="text-2xl font-semibold">
+              Save personalization profile
+            </h2>
           </div>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Keep your favorite themes, current struggles, growth goals, and tone
             preference synced with your account.
           </p>
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
+          <form
+            onSubmit={handleSave}
+            className="mt-6 grid gap-4 md:grid-cols-2"
+          >
             <input
               value={preferences.favoriteThemes}
               onChange={(event) =>
@@ -208,7 +224,9 @@ export default function PersonalizationPage() {
                 Save personalization profile
               </button>
               {savedMessage ? (
-                <p className="text-sm font-medium text-emerald-700">{savedMessage}</p>
+                <p className="text-sm font-medium text-emerald-700">
+                  {savedMessage}
+                </p>
               ) : null}
             </div>
           </form>
@@ -235,12 +253,14 @@ export default function PersonalizationPage() {
           <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <GitBranch className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Cross-device discipleship graph</h2>
+              <h2 className="text-2xl font-semibold">
+                Cross-device discipleship graph
+              </h2>
             </div>
             <p className="mt-4 leading-7 text-emerald-950">
-              Instead of treating notes, goals, prayer, mentor moments, and studies as
-              isolated records, connect them into one growth graph that follows the
-              user across devices.
+              Instead of treating notes, goals, prayer, mentor moments, and
+              studies as isolated records, connect them into one growth graph
+              that follows the user across devices.
             </p>
             <div className="mt-6 grid gap-4">
               {graphMoments.map((moment) => (
@@ -248,7 +268,9 @@ export default function PersonalizationPage() {
                   key={moment.title}
                   className="rounded-2xl border border-emerald-200 bg-white p-5"
                 >
-                  <p className="font-semibold text-emerald-950">{moment.title}</p>
+                  <p className="font-semibold text-emerald-950">
+                    {moment.title}
+                  </p>
                   <p className="mt-2 text-sm leading-6 text-emerald-900">
                     {moment.description}
                   </p>
@@ -265,8 +287,8 @@ export default function PersonalizationPage() {
               Dynamic study paths
             </h2>
             <p className="mt-4 leading-7 text-amber-900">
-              Recommend the next passage, plan, mentor prompt, or prayer practice
-              based on what someone actually needs now.
+              Recommend the next passage, plan, mentor prompt, or prayer
+              practice based on what someone actually needs now.
             </p>
           </article>
           <article className="rounded-3xl border border-violet-200 bg-violet-50 p-8">
@@ -285,8 +307,8 @@ export default function PersonalizationPage() {
               Goal-aware guidance
             </h2>
             <p className="mt-4 leading-7 text-blue-900">
-              Tie recommendations to goals like consistency, depth, prayer habits,
-              memory work, leadership prep, or family discipleship.
+              Tie recommendations to goals like consistency, depth, prayer
+              habits, memory work, leadership prep, or family discipleship.
             </p>
           </article>
         </section>
@@ -294,7 +316,9 @@ export default function PersonalizationPage() {
         <section className="mt-10 rounded-3xl border border-amber-200 bg-amber-50 p-8">
           <div className="flex items-center gap-3 text-amber-950">
             <Compass className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Professional personalization outcomes</h2>
+            <h2 className="text-2xl font-semibold">
+              Professional personalization outcomes
+            </h2>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[

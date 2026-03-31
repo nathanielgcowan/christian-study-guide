@@ -19,7 +19,7 @@ import {
   getWorkspaceResources,
   saveWorkspaceCollaborator,
   saveWorkspaceResource,
-} from "@/lib/persistence";
+} from "../../lib/persistence";
 
 const WORKSPACE_STORAGE_KEY = "christian-study-guide:workspace-resources";
 const ACTIVITY_STORAGE_KEY = "christian-study-guide:activity-timeline";
@@ -64,7 +64,9 @@ const initialWorkspaceBoards: WorkspaceBoard[] = [
 ];
 
 export default function WorkspacePage() {
-  const [boards, setBoards] = useState<WorkspaceBoard[]>(initialWorkspaceBoards);
+  const [boards, setBoards] = useState<WorkspaceBoard[]>(
+    initialWorkspaceBoards,
+  );
   const [draft, setDraft] = useState({
     title: "",
     summary: "",
@@ -75,7 +77,9 @@ export default function WorkspacePage() {
     collaboratorName: "",
     collaboratorRole: "member",
   });
-  const [collaborators, setCollaborators] = useState<WorkspaceCollaborator[]>([]);
+  const [collaborators, setCollaborators] = useState<WorkspaceCollaborator[]>(
+    [],
+  );
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
@@ -91,17 +95,19 @@ export default function WorkspacePage() {
         if (session) {
           const data = await getWorkspaceResources();
           setBoards(
-            (data as Array<{
-              id: string;
-              title: string;
-              summary: string;
-              resource_type: string;
-            }>).map((item) => ({
+            (
+              data as Array<{
+                id: string;
+                title: string;
+                summary: string;
+                resource_type: string;
+              }>
+            ).map((item) => ({
               id: item.id,
               title: item.title,
               summary: item.summary,
               resourceType: item.resource_type,
-            }))
+            })),
           );
           const primaryResourceId =
             (data as Array<{ id: string }>)[0]?.id ?? "";
@@ -110,19 +116,22 @@ export default function WorkspacePage() {
             workspaceResourceId: primaryResourceId,
           }));
           if (primaryResourceId) {
-            const collaboratorData = await getWorkspaceCollaborators(primaryResourceId);
+            const collaboratorData =
+              await getWorkspaceCollaborators(primaryResourceId);
             setCollaborators(
-              (collaboratorData as Array<{
-                id: string;
-                workspace_resource_id: string;
-                collaborator_name: string;
-                collaborator_role: string;
-              }>).map((item) => ({
+              (
+                collaboratorData as Array<{
+                  id: string;
+                  workspace_resource_id: string;
+                  collaborator_name: string;
+                  collaborator_role: string;
+                }>
+              ).map((item) => ({
                 id: item.id,
                 workspaceResourceId: item.workspace_resource_id,
                 collaboratorName: item.collaborator_name,
                 collaboratorRole: item.collaborator_role,
-              }))
+              })),
             );
           }
         } else {
@@ -158,7 +167,7 @@ export default function WorkspacePage() {
         const saved = await saveWorkspaceResource(
           draft.title,
           draft.resourceType,
-          draft.summary
+          draft.summary,
         );
         setBoards((current) => [
           {
@@ -182,23 +191,25 @@ export default function WorkspacePage() {
         setBoards(nextBoards);
         localStorage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(nextBoards));
         const existingActivity = JSON.parse(
-          localStorage.getItem(ACTIVITY_STORAGE_KEY) || "[]"
+          localStorage.getItem(ACTIVITY_STORAGE_KEY) || "[]",
         ) as Array<Record<string, unknown>>;
         localStorage.setItem(
           ACTIVITY_STORAGE_KEY,
-          JSON.stringify([
-            {
-              id: `workspace-${Date.now()}`,
-              event_type: "workspace_resource_created",
-              reference: null,
-              metadata: {
-                title: draft.title,
-                resource_type: draft.resourceType,
+          JSON.stringify(
+            [
+              {
+                id: `workspace-${Date.now()}`,
+                event_type: "workspace_resource_created",
+                reference: null,
+                metadata: {
+                  title: draft.title,
+                  resource_type: draft.resourceType,
+                },
+                created_at: new Date().toISOString(),
               },
-              created_at: new Date().toISOString(),
-            },
-            ...existingActivity,
-          ].slice(0, 30))
+              ...existingActivity,
+            ].slice(0, 30),
+          ),
         );
       }
 
@@ -222,7 +233,7 @@ export default function WorkspacePage() {
         const saved = await saveWorkspaceCollaborator(
           collaboratorDraft.workspaceResourceId,
           collaboratorDraft.collaboratorName,
-          collaboratorDraft.collaboratorRole
+          collaboratorDraft.collaboratorRole,
         );
         setCollaborators((current) => [
           {
@@ -244,7 +255,10 @@ export default function WorkspacePage() {
           ...collaborators,
         ];
         setCollaborators(nextCollaborators);
-        localStorage.setItem(COLLAB_STORAGE_KEY, JSON.stringify(nextCollaborators));
+        localStorage.setItem(
+          COLLAB_STORAGE_KEY,
+          JSON.stringify(nextCollaborators),
+        );
       }
 
       setCollaboratorDraft((current) => ({
@@ -291,11 +305,17 @@ export default function WorkspacePage() {
           <h2 className="text-2xl font-semibold text-[#0f172a]">
             Save a workspace resource
           </h2>
-          <form onSubmit={handleAddResource} className="mt-6 grid gap-4 md:grid-cols-3">
+          <form
+            onSubmit={handleAddResource}
+            className="mt-6 grid gap-4 md:grid-cols-3"
+          >
             <input
               value={draft.title}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, title: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  title: event.target.value,
+                }))
               }
               placeholder="Resource title"
               className="rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#1e40af]"
@@ -323,7 +343,10 @@ export default function WorkspacePage() {
             <textarea
               value={draft.summary}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, summary: event.target.value }))
+                setDraft((current) => ({
+                  ...current,
+                  summary: event.target.value,
+                }))
               }
               placeholder="What is this workspace resource for?"
               rows={3}
@@ -356,7 +379,9 @@ export default function WorkspacePage() {
           <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-center gap-3 text-blue-950">
               <LayoutPanelTop className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">What a workspace can hold</h2>
+              <h2 className="text-2xl font-semibold">
+                What a workspace can hold
+              </h2>
             </div>
             <ul className="mt-5 space-y-4 text-sm leading-6 text-blue-950">
               <li>• Shared lesson drafts and sermon starter outlines</li>
@@ -373,8 +398,8 @@ export default function WorkspacePage() {
             </div>
             <p className="mt-4 leading-7 text-slate-700">
               Today, leaders can already use saved study sessions, passage
-              sharing, sermon tools, and community pages together. This workspace
-              page makes that premium direction visible.
+              sharing, sermon tools, and community pages together. This
+              workspace page makes that premium direction visible.
             </p>
             <Link
               href="/leaders"
@@ -401,11 +426,14 @@ export default function WorkspacePage() {
         <section className="mt-12 rounded-3xl border border-violet-200 bg-violet-50 p-8">
           <div className="flex items-center gap-3 text-violet-950">
             <MicVocal className="h-6 w-6" />
-            <h2 className="text-2xl font-semibold">Sermon and lesson workspace</h2>
+            <h2 className="text-2xl font-semibold">
+              Sermon and lesson workspace
+            </h2>
           </div>
           <p className="mt-4 leading-7 text-violet-950">
             This is the premium leader studio for outline drafts, illustrations,
-            handouts, exports, team comments, and teaching prep workflows in one place.
+            handouts, exports, team comments, and teaching prep workflows in one
+            place.
           </p>
         </section>
 
@@ -473,7 +501,7 @@ export default function WorkspacePage() {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {collaborators.map((collaborator) => {
               const resource = boards.find(
-                (board) => board.id === collaborator.workspaceResourceId
+                (board) => board.id === collaborator.workspaceResourceId,
               );
               return (
                 <article
@@ -487,7 +515,8 @@ export default function WorkspacePage() {
                     {collaborator.collaboratorRole}
                   </p>
                   <p className="mt-3 text-sm text-slate-600">
-                    Working on {resource?.title || "selected workspace resource"}
+                    Working on{" "}
+                    {resource?.title || "selected workspace resource"}
                   </p>
                 </article>
               );

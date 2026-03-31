@@ -19,7 +19,10 @@ import {
   Trophy,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getGamificationProgress, saveGamificationProgress } from "@/lib/persistence";
+import {
+  getGamificationProgress,
+  saveGamificationProgress,
+} from "../../lib/persistence";
 
 const GAMIFICATION_PROGRESS_KEY = "christian-study-guide:gamification-progress";
 
@@ -60,16 +63,34 @@ const weeklySystems = [
 
 const badgeShelf = [
   { name: "Bible Beginner", summary: "Finish your first guided path." },
-  { name: "Gospel Explorer", summary: "Complete a Gospel-focused study track." },
-  { name: "Faithful for 30 Days", summary: "Keep a 30-day study streak alive." },
+  {
+    name: "Gospel Explorer",
+    summary: "Complete a Gospel-focused study track.",
+  },
+  {
+    name: "Faithful for 30 Days",
+    summary: "Keep a 30-day study streak alive.",
+  },
   { name: "Romans Scholar", summary: "Finish a deep study through Romans." },
 ];
 
 const mapSteps = [
-  { week: "Level 1", focus: "Foundations of Christianity", reward: "Bible Beginner badge" },
+  {
+    week: "Level 1",
+    focus: "Foundations of Christianity",
+    reward: "Bible Beginner badge",
+  },
   { week: "Level 2", focus: "Life of Jesus", reward: "Gospel Explorer badge" },
-  { week: "Level 3", focus: "Spiritual Growth Habits", reward: "Streak boost + XP pack" },
-  { week: "Level 4", focus: "Theology Basics", reward: "Course completion trophy" },
+  {
+    week: "Level 3",
+    focus: "Spiritual Growth Habits",
+    reward: "Streak boost + XP pack",
+  },
+  {
+    week: "Level 4",
+    focus: "Theology Basics",
+    reward: "Course completion trophy",
+  },
 ];
 
 const advancedSystems = [
@@ -134,7 +155,9 @@ export default function GamificationPage() {
   const [supabase] = useState(() => createClient());
 
   const nextBadge = useMemo(
-    () => badgeShelf.find((badge) => !progress.unlockedBadges.includes(badge.name))?.name ?? "All starter badges unlocked",
+    () =>
+      badgeShelf.find((badge) => !progress.unlockedBadges.includes(badge.name))
+        ?.name ?? "All starter badges unlocked",
     [progress.unlockedBadges],
   );
 
@@ -194,7 +217,10 @@ export default function GamificationPage() {
           streakFreezes: saved.streak_freezes ?? 0,
         });
       } else {
-        localStorage.setItem(GAMIFICATION_PROGRESS_KEY, JSON.stringify(progress));
+        localStorage.setItem(
+          GAMIFICATION_PROGRESS_KEY,
+          JSON.stringify(progress),
+        );
       }
 
       setSaveFeedback("Progress saved");
@@ -212,7 +238,10 @@ export default function GamificationPage() {
       return {
         ...current,
         xpPoints: nextXp,
-        currentLevel: Math.max(current.currentLevel, Math.floor(nextXp / 100) + 1),
+        currentLevel: Math.max(
+          current.currentLevel,
+          Math.floor(nextXp / 100) + 1,
+        ),
         completedDailyQuests: [...current.completedDailyQuests, quest],
         masteryRank:
           current.completedDailyQuests.length + 1 >= 4
@@ -242,12 +271,13 @@ export default function GamificationPage() {
               Gamified Bible learning
             </div>
             <h1 className="text-5xl font-bold md:text-6xl">
-              Turn Bible study into a guided growth journey people want to return to.
+              Turn Bible study into a guided growth journey people want to
+              return to.
             </h1>
             <p className="mt-6 text-lg leading-8 text-emerald-50">
-              The goal is not shallow competition. It is consistent spiritual formation:
-              clear wins, visible progress, and better habits around Scripture, prayer,
-              memorization, and guided learning.
+              The goal is not shallow competition. It is consistent spiritual
+              formation: clear wins, visible progress, and better habits around
+              Scripture, prayer, memorization, and guided learning.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -275,9 +305,14 @@ export default function GamificationPage() {
             { label: "Mastery rank", value: progress.masteryRank },
             { label: "Next badge", value: nextBadge },
           ].map((item) => (
-            <article key={item.label} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article
+              key={item.label}
+              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+            >
               <p className="text-sm font-medium text-slate-500">{item.label}</p>
-              <p className="mt-3 text-2xl font-bold text-slate-900">{item.value}</p>
+              <p className="mt-3 text-2xl font-bold text-slate-900">
+                {item.value}
+              </p>
             </article>
           ))}
         </section>
@@ -291,7 +326,9 @@ export default function GamificationPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
                 <Icon className="h-6 w-6" />
               </div>
-              <h2 className="mt-5 text-xl font-semibold text-slate-900">{title}</h2>
+              <h2 className="mt-5 text-xl font-semibold text-slate-900">
+                {title}
+              </h2>
               <p className="mt-3 text-sm leading-7 text-slate-600">{detail}</p>
             </article>
           ))}
@@ -301,7 +338,9 @@ export default function GamificationPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3">
               <Target className="h-6 w-6 text-[#1e40af]" />
-              <h2 className="text-2xl font-semibold text-slate-900">Daily quests</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Daily quests
+              </h2>
             </div>
             <div className="mt-6 grid gap-3">
               {dailySystems.map((item) => (
@@ -327,22 +366,32 @@ export default function GamificationPage() {
             >
               Save progression
             </button>
-            {saveFeedback ? <p className="mt-3 text-sm font-semibold text-emerald-700">{saveFeedback}</p> : null}
+            {saveFeedback ? (
+              <p className="mt-3 text-sm font-semibold text-emerald-700">
+                {saveFeedback}
+              </p>
+            ) : null}
           </article>
 
           <article className="rounded-3xl border border-amber-200 bg-amber-50 p-8 shadow-sm">
             <div className="flex items-center gap-3">
               <Flame className="h-6 w-6 text-amber-700" />
-              <h2 className="text-2xl font-semibold text-slate-900">Weekly challenges</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Weekly challenges
+              </h2>
             </div>
             <div className="mt-6 space-y-4">
               {weeklySystems.map((item) => (
-                <div key={item} className="rounded-2xl border border-amber-200 bg-white px-4 py-4">
+                <div
+                  key={item}
+                  className="rounded-2xl border border-amber-200 bg-white px-4 py-4"
+                >
                   <p className="text-sm font-medium text-slate-700">{item}</p>
                 </div>
               ))}
               <p className="text-sm leading-6 text-slate-600">
-                These are ideal for small groups, church teams, and personal momentum loops.
+                These are ideal for small groups, church teams, and personal
+                momentum loops.
               </p>
             </div>
           </article>
@@ -352,17 +401,24 @@ export default function GamificationPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3">
               <Map className="h-6 w-6 text-emerald-700" />
-              <h2 className="text-2xl font-semibold text-slate-900">Guided learning map</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Guided learning map
+              </h2>
             </div>
             <div className="mt-6 space-y-4">
               {mapSteps.map((step) => (
-                <div key={step.week} className="rounded-2xl border border-slate-200 p-5">
+                <div
+                  key={step.week}
+                  className="rounded-2xl border border-slate-200 p-5"
+                >
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-[#1e40af]">
                         {step.week}
                       </p>
-                      <h3 className="mt-2 text-lg font-semibold text-slate-900">{step.focus}</h3>
+                      <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                        {step.focus}
+                      </h3>
                     </div>
                     <div className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                       {step.reward}
@@ -376,7 +432,9 @@ export default function GamificationPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3">
               <Trophy className="h-6 w-6 text-amber-600" />
-              <h2 className="text-2xl font-semibold text-slate-900">Badge shelf</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Badge shelf
+              </h2>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {badgeShelf.map((badge) => (
@@ -384,8 +442,12 @@ export default function GamificationPage() {
                   key={badge.name}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                 >
-                  <p className="text-sm font-semibold text-slate-900">{badge.name}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{badge.summary}</p>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {badge.name}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {badge.summary}
+                  </p>
                   {progress.unlockedBadges.includes(badge.name) ? (
                     <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-emerald-700">
                       Unlocked
@@ -399,10 +461,12 @@ export default function GamificationPage() {
 
         <section className="mt-14 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="max-w-3xl">
-            <h2 className="text-2xl font-semibold text-slate-900">Advanced retention systems</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Advanced retention systems
+            </h2>
             <p className="mt-3 text-sm leading-7 text-slate-600">
-              These are the systems that move the product from simple study utility into a
-              habit-forming learning platform.
+              These are the systems that move the product from simple study
+              utility into a habit-forming learning platform.
             </p>
           </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -414,8 +478,12 @@ export default function GamificationPage() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[#1e40af] shadow-sm">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-slate-900">{title}</h3>
-                <p className="mt-2 text-sm leading-7 text-slate-600">{detail}</p>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  {detail}
+                </p>
               </article>
             ))}
           </div>
@@ -445,8 +513,9 @@ export default function GamificationPage() {
               <h2 className="text-2xl font-semibold">More playful discovery</h2>
             </div>
             <p className="mt-4 leading-7 text-violet-900">
-              Add surprise-study moments, memory battles, shareable win cards, and
-              seasonal campaigns so the product feels encouraging and dynamic.
+              Add surprise-study moments, memory battles, shareable win cards,
+              and seasonal campaigns so the product feels encouraging and
+              dynamic.
             </p>
             <Link
               href="/fun"

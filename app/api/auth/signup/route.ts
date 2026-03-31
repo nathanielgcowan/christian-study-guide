@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     // migrations/001_initial_schema.sql. No manual insert is needed here.
 
     return NextResponse.json(data, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

@@ -10,7 +10,7 @@ import {
   Sparkles,
   Users2,
 } from "lucide-react";
-import { sermonCompanionModes } from "@/lib/product-expansion";
+import { sermonCompanionModes } from "../../lib/product-expansion";
 
 const sermonBlocks = [
   "Title",
@@ -63,9 +63,12 @@ export default function SermonPage() {
       <section className="bg-gradient-to-br from-[#14532d] via-[#0f172a] to-[#7c2d12] py-20 text-white">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <Mic2 className="mx-auto h-16 w-16" />
-          <h1 className="mt-6 text-5xl font-bold md:text-6xl">AI Sermon & Study Builder</h1>
+          <h1 className="mt-6 text-5xl font-bold md:text-6xl">
+            AI Sermon & Study Builder
+          </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-emerald-50">
-            Build sermons, youth lessons, family devotions, and leader-ready studies from one passage.
+            Build sermons, youth lessons, family devotions, and leader-ready
+            studies from one passage.
           </p>
         </div>
       </section>
@@ -80,9 +83,13 @@ export default function SermonPage() {
               {index === 0 && <BookOpen className="h-5 w-5 text-[#1e40af]" />}
               {index === 1 && <Sparkles className="h-5 w-5 text-violet-700" />}
               {index === 2 && <Lightbulb className="h-5 w-5 text-amber-700" />}
-              {index === 3 && <MessageSquare className="h-5 w-5 text-emerald-700" />}
+              {index === 3 && (
+                <MessageSquare className="h-5 w-5 text-emerald-700" />
+              )}
               {index === 4 && <Mic2 className="h-5 w-5 text-[#7c2d12]" />}
-              <p className="mt-4 text-sm font-semibold text-slate-900">{block}</p>
+              <p className="mt-4 text-sm font-semibold text-slate-900">
+                {block}
+              </p>
             </article>
           ))}
         </section>
@@ -91,11 +98,14 @@ export default function SermonPage() {
           <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8">
             <div className="flex items-center gap-3 text-emerald-950">
               <Mic2 className="h-6 w-6" />
-              <h2 className="text-2xl font-semibold">Sermon companion workspace</h2>
+              <h2 className="text-2xl font-semibold">
+                Sermon companion workspace
+              </h2>
             </div>
             <p className="mt-4 text-sm leading-7 text-emerald-900">
-              Paste a sermon title or passage, choose the audience, and generate the right
-              note structure instead of rebuilding the same prep flow every week.
+              Paste a sermon title or passage, choose the audience, and generate
+              the right note structure instead of rebuilding the same prep flow
+              every week.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -118,7 +128,9 @@ export default function SermonPage() {
               <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
                 {activeMode.label}
               </p>
-              <p className="mt-3 text-sm leading-7 text-slate-700">{activeMode.summary}</p>
+              <p className="mt-3 text-sm leading-7 text-slate-700">
+                {activeMode.summary}
+              </p>
               <div className="mt-5 space-y-3">
                 {activeMode.output.map((item) => (
                   <article
@@ -146,7 +158,9 @@ export default function SermonPage() {
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-900">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-amber-950">{item.detail}</p>
+                  <p className="mt-2 text-sm leading-6 text-amber-950">
+                    {item.detail}
+                  </p>
                 </article>
               ))}
             </div>
@@ -156,26 +170,32 @@ export default function SermonPage() {
         <section className="mt-10 grid gap-6 md:grid-cols-3">
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <NotebookPen className="h-6 w-6 text-[#1e40af]" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Source-aware notes</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Source-aware notes
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              Keep Scripture text, sermon observations, and AI-generated follow-up clearly
-              separated so leaders know what is primary.
+              Keep Scripture text, sermon observations, and AI-generated
+              follow-up clearly separated so leaders know what is primary.
             </p>
           </article>
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <MessageSquare className="h-6 w-6 text-emerald-700" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Discussion flow</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Discussion flow
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              Generate one observation question, one application question, and one prayer
-              transition that carry the sermon into the room.
+              Generate one observation question, one application question, and
+              one prayer transition that carry the sermon into the room.
             </p>
           </article>
           <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <Lightbulb className="h-6 w-6 text-amber-700" />
-            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Midweek follow-up</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+              Midweek follow-up
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              Package the message into one recap, one family prompt, one reading, and one
-              pastoral encouragement during the week.
+              Package the message into one recap, one family prompt, one
+              reading, and one pastoral encouragement during the week.
             </p>
           </article>
         </section>
