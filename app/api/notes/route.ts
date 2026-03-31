@@ -17,6 +17,21 @@ async function ensureUserProfile(
   return error;
 }
 
+function normalizeTags(tags: unknown) {
+  if (!Array.isArray(tags)) {
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      tags
+        .filter((tag): tag is string => typeof tag === "string")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
 // GET all notes for user
 export async function GET() {
   try {
@@ -54,6 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { reference, content, note_type, color, tags } = await request.json();
+    const normalizedTags = normalizeTags(tags);
 
     if (!reference || !content) {
       return NextResponse.json(
@@ -87,8 +103,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Add tags if provided
-    if (tags && tags.length > 0) {
-      const tagInserts = tags.map((tag: string) => ({
+    if (normalizedTags.length > 0) {
+      const tagInserts = normalizedTags.map((tag: string) => ({
         note_id: noteData.id,
         tag,
       }));
@@ -100,7 +116,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(noteData, { status: 201 });
+    const { data: createdNote } = await supabase
+      .from("user_notes")
+      .select("*, note_tags(tag)")
+      .eq("id", noteData.id)
+      .single();
+
+    return NextResponse.json(createdNote ?? noteData, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },
@@ -117,7 +139,15 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id, content, color, tags } = await request.json();
+    const { id, reference, content, note_type, color, tags } = await request.json();
+    const normalizedTags = normalizeTags(tags);
+
+    if (!id || !reference || !content) {
+      return NextResponse.json(
+        { error: "ID, reference, and content are required" },
+        { status: 400 },
+      );
+    }
 
     const supabase = await createClient();
 
@@ -136,7 +166,9 @@ export async function PATCH(request: NextRequest) {
     const { data: updatedNote, error } = await supabase
       .from("user_notes")
       .update({
+        reference,
         content,
+        note_type: note_type || "note",
         color,
         updated_at: new Date().toISOString(),
       })
@@ -154,8 +186,8 @@ export async function PATCH(request: NextRequest) {
       await supabase.from("note_tags").delete().eq("note_id", id);
 
       // Insert new tags
-      if (tags.length > 0) {
-        const tagInserts = tags.map((tag: string) => ({
+      if (normalizedTags.length > 0) {
+        const tagInserts = normalizedTags.map((tag: string) => ({
           note_id: id,
           tag,
         }));
@@ -163,7 +195,13 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(updatedNote);
+    const { data: fullNote } = await supabase
+      .from("user_notes")
+      .select("*, note_tags(tag)")
+      .eq("id", updatedNote.id)
+      .single();
+
+    return NextResponse.json(fullNote ?? updatedNote);
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },
